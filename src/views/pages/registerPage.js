@@ -23,13 +23,13 @@ import {
 } from "reactstrap";
 
 // core components
-import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
+import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footer/Footer.js";
 
 export default function RegisterPage() {
     return (
         <>
-            <ExamplesNavbar />
+            <IndexNavbar />
             <div className="wrapper">
                 <div className="register-page">
                     <div className="wrapper">

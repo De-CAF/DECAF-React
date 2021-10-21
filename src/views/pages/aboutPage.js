@@ -17,13 +17,13 @@ import {
 } from "reactstrap";
 
 // core components
-import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
+import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footer/Footer.js";
 
 export default function AboutPage() {
     return (
         <>
-            <ExamplesNavbar />
+            <IndexNavbar />
             <div className="wrapper">
                 <div className="landing-page">
                     <div className="page-header">
