@@ -116,3 +116,135 @@ $asset-base-path: '../../../../assets' !default;
 // React Differences
 
 @import "blk-design-system-react/react/react-differences";
+
+
+.account-settings .nav .nav-link {
+    font-size: .99925rem;
+    color: #fff;
+    padding-left: 0
+}
+
+.account-settings .nav .nav-link.active {
+    color: #e14eca
+}
+
+.account-settings .nav .nav-link i {
+    margin-right: 5px
+}
+
+.account-settings .nav hr {
+    width: 100%;
+    height: auto
+}
+
+.account-settings .table .avatar {
+    background: transparent;
+    border-radius: 0
+}
+
+.account-settings .table .form-check.form-check-radio {
+    margin-bottom: 20px
+}
+
+.section-download {
+    padding-top: 130px;
+}
+
+.section-download .description {
+    margin-bottom: 60px;
+}
+
+.section-download h4 {
+    margin-bottom: 25px;
+}
+
+@media screen and (min-width:991px) {
+    .chat-page .section {
+        min-height: 100vh;
+        max-height: 999px
+    }
+}
+
+.chat-page .path {
+    width: 70%;
+    transform: rotate(90deg)
+}
+
+.chat-page .list-group .list-group-item:not(.active) {
+    background: transparent
+}
+
+.chat-page .list-group .avatar {
+    width: 40px;
+    height: 40px
+}
+
+.chat-page .list-group .badge {
+    padding: 4px;
+    margin-top: 3px;
+    display: inline-block;
+    float: right
+}
+
+.chat-page .list-group .list-group-item.active {
+    border-radius: .4285rem
+}
+
+.chat-page .list-group .list-group-item:nth-of-type(2) {
+    border-top: 0
+}
+
+.chat-page .card {
+    max-height: 70vh;
+    overflow: auto
+}
+
+.chat-page .card .card-footer,
+.chat-page .card .card-header {
+    background: transparent;
+    display: flex
+}
+
+.chat-page .card .far {
+    margin-right: 3px
+}
+
+.chat-page .spinner {
+    width: 70px;
+    text-align: center;
+    display: inline-block
+}
+
+.chat-page .spinner>div {
+    width: 7px;
+    height: 7px;
+    background-color: #e3e3e3;
+    border-radius: 100%;
+    display: inline-block;
+    animation: e 1.4s infinite ease-in-out both
+}
+
+.chat-page .spinner .bounce1 {
+    animation-delay: -.32s
+}
+
+.chat-page .spinner .bounce2 {
+    animation-delay: -.16s
+}
+
+.about-us,
+.account-settings,
+.chat-page,
+.checkout-page,
+.index-page,
+.invoice-page,
+.landing-page,
+.login-page,
+.presentation-page,
+.product-page,
+.profile-page,
+.register-page,
+.reset-page {
+    background-image: url(../img/dots.png);
+    background-size: contain
+}

@@ -1,20 +1,4 @@
-/*!
 
-=========================================================
-* BLK Design System React - v1.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/blk-design-system-react
-* Copyright 2020 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/blk-design-system-react/blob/main/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React from "react";
 import { Link } from "react-router-dom";
 // reactstrap components
@@ -45,7 +29,7 @@ export default function IndexNavbar() {
     return function cleanup() {
       window.removeEventListener("scroll", changeColor);
     };
-  },[]);
+  }, []);
   const changeColor = () => {
     if (
       document.documentElement.scrollTop > 99 ||
@@ -79,11 +63,11 @@ export default function IndexNavbar() {
       <Container>
         <div className="navbar-translate">
           <NavbarBrand to="/" tag={Link} id="navbar-brand">
-            <span>BLK• </span>
-            Design System React
+            <span>DECAF• </span>
+            Social
           </NavbarBrand>
           <UncontrolledTooltip placement="bottom" target="navbar-brand">
-            Designed and Coded by Creative Tim
+            Decentralised file sharing social network
           </UncontrolledTooltip>
           <button
             aria-expanded={collapseOpen}
@@ -106,7 +90,7 @@ export default function IndexNavbar() {
             <Row>
               <Col className="collapse-brand" xs="6">
                 <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                  BLK•React
+                  DECAF• Social
                 </a>
               </Col>
               <Col className="collapse-close text-right" xs="6">
@@ -124,37 +108,13 @@ export default function IndexNavbar() {
             <NavItem className="p-0">
               <NavLink
                 data-placement="bottom"
-                href="https://twitter.com/CreativeTim"
+                href="https://github.com/De-CAF/DECAF-React"
                 rel="noopener noreferrer"
                 target="_blank"
-                title="Follow us on Twitter"
+                title="Star us on Twitter"
               >
-                <i className="fab fa-twitter" />
-                <p className="d-lg-none d-xl-none">Twitter</p>
-              </NavLink>
-            </NavItem>
-            <NavItem className="p-0">
-              <NavLink
-                data-placement="bottom"
-                href="https://www.facebook.com/CreativeTim"
-                rel="noopener noreferrer"
-                target="_blank"
-                title="Like us on Facebook"
-              >
-                <i className="fab fa-facebook-square" />
-                <p className="d-lg-none d-xl-none">Facebook</p>
-              </NavLink>
-            </NavItem>
-            <NavItem className="p-0">
-              <NavLink
-                data-placement="bottom"
-                href="https://www.instagram.com/CreativeTimOfficial"
-                rel="noopener noreferrer"
-                target="_blank"
-                title="Follow us on Instagram"
-              >
-                <i className="fab fa-instagram" />
-                <p className="d-lg-none d-xl-none">Instagram</p>
+                <i className="fab fa-github" />
+                <p className="d-lg-none d-xl-none">Github</p>
               </NavLink>
             </NavItem>
             <UncontrolledDropdown nav>
@@ -167,24 +127,32 @@ export default function IndexNavbar() {
                 onClick={(e) => e.preventDefault()}
               >
                 <i className="fa fa-cogs d-lg-none d-xl-none" />
-                Getting started
+                Explore
               </DropdownToggle>
               <DropdownMenu className="dropdown-with-icons">
-                <DropdownItem href="https://demos.creative-tim.com/blk-design-system-react/#/documentation/overview">
-                  <i className="tim-icons icon-paper" />
-                  Documentation
-                </DropdownItem>
-                <DropdownItem tag={Link} to="/register-page">
-                  <i className="tim-icons icon-bullet-list-67" />
-                  Register Page
-                </DropdownItem>
-                <DropdownItem tag={Link} to="/landing-page">
+                <DropdownItem tag={Link} to="/">
                   <i className="tim-icons icon-image-02" />
-                  Landing Page
+                  Home
                 </DropdownItem>
-                <DropdownItem tag={Link} to="/profile-page">
+                <DropdownItem tag={Link} to="/register">
+                  <i className="tim-icons icon-laptop" />
+                  Register
+                </DropdownItem>
+                <DropdownItem tag={Link} to="/login">
+                  <i className="tim-icons icon-tablet-2" />
+                  Login
+                </DropdownItem>
+                <DropdownItem tag={Link} to="/profile">
                   <i className="tim-icons icon-single-02" />
-                  Profile Page
+                  Profile
+                </DropdownItem>
+                <DropdownItem tag={Link} to="/account-settings">
+                  <i className="tim-icons icon-single-02" />
+                  Account Settings
+                </DropdownItem>
+                <DropdownItem tag={Link} to="/chat">
+                  <i className="tim-icons icon-email-85" />
+                  Chat
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
@@ -193,16 +161,16 @@ export default function IndexNavbar() {
                 className="nav-link d-none d-lg-block"
                 color="primary"
                 target="_blank"
-                href="https://www.creative-tim.com/product/blk-design-system-pro-react?ref=bdsr-user-archive-index-navbar-upgrade-pro"
+                href="/register"
               >
-                <i className="tim-icons icon-spaceship" /> Upgrade to PRO
+                <i className="tim-icons icon-spaceship" /> Lets get started
               </Button>
             </NavItem>
             <NavItem>
               <Button
                 className="nav-link d-none d-lg-block"
                 color="default"
-                onClick={scrollToDownload}
+                to="/download" tag={Link}
               >
                 <i className="tim-icons icon-cloud-download-93" /> Download
               </Button>

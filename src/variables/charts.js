@@ -1,21 +1,6 @@
-/*!
-
-=========================================================
-* BLK Design System React - v1.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/blk-design-system-react
-* Copyright 2020 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/blk-design-system-react/blob/main/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 // used inside src/views/examples/LandingPage.js
+
+
 const bigChart = {
   data: (canvas) => {
     let ctx = canvas.getContext("2d");
@@ -115,5 +100,19 @@ const bigChart = {
     },
   },
 };
+
+const ethereumData = async () => {
+  const response = await fetch(
+    'https://min-api.cryptocompare.com/data/v2/histominute?fsym=ETH&tsym=USD&limit=119&api_key=0646cc7b8a4d4b54926c74e0b20253b57fd4ee406df79b3d57d5439874960146'
+  );
+  const json = await response.json();
+  const data = json.Data.Data
+  const times = data.map(obj => obj.time)
+  const prices = data.map(obj => obj.high)
+  return {
+    times,
+    prices
+  }
+}
 
 export default bigChart;
