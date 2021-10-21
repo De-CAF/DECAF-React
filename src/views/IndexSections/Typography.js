@@ -1,20 +1,3 @@
-/*!
-
-=========================================================
-* BLK Design System React - v1.2.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/blk-design-system-react
-* Copyright 2020 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/blk-design-system-react/blob/main/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React from "react";
 // reactstrap components
 import { Container, Row, Col } from "reactstrap";
@@ -25,12 +8,12 @@ export default function Typography() {
       <img
         alt="..."
         className="path"
-        src={require("assets/img/path1.png").default}
+        src="/static/img/path1.png"
       />
       <img
         alt="..."
         className="path path1"
-        src={require("assets/img/path3.png").default}
+        src="/static/img/path3.png"
       />
       <Container>
         <h3 className="title">Typography</h3>
@@ -159,7 +142,7 @@ export default function Typography() {
               <img
                 alt="..."
                 className="img-fluid rounded shadow"
-                src={require("assets/img/ryan.jpg").default}
+                src="/static/img/ryan.jpg"
                 style={{ width: "150px" }}
               />
             </Col>
@@ -170,7 +153,7 @@ export default function Typography() {
               <img
                 alt="..."
                 className="img-fluid rounded-circle shadow"
-                src={require("assets/img/james.jpg").default}
+                src="/static/img/james.jpg"
                 style={{ width: "150px" }}
               />
             </Col>
@@ -181,7 +164,7 @@ export default function Typography() {
               <img
                 alt="..."
                 className="img-fluid rounded shadow-lg"
-                src={require("assets/img/lora.jpg").default}
+                src="/static/img/lora.jpg"
                 style={{ width: "150px" }}
               />
             </Col>
@@ -192,7 +175,7 @@ export default function Typography() {
               <img
                 alt="..."
                 className="img-fluid rounded-circle shadow-lg"
-                src={require("assets/img/mike.jpg").default}
+                src="/static/img/mike.jpg"
                 style={{ width: "150px" }}
               />
             </Col>

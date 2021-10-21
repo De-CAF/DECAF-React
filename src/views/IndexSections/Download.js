@@ -12,7 +12,7 @@ export default function Download() {
             <img
                 alt="..."
                 className="path"
-                src={require("assets/img/path1.png").default}
+                src="/static/img/path1.png"
             />
             <Container>
                 <Row className="justify-content-md-center">

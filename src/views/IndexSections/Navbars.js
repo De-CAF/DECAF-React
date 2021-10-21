@@ -39,7 +39,7 @@ export default function Navbars() {
       <img
         alt="..."
         className="path"
-        src={require("assets/img/path3.png").default}
+        src="/static/img/path3.png"
       />
       <Container id="menu-dropdown">
         <Row>
