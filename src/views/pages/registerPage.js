@@ -76,7 +76,7 @@ export default function RegisterPage() {
                                                             <input className="form-check-input" type="checkbox" />
                                                             <span className="form-check-sign" />
                                                             I agree to the
-                                                            <a href="javascript:void(0)">terms and conditions</a>.
+                                                            <a href="#">terms and conditions</a>.
                                                         </label>
                                                     </div>
                                                 </form>

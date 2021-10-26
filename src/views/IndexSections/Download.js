@@ -16,28 +16,37 @@ export default function Download() {
             />
             <Container>
                 <Row className="justify-content-md-center">
+
                     <Col className="text-center" lg="8" md="12">
+                        <img src="/static/img/mockupHD.png" />
                         <h2 className="title">
-                            Do you love this Bootstrap 4 React Design System?
+                            Coming Soon!
                         </h2>
                         <h4 className="description">
-                            Cause if you do, it can be yours for FREE. Hit the button below to
-                            navigate to Creative Tim where you can find the design system in
-                            React format. Start a new project or give an old Bootstrap project
-                            a new look!
+                            We cannot wait to release the mobile version. Our application will soon be available on Android as well as on iOS!
                         </h4>
                     </Col>
                     <Col className="text-center" lg="8" md="12">
                         <Button
                             className="btn-round"
-                            color="info"
-                            href="https://www.creative-tim.com/product/blk-design-system-react?ref=blkdsr-index-page-download-section"
+                            color='success'
+                            href="#"
                             role="button"
                             size="lg"
                         >
-                            Download React
+                            <i className="fab fa-android" />
+                        </Button>
+                        <Button
+                            className="btn-round"
+                            color=""
+                            href="#"
+                            role="button"
+                            size="lg"
+                        >
+                            <i className="fab fa-apple" />
                         </Button>
                     </Col>
+
                 </Row>
                 <br />
                 <br />

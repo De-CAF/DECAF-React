@@ -33,19 +33,16 @@ export default function AboutPage() {
                         <img src="/static/img/waves.png" className="shapes wave" />
                         <img src="/static/img/patrat.png" className="shapes squares" />
                         <img src="/static/img/cercuri.png" className="shapes circle" />
+        
                         <div className="container">
                             <div className="row row-grid justify-content-between align-items-center text-left">
                                 <div className="col-lg-6 col-md-6">
-                                    <h1 className="text-white">We keep your coin
+                                
+                                    <h1 className="text-white">We keep your files
                                         <br />
                                         <span className="text-white">secured</span>
                                     </h1>
-                                    <p className="text-white mb-3">A wonderful serenity has taken possession of my entire soul, like these
-                                        sweet mornings of spring which I enjoy with my whole heart. I am alone, and feel...</p>
-                                    <div className="btn-wrapper mb-3">
-                                        <p className="category text-success d-inline">From 9.99%/mo</p>
-                                        <a href="#blk" className="btn btn-success btn-link btn-sm"><i className="tim-icons icon-minimal-right" /></a>
-                                    </div>
+                                    <p className="text-white mb-3">A seamless service enabling you to share every file with the highest security and integrity. One stop platform for all documents, using our state of the art request-response mechanism, powered by blockchain technology.</p>
                                     <div className="btn-wrapper">
                                         <div className="button-container">
                                             <button href="javascript:void(0)" className="btn btn-icon btn-simple btn-round btn-neutral">
