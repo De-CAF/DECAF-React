@@ -1,32 +1,39 @@
 
 import React from "react";
-import classnames from "classnames";
-// reactstrap components
-import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  CardImg,
-  CardTitle,
-  Label,
-  FormGroup,
-  Form,
-  Input,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
-  Container,
-  Row,
-  Col,
-} from "reactstrap";
 
 // core components
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footer/Footer.js";
 
+
+import { auth, provider } from '../../firebase'
+
+import { useDispatch, useSelector } from "react-redux";
+
+import { setActiveUser, setLogOutState, selectUserEmail, selectUserName, setUserLogOutState } from "../../features/userSlice";
+
 export default function LoginPage() {
+  const dispatch = useDispatch();
+
+  const userName = useSelector(selectUserName)
+  const userEmail = useSelector(selectUserEmail)
+
+  const handleSignIn = (e) => {
+    e.preventDefault();
+    auth.signInWithPopup(provider).then((result) => {
+      dispatch(setActiveUser({
+        userName: result.user.displayName,
+        userEmail: result.user.email
+      }))
+    })
+  }
+
+  const handleSignOut = () => {
+    auth.signOut().then(() => {
+      dispatch(setUserLogOutState())
+    }).catch((err) => alert(err.message))
+  }
+
   const [squares1to6, setSquares1to6] = React.useState("");
   const [squares7and8, setSquares7and8] = React.useState("");
   const [fullNameFocus, setFullNameFocus] = React.useState(false);
@@ -98,14 +105,20 @@ export default function LoginPage() {
                     <div className="card-footer text-center">
                       <a href="#pablo" className="btn btn-primary btn-round btn-lg btn-block">Get Started</a>
                     </div>
+                    {
+                      userName ? (
+                        <div className="card-footer text-center">
+                          <button onClick={handleSignOut} className="btn btn-primary btn-round btn-lg btn-block">Sign Out</button>
+                        </div>
+                      ) : (
+                        <div className="card-footer text-center">
+                          <button onClick={handleSignIn}className="btn btn-primary btn-round btn-lg btn-block">Google Auth</button>
+                        </div>
+                      )
+                    }
                     <div className="pull-left ml-3 mb-3">
                       <h6>
                         <a href="#pablo" className="link footer-link">Create Account</a>
-                      </h6>
-                    </div>
-                    <div className="pull-right mr-3 mb-3">
-                      <h6>
-                        <a href="#pablo" className="link footer-link">Need Help?</a>
                       </h6>
                     </div>
                   </form>
