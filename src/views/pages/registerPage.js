@@ -1,6 +1,8 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import classnames from "classnames";
+import { Alert } from 'reactstrap'
+import { auth, provider } from '../../firebase'
 // reactstrap components
 import {
     Button,
@@ -25,8 +27,38 @@ import {
 // core components
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footer/Footer.js";
+import { event } from "jquery";
 
 export default function RegisterPage() {
+    const [name,setName] = useState("");
+    const [email,setEmail] = useState("");
+    const [password,setPasword] = useState("");
+    const [showAlert,setShowAlert] = useState(false);
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged(user => {
+            console.log(user);
+        })
+
+        return unsubscribe;
+    },[])
+
+    const onRegister = () => {
+
+
+        auth.createUserWithEmailAndPassword(email, password)
+        .then((user) => {
+            console.log('User signed up', user);
+            setName("");
+            setEmail("");
+            setPasword("");
+            setShowAlert(true)
+        })
+        .catch(err => console.log(err))
+    }
+
+
+
     return (
         <>
             <IndexNavbar />
@@ -53,7 +85,7 @@ export default function RegisterPage() {
                                                                 <i className="tim-icons icon-single-02" />
                                                             </div>
                                                         </div>
-                                                        <input type="text" className="form-control" placeholder="Full Name" />
+                                                        <input type="text" value={name} onChange={e => setName(e.target.value)} className="form-control" placeholder="Full Name" />
                                                     </div>
                                                     <div className="input-group">
                                                         <div className="input-group-prepend">
@@ -61,7 +93,7 @@ export default function RegisterPage() {
                                                                 <i className="tim-icons icon-email-85" />
                                                             </div>
                                                         </div>
-                                                        <input type="text" placeholder="Email" className="form-control" />
+                                                        <input type="text" value={email} placeholder="Email" className="form-control" onChange={(e) => setEmail(e.target.value)} />
                                                     </div>
                                                     <div className="input-group">
                                                         <div className="input-group-prepend">
@@ -69,7 +101,7 @@ export default function RegisterPage() {
                                                                 <i className="tim-icons icon-lock-circle" />
                                                             </div>
                                                         </div>
-                                                        <input type="text" className="form-control" placeholder="Password" />
+                                                        <input type="text" value={password} onChange={e => setPasword(e.target.value)} className="form-control" placeholder="Password" />
                                                     </div>
                                                     <div className="form-check text-left">
                                                         <label className="form-check-label">
@@ -82,8 +114,11 @@ export default function RegisterPage() {
                                                 </form>
                                             </div>
                                             <div className="card-footer">
-                                                <a href="javascript:void(0)" className="btn btn-info btn-round btn-lg">Get Started</a>
+                                                <a href="javascript:void(0)" onClick={onRegister} className="btn btn-info btn-round btn-lg">Register</a>
                                             </div>
+                                            {showAlert && (
+                                                    <Alert color="success">User signed up</Alert>
+                                                )}
                                         </div>
                                     </div>
                                 </div>
