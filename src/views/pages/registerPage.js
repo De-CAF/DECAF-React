@@ -1,39 +1,24 @@
 
 import React, { useState, useEffect } from "react";
-import classnames from "classnames";
 import { Alert } from 'reactstrap'
-import { auth, provider } from '../../firebase'
-// reactstrap components
-import {
-    Button,
-    Card,
-    CardHeader,
-    CardBody,
-    CardFooter,
-    CardImg,
-    CardTitle,
-    Label,
-    FormGroup,
-    Form,
-    Input,
-    InputGroupAddon,
-    InputGroupText,
-    InputGroup,
-    Container,
-    Row,
-    Col,
-} from "reactstrap";
+import { auth } from '../../firebase'
+
+
+import { useDispatch, useSelector } from "react-redux";
+import { setdefaultActiveUser, setdefaultUserLogOutState } from "../../features/defaultAuthSlice";
 
 // core components
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footer/Footer.js";
-import { event } from "jquery";
 
 export default function RegisterPage() {
-    const [name,setName] = useState("");
-    const [email,setEmail] = useState("");
-    const [password,setPasword] = useState("");
-    const [showAlert,setShowAlert] = useState(false);
+    const dispatch = useDispatch();
+
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPasword] = useState("");
+    const [showAlert, setShowAlert] = useState(false);
+    const [showErr, setShowErr] = useState(false);
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
@@ -41,20 +26,25 @@ export default function RegisterPage() {
         })
 
         return unsubscribe;
-    },[])
+    }, [])
 
-    const onRegister = () => {
-
-
+    const onRegister = (e) => {
+        e.preventDefault();
         auth.createUserWithEmailAndPassword(email, password)
-        .then((user) => {
-            console.log('User signed up', user);
-            setName("");
-            setEmail("");
-            setPasword("");
-            setShowAlert(true)
-        })
-        .catch(err => console.log(err))
+            .then((user) => {
+                console.log('User signed up', user);
+                dispatch(setdefaultActiveUser({
+                    userName: name,
+                    userEmail: email,
+                    password: password
+                }))
+                setShowAlert(true)
+                setShowErr(false)
+            })
+            .catch(err => {
+                console.log(err)
+                setShowErr(true)
+            })
     }
 
 
@@ -114,11 +104,19 @@ export default function RegisterPage() {
                                                 </form>
                                             </div>
                                             <div className="card-footer">
-                                                <a href="javascript:void(0)" onClick={onRegister} className="btn btn-info btn-round btn-lg">Register</a>
+                                                <button onClick={onRegister} className="btn btn-info btn-round btn-lg">Register</button>
                                             </div>
-                                            {showAlert && (
-                                                    <Alert color="success">User signed up</Alert>
-                                                )}
+
+                                            {
+                                                showAlert ?
+                                                    (<Alert color="success">User signed up</Alert>) : (<div></div>)
+                                            }
+
+                                            {
+                                                showErr ?
+                                                (<Alert color="danger">Failed to create account</Alert>) : (<div></div>)
+                                            }
+
                                         </div>
                                     </div>
                                 </div>

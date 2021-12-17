@@ -1,5 +1,5 @@
 
-import React, {useState} from "react";
+import React, { useState } from "react";
 
 // core components
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
@@ -10,7 +10,9 @@ import { auth, provider } from '../../firebase'
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { setActiveUser, setLogOutState, selectUserEmail, selectUserName, setUserLogOutState } from "../../features/userSlice";
+import { setActiveUser, selectUserEmail, selectUserName, setUserLogOutState } from "../../features/userSlice";
+
+import { setdefaultActiveUser, selectdefaultUserName, setdefaultUserLogOutState } from "../../features/defaultAuthSlice";
 
 export default function LoginPage() {
   const dispatch = useDispatch();
@@ -20,37 +22,50 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const username = useSelector(selectdefaultUserName)
+
+  const [signedIn, setSignedIn] = useState(false);
 
   const handleGoogleSignIn = (e) => {
     e.preventDefault();
     auth.signInWithPopup(provider).then((result) => {
-      console.log("Result",result)
+      console.log("Result", result)
       dispatch(setActiveUser({
         userName: result.user.displayName,
         userEmail: result.user.email
       }))
+
+      setSignedIn(true)
     })
   }
 
   const handleSignIn = e => {
     e.preventDefault();
 
-    auth.signInWithEmailAndPassword(email,password)
-    .then(result => {
-      console.log(result);
-      setEmail("");
-      setPassword("");
-      dispatch(setActiveUser({
-        userName: result.user.displayName,
-        userEmail: result.user.email
-      }))
-    })
-    .catch(err => console.log(err));
+    auth.signInWithEmailAndPassword(email, password)
+      .then(result => {
+        console.log(result);
+        dispatch(setdefaultActiveUser({
+          userName: username,
+          userEmail: email,
+          password: password
+        }))
+        setSignedIn(true)
+      })
+      .catch(err => console.log(err));
   }
 
   const handleSignOut = () => {
     auth.signOut().then(() => {
       dispatch(setUserLogOutState())
+      setSignedIn(false)
+    }).catch((err) => alert(err.message))
+  }
+
+  const handledefaultSignOut = () => {
+    auth.signOut().then(() => {
+      dispatch(setdefaultUserLogOutState())
+      setSignedIn(false)
     }).catch((err) => alert(err.message))
   }
 
@@ -59,6 +74,7 @@ export default function LoginPage() {
   const [fullNameFocus, setFullNameFocus] = React.useState(false);
   const [emailFocus, setEmailFocus] = React.useState(false);
   const [passwordFocus, setPasswordFocus] = React.useState(false);
+
   React.useEffect(() => {
     document.body.classList.toggle("register-page");
     document.documentElement.addEventListener("mousemove", followCursor);
@@ -109,36 +125,42 @@ export default function LoginPage() {
                       <h4 className="card-title">Login</h4>
                     </div>
                     <div className="card-body">
-                    <div className="input-group">
-                        <div className="input-group-prepend">
-                         <div className="input-group-text">
-                            <i className="tim-icons icon-email-85" />
-                             </div>
-                        </div>
-                       <input value={email} onChange={e => setEmail(e.target.value)} type="text" placeholder="Email" className="form-control" />
-                    </div>
                       <div className="input-group">
-                          <div className="input-group-prepend">
-                             <div className="input-group-text">
-                                <i className="tim-icons icon-lock-circle" />
-                              </div>
+                        <div className="input-group-prepend">
+                          <div className="input-group-text">
+                            <i className="tim-icons icon-email-85" />
                           </div>
-                         <input value={password} onChange={e => setPassword(e.target.value)} type="password" className="form-control" placeholder="Password"  />
-                     </div>
+                        </div>
+                        <input value={email} onChange={e => setEmail(e.target.value)} type="text" placeholder="Email" className="form-control" />
+                      </div>
+                      <div className="input-group">
+                        <div className="input-group-prepend">
+                          <div className="input-group-text">
+                            <i className="tim-icons icon-lock-circle" />
+                          </div>
+                        </div>
+                        <input value={password} onChange={e => setPassword(e.target.value)} type="password" className="form-control" placeholder="Password" />
+                      </div>
                     </div>
 
                     {
-                      userEmail ? (
-                        <div className="card-footer text-center">
-                          <button onClick={handleSignOut} className="btn btn-primary btn-round btn-lg btn-block">Sign Out</button>
-                        </div>
+                      signedIn ? (
+
+                        userEmail ? (
+                          <div className="card-footer text-center">
+                            <button onClick={handleSignOut} className="btn btn-primary btn-round btn-lg btn-block">Sign Out</button>
+                          </div>) : (
+                          <div className="card-footer text-center">
+                            <button onClick={handledefaultSignOut} className="btn btn-primary btn-round btn-lg btn-block">Sign Out</button>
+                          </div>
+                        )
                       ) : (
                         <div>
                           <div className="card-footer text-center">
                             <button onClick={handleSignIn} className="btn btn-primary btn-round btn-lg btn-block">Login</button>
                           </div>
                           <div className="card-footer text-center">
-                            <button onClick={handleGoogleSignIn}className="btn btn-primary btn-round btn-lg btn-block">Google Auth</button>
+                            <button onClick={handleGoogleSignIn} className="btn btn-primary btn-round btn-lg btn-block">Google Auth</button>
                           </div>
                         </div>
                       )
