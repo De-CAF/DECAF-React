@@ -1,4 +1,4 @@
-<h1 align="center">DECAF• Social</h1>
+<h1 align="center">DECAF• Social :coffee:</h1>
 
 
 ![Product Presentation Image](https://github.com/De-CAF/DECAF-React/blob/main/public/static/img/mockupHD.png)
