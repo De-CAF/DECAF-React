@@ -10,7 +10,7 @@ import { auth, provider } from '../../firebase'
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { setActiveUser, selectUserEmail, selectUserName, setUserLogOutState, selectIsLoggedIn } from "../../features/userSlice";
+import { setActiveUser, selectUserEmail,setUserLogOutState, selectIsLoggedIn } from "../../features/userSlice";
 
 import { setdefaultActiveUser, selectdefaultUserName, setdefaultUserLogOutState, selectdefaultIsLoggedIn } from "../../features/defaultAuthSlice";
 
@@ -151,7 +151,10 @@ export default function LoginPage() {
                             <div className="card-footer text-center">
                               <button onClick={handleSignIn} className="btn btn-primary btn-round btn-lg btn-block">Login</button>
                             </div>
-                            <div className=" text-center">
+                            <div className="card-footer text-center">
+                              OR
+                            </div>
+                            <div className="card-footer text-center">
                               <button onClick={handleGoogleSignIn} class="btn btn-google">
                                 <i class="fab fa-google"></i> Sign in with Google
                               </button>
@@ -168,7 +171,10 @@ export default function LoginPage() {
                             <div className="card-footer text-center">
                               <button onClick={handleSignIn} className="btn btn-primary btn-round btn-lg btn-block">Login</button>
                             </div>
-                            <div className=" text-center">
+                            <div className="card-footer text-center">
+                              OR
+                            </div>
+                            <div className="card-footer text-center">
                               <button onClick={handleGoogleSignIn} class="btn btn-google">
                                 <i class="fab fa-google"></i> Sign in with Google
                               </button>

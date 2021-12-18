@@ -10,7 +10,39 @@ import LoginPage from "views/pages/loginPage.js"
 import ChatPage from "views/pages/chatPage.js"
 import AccountSettings from "views/pages/accountSettingsPage.js";
 
+import {useSelector} from "react-redux";
+
+import { selectUserEmail, selectIsLoggedIn } from "./features/userSlice";
+
+import { selectdefaultIsLoggedIn } from "./features/defaultAuthSlice";
+
 export default function App() {
+
+    const userEmail = useSelector(selectUserEmail)
+    const isLoggedIn = useSelector(selectIsLoggedIn)
+    const defaultIsLoggedIn = useSelector(selectdefaultIsLoggedIn)
+
+    const getAuth = () => {
+        const status = userEmail ? (isLoggedIn ? (true):(false)):(defaultIsLoggedIn ? (true): (false));
+        return status;
+    }
+
+    const PrivateRoute = ({ component: Component, ...rest }) => (
+        <Route
+            {...rest}
+            render={props =>
+                getAuth() ? (
+                    <Component {...props} />
+                ) : (
+                    <Redirect
+                        to={{
+                            pathname: "/login"
+                        }}
+                    />
+                )
+            }
+        />
+    );
     return (
         <BrowserRouter>
             <Switch>
@@ -27,21 +59,21 @@ export default function App() {
                     path="/login"
                     render={(props) => <LoginPage {...props} />}
                 />
-                <Route
+                <PrivateRoute
                     path="/profile"
-                    render={(props) => <ProfilePage {...props} />}
+                    component={ProfilePage}
                 />
                 <Route
                     path="/download"
                     render={(props) => <DownloadPage {...props} />}
                 />
-                <Route
+                <PrivateRoute
                     path="/account-settings"
-                    render={(props) => <AccountSettings {...props} />}
+                    component={AccountSettings}
                 />
                 <Route
                     path="/chat"
-                    render={(props) => <ChatPage {...props} />}
+                    component={ChatPage}
                 />
                 <Redirect from="/" to="/home" />
             </Switch>
