@@ -20,10 +20,19 @@ import {
   UncontrolledTooltip,
 } from "reactstrap";
 
+import { useDispatch, useSelector } from "react-redux";
+import { selectIsLoggedIn, selectUserEmail } from "../../features/userSlice";
+import { selectdefaultIsLoggedIn } from "../../features/defaultAuthSlice";
+
 export default function IndexNavbar() {
   const [collapseOpen, setCollapseOpen] = React.useState(false);
   const [collapseOut, setCollapseOut] = React.useState("");
   const [color, setColor] = React.useState("navbar-transparent");
+
+  const userEmail = useSelector(selectUserEmail)
+  const isLoggedIn = useSelector(selectIsLoggedIn)
+  const defaultIsLoggedIn = useSelector(selectdefaultIsLoggedIn)
+
   React.useEffect(() => {
     window.addEventListener("scroll", changeColor);
     return function cleanup() {
@@ -134,37 +143,73 @@ export default function IndexNavbar() {
                   <i className="tim-icons icon-image-02" />
                   Home
                 </DropdownItem>
-                <DropdownItem tag={Link} to="/register">
-                  <i className="tim-icons icon-laptop" />
-                  Register
-                </DropdownItem>
-                <DropdownItem tag={Link} to="/login">
-                  <i className="tim-icons icon-tablet-2" />
-                  Login
-                </DropdownItem>
-                <DropdownItem tag={Link} to="/profile">
-                  <i className="tim-icons icon-single-02" />
-                  Profile
-                </DropdownItem>
-                <DropdownItem tag={Link} to="/account-settings">
-                  <i className="tim-icons icon-single-02" />
-                  Account Settings
-                </DropdownItem>
-                <DropdownItem tag={Link} to="/chat">
-                  <i className="tim-icons icon-email-85" />
-                  Chat
-                </DropdownItem>
+                {
+                  userEmail ? (isLoggedIn ? ( <><DropdownItem tag={Link} to="/profile">
+                    <i className="tim-icons icon-single-02" />
+                    Profile
+                  </DropdownItem><DropdownItem tag={Link} to="/account-settings">
+                      <i className="tim-icons icon-single-02" />
+                      Account Settings
+                    </DropdownItem><DropdownItem tag={Link} to="/chat">
+                      <i className="tim-icons icon-email-85" />
+                      Chat
+                    </DropdownItem></>) : (                <><DropdownItem tag={Link} to="/register">
+                      <i className="tim-icons icon-laptop" />
+                      Register
+                    </DropdownItem><DropdownItem tag={Link} to="/login">
+                        <i className="tim-icons icon-tablet-2" />
+                        Login
+                      </DropdownItem></>)) : (defaultIsLoggedIn ? (                <><DropdownItem tag={Link} to="/profile">
+                      <i className="tim-icons icon-single-02" />
+                      Profile
+                    </DropdownItem><DropdownItem tag={Link} to="/account-settings">
+                        <i className="tim-icons icon-single-02" />
+                        Account Settings
+                      </DropdownItem><DropdownItem tag={Link} to="/chat">
+                        <i className="tim-icons icon-email-85" />
+                        Chat
+                      </DropdownItem></>):(                <><DropdownItem tag={Link} to="/register">
+                        <i className="tim-icons icon-laptop" />
+                        Register
+                      </DropdownItem><DropdownItem tag={Link} to="/login">
+                          <i className="tim-icons icon-tablet-2" />
+                          Login
+                        </DropdownItem></>))
+                }
               </DropdownMenu>
             </UncontrolledDropdown>
             <NavItem>
-              <Button
-                className="nav-link d-none d-lg-block"
-                color="primary"
-                target="_blank"
-                href="/register"
-              >
-                <i className="tim-icons icon-spaceship" /> Lets get started
-              </Button>
+              {
+                userEmail ? (isLoggedIn ? (<Button
+                  className="nav-link d-none d-lg-block"
+                  color="primary"
+                  target="_blank"
+                  href="/profile"
+                >
+                  <i className="tim-icons icon-spaceship" /> Profile
+                </Button>) : (<Button
+                  className="nav-link d-none d-lg-block"
+                  color="primary"
+                  target="_blank"
+                  href="/register"
+                >
+                  <i className="tim-icons icon-spaceship" /> Lets get started
+                </Button>)) : (defaultIsLoggedIn ? (<Button
+                  className="nav-link d-none d-lg-block"
+                  color="primary"
+                  target="_blank"
+                  href="/profile"
+                >
+                  <i className="tim-icons icon-spaceship" /> Profile
+                </Button>) : (<Button
+                  className="nav-link d-none d-lg-block"
+                  color="primary"
+                  target="_blank"
+                  href="/register"
+                >
+                  <i className="tim-icons icon-spaceship" /> Lets get started
+                </Button>))
+              }
             </NavItem>
             <NavItem>
               <Button
@@ -178,6 +223,6 @@ export default function IndexNavbar() {
           </Nav>
         </Collapse>
       </Container>
-    </Navbar>
+    </Navbar >
   );
 }

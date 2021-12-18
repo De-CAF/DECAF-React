@@ -36,7 +36,6 @@ export default function RegisterPage() {
                 dispatch(setdefaultActiveUser({
                     userName: name,
                     userEmail: email,
-                    password: password
                 }))
                 setShowAlert(true)
                 setShowErr(false)

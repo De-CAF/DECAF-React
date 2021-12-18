@@ -10,21 +10,22 @@ import { auth, provider } from '../../firebase'
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { setActiveUser, selectUserEmail, selectUserName, setUserLogOutState } from "../../features/userSlice";
+import { setActiveUser, selectUserEmail, selectUserName, setUserLogOutState, selectIsLoggedIn } from "../../features/userSlice";
 
-import { setdefaultActiveUser, selectdefaultUserName, setdefaultUserLogOutState } from "../../features/defaultAuthSlice";
+import { setdefaultActiveUser, selectdefaultUserName, setdefaultUserLogOutState, selectdefaultIsLoggedIn } from "../../features/defaultAuthSlice";
 
 export default function LoginPage() {
   const dispatch = useDispatch();
 
-  const userName = useSelector(selectUserName)
   const userEmail = useSelector(selectUserEmail)
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const username = useSelector(selectdefaultUserName)
 
-  const [signedIn, setSignedIn] = useState(false);
+
+  const isLoggedIn = useSelector(selectIsLoggedIn)
+  const defaultIsLoggedIn = useSelector(selectdefaultIsLoggedIn)
 
   const handleGoogleSignIn = (e) => {
     e.preventDefault();
@@ -32,10 +33,9 @@ export default function LoginPage() {
       console.log("Result", result)
       dispatch(setActiveUser({
         userName: result.user.displayName,
-        userEmail: result.user.email
+        userEmail: result.user.email,
+        isLoggedIn: true
       }))
-
-      setSignedIn(true)
     })
   }
 
@@ -48,9 +48,8 @@ export default function LoginPage() {
         dispatch(setdefaultActiveUser({
           userName: username,
           userEmail: email,
-          password: password
+          isLoggedIn: true
         }))
-        setSignedIn(true)
       })
       .catch(err => console.log(err));
   }
@@ -58,14 +57,12 @@ export default function LoginPage() {
   const handleSignOut = () => {
     auth.signOut().then(() => {
       dispatch(setUserLogOutState())
-      setSignedIn(false)
     }).catch((err) => alert(err.message))
   }
 
   const handledefaultSignOut = () => {
     auth.signOut().then(() => {
       dispatch(setdefaultUserLogOutState())
-      setSignedIn(false)
     }).catch((err) => alert(err.message))
   }
 
@@ -144,32 +141,46 @@ export default function LoginPage() {
                     </div>
 
                     {
-                      signedIn ? (
-
-                        userEmail ? (
+                      userEmail ? (
+                        isLoggedIn ? (
                           <div className="card-footer text-center">
                             <button onClick={handleSignOut} className="btn btn-primary btn-round btn-lg btn-block">Sign Out</button>
-                          </div>) : (
-                          <div className="card-footer text-center">
-                            <button onClick={handledefaultSignOut} className="btn btn-primary btn-round btn-lg btn-block">Sign Out</button>
+                          </div>
+                        ) : (
+                          <div>
+                            <div className="card-footer text-center">
+                              <button onClick={handleSignIn} className="btn btn-primary btn-round btn-lg btn-block">Login</button>
+                            </div>
+                            <div className=" text-center">
+                              <button onClick={handleGoogleSignIn} class="btn btn-google">
+                                <i class="fab fa-google"></i> Sign in with Google
+                              </button>
+                            </div>
                           </div>
                         )
                       ) : (
-                        <div>
+                        defaultIsLoggedIn ? (
                           <div className="card-footer text-center">
-                            <button onClick={handleSignIn} className="btn btn-primary btn-round btn-lg btn-block">Login</button>
+                            <button onClick={handledefaultSignOut} className="btn btn-primary btn-round btn-lg btn-block">Sign Out</button>
                           </div>
-                          <div className=" text-center">
-                            <button onClick={handleGoogleSignIn} class="btn btn-google">
-                              <i class="fab fa-google"></i> Sign in with Google
-                            </button>
+                        ) : (
+                          <div>
+                            <div className="card-footer text-center">
+                              <button onClick={handleSignIn} className="btn btn-primary btn-round btn-lg btn-block">Login</button>
+                            </div>
+                            <div className=" text-center">
+                              <button onClick={handleGoogleSignIn} class="btn btn-google">
+                                <i class="fab fa-google"></i> Sign in with Google
+                              </button>
+                            </div>
                           </div>
-                        </div>
+                        )
                       )
+
                     }
                     <div className="pull-left ml-3 mb-3">
                       <h6>
-                        <a href="#pablo" className="link footer-link">Create Account</a>
+                        <a href="/register" className="link footer-link">Create Account</a>
                       </h6>
                     </div>
                   </form>
