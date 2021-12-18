@@ -159,8 +159,10 @@ export default function LoginPage() {
                           <div className="card-footer text-center">
                             <button onClick={handleSignIn} className="btn btn-primary btn-round btn-lg btn-block">Login</button>
                           </div>
-                          <div className="card-footer text-center">
-                            <button onClick={handleGoogleSignIn} className="btn btn-primary btn-round btn-lg btn-block">Google Auth</button>
+                          <div className=" text-center">
+                            <button onClick={handleGoogleSignIn} class="btn btn-google">
+                              <i class="fab fa-google"></i> Sign in with Google
+                            </button>
                           </div>
                         </div>
                       )
