@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // core components
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
@@ -9,6 +9,7 @@ import Footer from "components/Footer/Footer.js";
 import { auth, provider } from '../../firebase'
 
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from 'react-router-dom';
 
 import { setActiveUser, selectUserEmail,setUserLogOutState, selectIsLoggedIn } from "../../features/userSlice";
 
@@ -18,6 +19,7 @@ export default function LoginPage() {
   const dispatch = useDispatch();
 
   const userEmail = useSelector(selectUserEmail)
+  const history = useHistory();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,6 +28,20 @@ export default function LoginPage() {
 
   const isLoggedIn = useSelector(selectIsLoggedIn)
   const defaultIsLoggedIn = useSelector(selectdefaultIsLoggedIn)
+
+//   useEffect(() => {
+//     const unsubscribe = auth.onAuthStateChanged(user => {
+//         console.log(user);
+//         setdefaultActiveUser({
+//           userName: user.displayName,
+//           userEmail: user.email,
+//           isLoggedIn: true
+//         })
+        
+//     })
+
+//     return unsubscribe;
+// }, [])
 
   const handleGoogleSignIn = (e) => {
     e.preventDefault();
@@ -46,10 +62,11 @@ export default function LoginPage() {
       .then(result => {
         console.log(result);
         dispatch(setdefaultActiveUser({
-          userName: username,
+          userName: result.user.displayName,
           userEmail: email,
           isLoggedIn: true
         }))
+        history.push('/account-settings');
       })
       .catch(err => console.log(err));
   }

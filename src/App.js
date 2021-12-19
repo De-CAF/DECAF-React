@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 import Index from "views/Index.js";
@@ -10,17 +10,34 @@ import LoginPage from "views/pages/loginPage.js"
 import ChatPage from "views/pages/chatPage.js"
 import AccountSettings from "views/pages/accountSettingsPage.js";
 
-import {useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
+import { auth, provider } from './firebase'
 
 import { selectUserEmail, selectIsLoggedIn } from "./features/userSlice";
 
-import { selectdefaultIsLoggedIn } from "./features/defaultAuthSlice";
+import { selectdefaultIsLoggedIn,setdefaultActiveUser, selectdefaultUserName, setdefaultUserLogOutState } from "./features/defaultAuthSlice";
+
 
 export default function App() {
 
     const userEmail = useSelector(selectUserEmail)
     const isLoggedIn = useSelector(selectIsLoggedIn)
     const defaultIsLoggedIn = useSelector(selectdefaultIsLoggedIn)
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged(user => {
+            console.log('Auth',user);
+            console.log('Current user',auth.currentUser);
+            dispatch(setdefaultActiveUser({
+                userName: user.displayName,
+                userEmail: user.email,
+                isLoggedIn: true
+              }))
+            
+        })
+        return unsubscribe;
+    }, [])
 
     const getAuth = () => {
         const status = userEmail ? (isLoggedIn ? (true):(false)):(defaultIsLoggedIn ? (true): (false));
