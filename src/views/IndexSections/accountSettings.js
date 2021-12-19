@@ -1,8 +1,14 @@
 import React from "react";
 // reactstrap components
-import { Button, Container, Row, Col, UncontrolledTooltip } from "reactstrap";
+import { Container } from "reactstrap";
+
+import { useDispatch, useSelector } from "react-redux";
+import { selectUserName } from "../../features/userSlice";
 
 export default function AccountSettings() {
+
+    const userName = useSelector(selectUserName)
+    
     return (
         <div>
             <div className="account-settings">
@@ -28,7 +34,7 @@ export default function AccountSettings() {
                                                 <a href="#pablo" className="btn btn-danger btn-round fileinput-exists btn-simple" data-dismiss="fileinput"><i className="tim-icons icon-simple-remove" /> Remove</a>
                                             </div>
                                         </div>
-                                        <h3 className="title">Charlie Bailey</h3>
+                                        <h3 className="title">{userName}</h3>
                                     </section>
                                     {/* User Information */}
                                     {/* Profile Sidebar */}
@@ -347,14 +353,6 @@ export default function AccountSettings() {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div className="row">
-                                                    <div className="col-md-3 align-self-center">
-                                                        <label className="labels">Skills</label>
-                                                    </div>
-                                                    <div className="col-md-9 align-self-center">
-                                                        <div className="bootstrap-tagsinput"><span className="tag badge badge-danger">HTML5<span data-role="remove" /></span> <span className="tag badge badge-danger">CSS3<span data-role="remove" /></span> <span className="tag badge badge-danger">JavaScript<span data-role="remove" /></span> <span className="tag badge badge-danger">React<span data-role="remove" /></span> <input type="text" placeholder /></div><input type="text" defaultValue="HTML5,CSS3,JavaScript,React" className="tagsinput" data-role="tagsinput" data-color="danger" style={{ display: 'none' }} />
                                                     </div>
                                                 </div>
                                                 <div className="row mt-4">

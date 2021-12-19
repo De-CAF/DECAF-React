@@ -124,69 +124,73 @@ export default function IndexNavbar() {
                 data-placement="bottom"
                 href="https://github.com/De-CAF/DECAF-React"
                 rel="noopener noreferrer"
-                target="_blank"
+
                 title="Star us on Twitter"
               >
                 <i className="fab fa-github" />
                 <p className="d-lg-none d-xl-none">Github</p>
               </NavLink>
             </NavItem>
-            <UncontrolledDropdown nav>
-              <DropdownToggle
-                caret
-                color="default"
-                data-toggle="dropdown"
-                href="#pablo"
-                nav
-                onClick={(e) => e.preventDefault()}
+            {
+              isLoggedIn ? (<div></div>) : (<NavItem><Button
+                className="nav-link d-none d-lg-block"
+                color="info"
+                href="/login"
               >
-                <i className="fa fa-cogs d-lg-none d-xl-none" />
-                Explore
-              </DropdownToggle>
-              <DropdownMenu className="dropdown-with-icons">
-                <DropdownItem tag={Link} to="/">
-                  <i className="tim-icons icon-image-02" />
-                  Home
-                </DropdownItem>
-                {
-                  isLoggedIn ? (<><DropdownItem tag={Link} to="/profile">
-                    <i className="tim-icons icon-single-02" />
-                    Profile
-                  </DropdownItem><DropdownItem tag={Link} to="/account-settings">
-                      <i className="tim-icons icon-single-02" />
-                      Account Settings
-                    </DropdownItem><DropdownItem tag={Link} to="/chat">
-                      <i className="tim-icons icon-email-85" />
-                      Chat
-                    </DropdownItem></>) : (<><DropdownItem tag={Link} to="/register">
-                      <i className="tim-icons icon-laptop" />
-                      Register
-                    </DropdownItem><DropdownItem tag={Link} to="/login">
-                        <i className="tim-icons icon-tablet-2" />
-                        Login
-                      </DropdownItem></>)
-                }
-              </DropdownMenu>
-            </UncontrolledDropdown>
+                <i className="tim-icons icon-single-02" /> Log in
+              </Button>
+              </NavItem>
+              )
+            }
             <NavItem>
               {
-                isLoggedIn ? (<Button
+                isLoggedIn ? (<><Button
                   className="nav-link d-none d-lg-block"
                   color="primary"
-                  target="_blank"
+
                   href="/profile"
                 >
-                  <i className="tim-icons icon-spaceship" /> Profile
-                </Button>) : (<Button
+                  <i className="tim-icons icon-badge" /> Profile
+                </Button></>) : (<Button
                   className="nav-link d-none d-lg-block"
                   color="primary"
-                  target="_blank"
+
                   href="/register"
                 >
                   <i className="tim-icons icon-spaceship" /> Lets get started
                 </Button>)
               }
             </NavItem>
+
+            {
+              isLoggedIn ? (
+                <NavItem>
+
+                  <Button
+                    className="nav-link d-none d-lg-block"
+                    color="info"
+                    href="/account-settings"
+                  >
+                    <i className="tim-icons icon-settings-gear-63" /> Settings
+                  </Button>
+                </NavItem>) : (<div></div>)
+            }
+
+
+            {
+              isLoggedIn ? (
+                <NavItem>
+
+                  <Button
+                    className="nav-link d-none d-lg-block"
+                    color="warning"
+                    href="/Chat"
+                  >
+                    <i className="tim-icons icon-chat-33" /> Chat
+                  </Button>
+                </NavItem>) : (<div></div>)
+            }
+
             <NavItem>
               <Button
                 className="nav-link d-none d-lg-block"
@@ -196,14 +200,14 @@ export default function IndexNavbar() {
                 <i className="tim-icons icon-cloud-download-93" /> Download
               </Button>
             </NavItem>
+
             {
-              isLoggedIn ?(
-              <NavItem>
-                <button onClick={handleSignOut} className="btn btn-primary btn-round btn-lg btn-block">Sign Out</button>
-              </NavItem>
+              isLoggedIn ? (
+                <NavItem>
+                  <Button color="danger" onClick={handleSignOut} className="nav-link d-none d-lg-block"><i className="tim-icons icon-user-run" />Sign Out</Button>
+                </NavItem>
               ) : (<div></div>)
             }
-
           </Nav>
         </Collapse>
       </Container >

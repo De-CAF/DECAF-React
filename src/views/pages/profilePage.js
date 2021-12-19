@@ -1,4 +1,4 @@
-/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable */
 import React from "react";
 
 // core components
@@ -9,12 +9,11 @@ import WalletCard from "views/IndexSections/WalletCard";
 import SendDocForm from "views/IndexSections/SendDocForm";
 
 import { useDispatch, useSelector } from "react-redux";
-import { selectUserEmail, selectUserName } from "../../features/userSlice";
-//import { selectdefaultUserName, selectdefaultUserEmail } from "../../features/defaultAuthSlice";
+import { selectUserName } from "../../features/userSlice";
+
 
 export default function ProfilePage() {
 
-    const userEmail = useSelector(selectUserEmail)
     const userName = useSelector(selectUserName)
 
     return (
