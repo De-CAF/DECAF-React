@@ -33,12 +33,17 @@ export default function RegisterPage() {
         auth.createUserWithEmailAndPassword(email, password)
             .then((user) => {
                 console.log('User signed up', user);
-                dispatch(setdefaultActiveUser({
-                    userName: name,
-                    userEmail: email,
-                }))
-                setShowAlert(true)
-                setShowErr(false)
+                auth.currentUser.updateProfile({
+                    displayName: name
+                })
+                .then(() => {
+                    dispatch(setdefaultActiveUser({
+                        userName: name,
+                        userEmail: email,
+                    }))
+                    setShowAlert(true)
+                    setShowErr(false)
+                })
             })
             .catch(err => {
                 console.log(err)
