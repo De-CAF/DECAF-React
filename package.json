@@ -20,6 +20,7 @@
     "bootstrap": "4.5.3",
     "chart.js": "2.9.4",
     "classnames": "2.2.6",
+    "debounce": "^1.2.1",
     "firebase": "^7.24.0",
     "firebase-tools": "^9.23.1",
     "gulp": "4.0.2",

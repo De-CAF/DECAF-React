@@ -3,45 +3,23 @@ import React, { useState, useEffect } from "react";
 
 // core components
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
-import Footer from "components/Footer/Footer.js";
+import { useHistory } from 'react-router-dom';
 
+import Footer from "components/Footer/Footer.js";
 
 import { auth, provider } from '../../firebase'
 
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from 'react-router-dom';
-
-import { setActiveUser, selectUserEmail,setUserLogOutState, selectIsLoggedIn } from "../../features/userSlice";
-
-import { setdefaultActiveUser, selectdefaultUserName, setdefaultUserLogOutState, selectdefaultIsLoggedIn } from "../../features/defaultAuthSlice";
+import { setActiveUser, setUserLogOutState, selectIsLoggedIn } from "../../features/userSlice";
 
 export default function LoginPage() {
   const dispatch = useDispatch();
-
-  const userEmail = useSelector(selectUserEmail)
   const history = useHistory();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const username = useSelector(selectdefaultUserName)
-
 
   const isLoggedIn = useSelector(selectIsLoggedIn)
-  const defaultIsLoggedIn = useSelector(selectdefaultIsLoggedIn)
-
-//   useEffect(() => {
-//     const unsubscribe = auth.onAuthStateChanged(user => {
-//         console.log(user);
-//         setdefaultActiveUser({
-//           userName: user.displayName,
-//           userEmail: user.email,
-//           isLoggedIn: true
-//         })
-        
-//     })
-
-//     return unsubscribe;
-// }, [])
 
   const handleGoogleSignIn = (e) => {
     e.preventDefault();
@@ -52,7 +30,9 @@ export default function LoginPage() {
         userEmail: result.user.email,
         isLoggedIn: true
       }))
+      history.push('/profile');
     })
+      .catch(err => console.log(err));
   }
 
   const handleSignIn = e => {
@@ -61,12 +41,12 @@ export default function LoginPage() {
     auth.signInWithEmailAndPassword(email, password)
       .then(result => {
         console.log(result);
-        dispatch(setdefaultActiveUser({
+        dispatch(setActiveUser({
           userName: result.user.displayName,
           userEmail: email,
           isLoggedIn: true
         }))
-        history.push('/account-settings');
+        history.push('/profile');
       })
       .catch(err => console.log(err));
   }
@@ -77,11 +57,6 @@ export default function LoginPage() {
     }).catch((err) => alert(err.message))
   }
 
-  const handledefaultSignOut = () => {
-    auth.signOut().then(() => {
-      dispatch(setdefaultUserLogOutState())
-    }).catch((err) => alert(err.message))
-  }
 
   const [squares1to6, setSquares1to6] = React.useState("");
   const [squares7and8, setSquares7and8] = React.useState("");
@@ -89,7 +64,7 @@ export default function LoginPage() {
   const [emailFocus, setEmailFocus] = React.useState(false);
   const [passwordFocus, setPasswordFocus] = React.useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     document.body.classList.toggle("register-page");
     document.documentElement.addEventListener("mousemove", followCursor);
     // Specify how to clean up after this effect:
@@ -116,6 +91,7 @@ export default function LoginPage() {
       "deg)"
     );
   };
+
   return (
     <>
       <IndexNavbar />
@@ -158,48 +134,25 @@ export default function LoginPage() {
                     </div>
 
                     {
-                      userEmail ? (
-                        isLoggedIn ? (
-                          <div className="card-footer text-center">
-                            <button onClick={handleSignOut} className="btn btn-primary btn-round btn-lg btn-block">Sign Out</button>
-                          </div>
-                        ) : (
-                          <div>
-                            <div className="card-footer text-center">
-                              <button onClick={handleSignIn} className="btn btn-primary btn-round btn-lg btn-block">Login</button>
-                            </div>
-                            <div className="card-footer text-center">
-                              OR
-                            </div>
-                            <div className="card-footer text-center">
-                              <button onClick={handleGoogleSignIn} class="btn btn-google">
-                                <i class="fab fa-google"></i> Sign in with Google
-                              </button>
-                            </div>
-                          </div>
-                        )
+                      isLoggedIn ? (
+                        <div className="card-footer text-center">
+                          <button onClick={handleSignOut} className="btn btn-primary btn-round btn-lg btn-block">Sign Out</button>
+                        </div>
                       ) : (
-                        defaultIsLoggedIn ? (
+                        <div>
                           <div className="card-footer text-center">
-                            <button onClick={handledefaultSignOut} className="btn btn-primary btn-round btn-lg btn-block">Sign Out</button>
+                            <button onClick={handleSignIn} className="btn btn-primary btn-round btn-lg btn-block">Login</button>
                           </div>
-                        ) : (
-                          <div>
-                            <div className="card-footer text-center">
-                              <button onClick={handleSignIn} className="btn btn-primary btn-round btn-lg btn-block">Login</button>
-                            </div>
-                            <div className="card-footer text-center">
-                              OR
-                            </div>
-                            <div className="card-footer text-center">
-                              <button onClick={handleGoogleSignIn} class="btn btn-google">
-                                <i class="fab fa-google"></i> Sign in with Google
-                              </button>
-                            </div>
+                          <div className="card-footer text-center">
+                            OR
                           </div>
-                        )
+                          <div className="card-footer text-center">
+                            <button onClick={handleGoogleSignIn} class="btn btn-google">
+                              <i class="fab fa-google"></i> Sign in with Google
+                            </button>
+                          </div>
+                        </div>
                       )
-
                     }
                     <div className="pull-left ml-3 mb-3">
                       <h6>

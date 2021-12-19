@@ -20,10 +20,10 @@ import {
   UncontrolledTooltip,
 } from "reactstrap";
 
-import { auth, provider } from '../../firebase'
+import { auth } from '../../firebase'
 import { useDispatch, useSelector } from "react-redux";
 import { selectIsLoggedIn, selectUserEmail, setUserLogOutState } from "../../features/userSlice";
-import { selectdefaultIsLoggedIn, setdefaultUserLogOutState } from "../../features/defaultAuthSlice";
+//import { selectdefaultIsLoggedIn, setdefaultUserLogOutState } from "../../features/defaultAuthSlice";
 
 export default function IndexNavbar() {
   const dispatch = useDispatch();
@@ -33,7 +33,7 @@ export default function IndexNavbar() {
 
   const userEmail = useSelector(selectUserEmail)
   const isLoggedIn = useSelector(selectIsLoggedIn)
-  const defaultIsLoggedIn = useSelector(selectdefaultIsLoggedIn)
+  //const defaultIsLoggedIn = useSelector(selectdefaultIsLoggedIn)
 
   const handleSignOut = () => {
     auth.signOut().then(() => {
@@ -41,11 +41,6 @@ export default function IndexNavbar() {
     }).catch((err) => alert(err.message))
   }
 
-  const handledefaultSignOut = () => {
-    auth.signOut().then(() => {
-      dispatch(setdefaultUserLogOutState())
-    }).catch((err) => alert(err.message))
-  }
 
   React.useEffect(() => {
     window.addEventListener("scroll", changeColor);
@@ -76,11 +71,7 @@ export default function IndexNavbar() {
   const onCollapseExited = () => {
     setCollapseOut("");
   };
-  const scrollToDownload = () => {
-    document
-      .getElementById("download-section")
-      .scrollIntoView({ behavior: "smooth" });
-  };
+
   return (
     <Navbar className={"fixed-top " + color} color-on-scroll="100" expand="lg">
       <Container>
@@ -158,7 +149,7 @@ export default function IndexNavbar() {
                   Home
                 </DropdownItem>
                 {
-                  userEmail ? (isLoggedIn ? (<><DropdownItem tag={Link} to="/profile">
+                  isLoggedIn ? (<><DropdownItem tag={Link} to="/profile">
                     <i className="tim-icons icon-single-02" />
                     Profile
                   </DropdownItem><DropdownItem tag={Link} to="/account-settings">
@@ -173,28 +164,13 @@ export default function IndexNavbar() {
                     </DropdownItem><DropdownItem tag={Link} to="/login">
                         <i className="tim-icons icon-tablet-2" />
                         Login
-                      </DropdownItem></>)) : (defaultIsLoggedIn ? (<><DropdownItem tag={Link} to="/profile">
-                        <i className="tim-icons icon-single-02" />
-                        Profile
-                      </DropdownItem><DropdownItem tag={Link} to="/account-settings">
-                          <i className="tim-icons icon-single-02" />
-                          Account Settings
-                        </DropdownItem><DropdownItem tag={Link} to="/chat">
-                          <i className="tim-icons icon-email-85" />
-                          Chat
-                        </DropdownItem></>) : (<><DropdownItem tag={Link} to="/register">
-                          <i className="tim-icons icon-laptop" />
-                          Register
-                        </DropdownItem><DropdownItem tag={Link} to="/login">
-                            <i className="tim-icons icon-tablet-2" />
-                            Login
-                          </DropdownItem></>))
+                      </DropdownItem></>)
                 }
               </DropdownMenu>
             </UncontrolledDropdown>
             <NavItem>
               {
-                userEmail ? (isLoggedIn ? (<Button
+                isLoggedIn ? (<Button
                   className="nav-link d-none d-lg-block"
                   color="primary"
                   target="_blank"
@@ -208,21 +184,7 @@ export default function IndexNavbar() {
                   href="/register"
                 >
                   <i className="tim-icons icon-spaceship" /> Lets get started
-                </Button>)) : (defaultIsLoggedIn ? (<Button
-                  className="nav-link d-none d-lg-block"
-                  color="primary"
-                  target="_blank"
-                  href="/profile"
-                >
-                  <i className="tim-icons icon-spaceship" /> Profile
-                </Button>) : (<Button
-                  className="nav-link d-none d-lg-block"
-                  color="primary"
-                  target="_blank"
-                  href="/register"
-                >
-                  <i className="tim-icons icon-spaceship" /> Lets get started
-                </Button>))
+                </Button>)
               }
             </NavItem>
             <NavItem>
@@ -235,19 +197,15 @@ export default function IndexNavbar() {
               </Button>
             </NavItem>
             {
-              userEmail ? (<NavItem>
-                <button onClick = { handleSignOut } className = "btn btn-primary btn-round btn-lg btn-block">Sign Out</button>
-        </NavItem>): (
-        
-        defaultIsLoggedIn ? (
-
-        <NavItem>
-                <button onClick = { handledefaultSignOut } className = "btn btn-primary btn-round btn-lg btn-block">Sign Out</button>
-        </NavItem>): (<div></div>)) 
+              isLoggedIn ?(
+              <NavItem>
+                <button onClick={handleSignOut} className="btn btn-primary btn-round btn-lg btn-block">Sign Out</button>
+              </NavItem>
+              ) : (<div></div>)
             }
 
-      </Nav>
-    </Collapse>
+          </Nav>
+        </Collapse>
       </Container >
     </Navbar >
   );

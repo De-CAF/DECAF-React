@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React from "react";
 
 // core components
@@ -7,7 +8,15 @@ import TransactionTable from "views/IndexSections/TransactionTable";
 import WalletCard from "views/IndexSections/WalletCard";
 import SendDocForm from "views/IndexSections/SendDocForm";
 
+import { useDispatch, useSelector } from "react-redux";
+import { selectUserEmail, selectUserName } from "../../features/userSlice";
+//import { selectdefaultUserName, selectdefaultUserEmail } from "../../features/defaultAuthSlice";
+
 export default function ProfilePage() {
+
+    const userEmail = useSelector(selectUserEmail)
+    const userName = useSelector(selectUserName)
+
     return (
         <>
             <IndexNavbar />
@@ -19,7 +28,9 @@ export default function ProfilePage() {
                         <div className="container align-items-center">
                             <div className="row">
                                 <div className="col-lg-6 col-md-6">
-                                    <h1 className="profile-title text-left">Nandita Kadam</h1>
+
+                                    {<h1 className="profile-title text-left">{userName}</h1>}
+
                                     <h5 className="text-on-back">01</h5>
                                     <p className="profile-description">Final year computer engineering undergrad.</p>
                                     <div className="btn-wrapper profile pt-3">
@@ -29,8 +40,8 @@ export default function ProfilePage() {
                                         <a target="_blank" href="https://www.facebook.com/creativetim" className="btn btn-icon btn-facebook btn-round" data-toggle="tooltip" data-original-title="Like us">
                                             <i className="fab fa-facebook-square" />
                                         </a>
-                                        <a target="_blank" href="https://dribbble.com/creativetim" className="btn btn-icon btn-dribbble  btn-round" data-toggle="tooltip" data-original-title="Follow us">
-                                            <i className="fab fa-dribbble" />
+                                        <a target="_blank" href="/account-settings" className="btn btn-icon btn-dribbble  btn-round" data-toggle="tooltip" data-original-title="Account Settings">
+                                            <i className="fa fa-cog" />
                                         </a>
                                     </div>
                                 </div>

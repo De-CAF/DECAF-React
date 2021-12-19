@@ -1,10 +1,12 @@
-import {configureStore} from '@reduxjs/toolkit';
-
+import { configureStore } from '@reduxjs/toolkit';
 import userReducer from '../features/userSlice';
-import defaultAuthReducer from '../features/defaultAuthSlice'
-export default configureStore({
-    reducer:{
+import { loadState } from './browser-storage';
+const store = configureStore({
+    devTools: true,
+    reducer: {
         user: userReducer,
-        defaultUser: defaultAuthReducer
-    }
+    },
+    preloadedState: loadState()
 })
+
+export default store

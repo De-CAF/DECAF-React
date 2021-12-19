@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+/*import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
     userName: null,
@@ -29,4 +29,4 @@ export const selectdefaultUserName = state => state.defaultUser.userName
 export const selectdefaultUserEmail = state => state.defaultUser.userEmail
 export const selectdefaultIsLoggedIn = state => state.defaultUser.isLoggedIn
 
-export default defaultAuthSlice.reducer
+export default defaultAuthSlice.reducer*/
