@@ -3,16 +3,25 @@ import React, { useState } from "react";
 import { Container } from "reactstrap";
 
 import { useDispatch, useSelector } from "react-redux";
-import { selectProfilePicLink, selectUserName, setProfilePicLink, selectUserEmail } from "../../features/userSlice";
+import { selectProfilePicLink, selectUserName, setProfilePicLink, selectUserEmail, setAdditionalInformation, selectLastName, selectGender, selectBirthDate, selectLocation, selectPhone } from "../../features/userSlice";
 import { auth, storage } from "../../firebase"
 
 export default function AccountSettings() {
     const dispatch = useDispatch();
     const userName = useSelector(selectUserName)
+    const lastName = useSelector(selectLastName)
+    const gender = useSelector(selectGender)
+    const birthDate = useSelector(selectBirthDate)
+    const location = useSelector(selectLocation)
+    const phone = useSelector(selectPhone)
     const email = useSelector(selectUserEmail)
     const profilePicLink = useSelector(selectProfilePicLink)
 
     const [imageAsFile, setImageAsFile] = useState('')
+
+    const [profileCompletion, setProfileCompletion]= useState(0)
+    const [counter, setCounter]=useState(0)
+
 
 
     const handleImageAsFile = (e) => {
