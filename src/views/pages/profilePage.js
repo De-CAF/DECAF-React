@@ -9,12 +9,13 @@ import WalletCard from "views/IndexSections/WalletCard";
 import SendDocForm from "views/IndexSections/SendDocForm";
 
 import { useDispatch, useSelector } from "react-redux";
-import { selectUserName } from "../../features/userSlice";
+import { selectUserName, selectProfilePicLink } from "../../features/userSlice";
 
 
 export default function ProfilePage() {
 
     const userName = useSelector(selectUserName)
+    const profilePicLink = useSelector(selectProfilePicLink)
 
     return (
         <>

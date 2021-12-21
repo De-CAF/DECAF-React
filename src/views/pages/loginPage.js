@@ -28,7 +28,8 @@ export default function LoginPage() {
       dispatch(setActiveUser({
         userName: result.user.displayName,
         userEmail: result.user.email,
-        isLoggedIn: true
+        isLoggedIn: true,
+        profilePicLink: result.user.photoURL
       }))
       history.push('/profile');
     })
@@ -44,7 +45,8 @@ export default function LoginPage() {
         dispatch(setActiveUser({
           userName: result.user.displayName,
           userEmail: email,
-          isLoggedIn: true
+          isLoggedIn: true,
+          profilePicLink: result.user.photoURL
         }))
         history.push('/profile');
       })

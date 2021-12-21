@@ -1,14 +1,50 @@
-import React from "react";
+import React, { useState } from "react";
 // reactstrap components
 import { Container } from "reactstrap";
 
 import { useDispatch, useSelector } from "react-redux";
-import { selectUserName } from "../../features/userSlice";
+import { selectProfilePicLink, selectUserName, setProfilePicLink } from "../../features/userSlice";
+import { auth, storage } from "../../firebase"
 
 export default function AccountSettings() {
-
+    const dispatch = useDispatch();
     const userName = useSelector(selectUserName)
-    
+    const profilePicLink = useSelector(selectProfilePicLink)
+
+    const [imageAsFile, setImageAsFile] = useState('')
+
+
+    const handleImageAsFile = (e) => {
+        console.log(e)
+        setImageAsFile(e.target.files[0])
+    }
+
+    const handleFireBaseUpload = e => {
+        e.preventDefault()
+        console.log('start of upload')
+        if (imageAsFile === '') {
+            console.error(`not an image, the image file is a ${typeof (imageAsFile)}`)
+        }
+        const uploadTask = storage.ref(`/images/${auth.currentUser.uid}`).put(imageAsFile)
+        uploadTask.on('state_changed',
+            (snapShot) => {
+                console.log(snapShot)
+            }, (err) => {
+                console.log(err)
+            }, () => {
+                storage.ref('images').child(auth.currentUser.uid).getDownloadURL()
+                    .then(fireBaseUrl => {
+                        auth.currentUser.updateProfile({
+                            photoURL: fireBaseUrl
+                        }).then(() => {
+                            dispatch(setProfilePicLink({
+                                profilePicLink: fireBaseUrl
+                            }))
+                        })
+                    })
+            })
+    }
+
     return (
         <div>
             <div className="account-settings">
@@ -19,20 +55,19 @@ export default function AccountSettings() {
                                 <div className="section">
                                     {/* User Information */}
                                     <section className="text-center">
-                                        <div className="fileinput fileinput-new text-center" data-provides="fileinput">
-                                            <div className="fileinput-new thumbnail img-circle img-raised">
-                                                <img src="/img/placeholder.jpg" alt="..." />
-                                            </div>
-                                            <div className="fileinput-preview fileinput-exists thumbnail img-circle img-raised" />
-                                            <div>
-                                                <span className="btn btn-raised btn-round btn-default btn-file">
-                                                    <span className="fileinput-new">Add Photo</span>
-                                                    <span className="fileinput-exists">Change</span>
-                                                    <input type="file" name="..." />
-                                                </span>
-                                                <br />
-                                                <a href="#pablo" className="btn btn-danger btn-round fileinput-exists btn-simple" data-dismiss="fileinput"><i className="tim-icons icon-simple-remove" /> Remove</a>
-                                            </div>
+                                        <div className="text-center">
+
+                                            {
+                                                profilePicLink ? (<><div className="fileinput-new thumbnail img-circle img-raised">
+                                                    <img src={profilePicLink} className="img-center img-fluid rounded-circle" alt="..." />
+                                                </div><input type="file" onChange={handleImageAsFile} /><button onClick={handleFireBaseUpload} className="btn btn-default btn-round btn-lg btn-block">Edit</button></>) : 
+                                                (<><div className="fileinput-new thumbnail img-circle img-raised">
+                                                    <img src="/img/placeholder.jpg" alt="..."  />
+                                                </div><br />
+
+                                                    <input type="file" onChange={handleImageAsFile} />
+                                                    <button onClick={handleFireBaseUpload} className="btn btn-warning btn-round btn-lg btn-block">Upload</button></>)
+                                            }
                                         </div>
                                         <h3 className="title">{userName}</h3>
                                     </section>
@@ -637,8 +672,8 @@ export default function AccountSettings() {
                             </div>
                         </div>
                     </Container>
-                </div>
-            </div>&gt;
-        </div>
+                </div >
+            </div >& gt;
+        </div >
     );
 }
