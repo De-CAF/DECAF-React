@@ -3,12 +3,13 @@ import React, { useState } from "react";
 import { Container } from "reactstrap";
 
 import { useDispatch, useSelector } from "react-redux";
-import { selectProfilePicLink, selectUserName, setProfilePicLink } from "../../features/userSlice";
+import { selectProfilePicLink, selectUserName, setProfilePicLink, selectUserEmail } from "../../features/userSlice";
 import { auth, storage } from "../../firebase"
 
 export default function AccountSettings() {
     const dispatch = useDispatch();
     const userName = useSelector(selectUserName)
+    const email = useSelector(selectUserEmail)
     const profilePicLink = useSelector(selectProfilePicLink)
 
     const [imageAsFile, setImageAsFile] = useState('')
@@ -60,13 +61,13 @@ export default function AccountSettings() {
                                             {
                                                 profilePicLink ? (<><div className="fileinput-new thumbnail img-circle img-raised">
                                                     <img src={profilePicLink} className="img-center img-fluid rounded-circle" alt="..." />
-                                                </div><input type="file" onChange={handleImageAsFile} /><button onClick={handleFireBaseUpload} className="btn btn-default btn-round btn-lg btn-block">Edit</button></>) : 
-                                                (<><div className="fileinput-new thumbnail img-circle img-raised">
-                                                    <img src="/img/placeholder.jpg" alt="..."  />
-                                                </div><br />
+                                                </div><input type="file" onChange={handleImageAsFile} /><button onClick={handleFireBaseUpload} className="btn btn-default btn-round btn-lg btn-block">Edit</button></>) :
+                                                    (<><div className="fileinput-new thumbnail img-circle img-raised">
+                                                        <img src="/img/placeholder.jpg" alt="..." />
+                                                    </div><br />
 
-                                                    <input type="file" onChange={handleImageAsFile} />
-                                                    <button onClick={handleFireBaseUpload} className="btn btn-warning btn-round btn-lg btn-block">Upload</button></>)
+                                                        <input type="file" onChange={handleImageAsFile} />
+                                                        <button onClick={handleFireBaseUpload} className="btn btn-warning btn-round btn-lg btn-block">Upload</button></>)
                                             }
                                         </div>
                                         <h3 className="title">{userName}</h3>
@@ -135,7 +136,7 @@ export default function AccountSettings() {
                                                     </div>
                                                     <div className="col-md-9 align-self-center">
                                                         <div className="form-group">
-                                                            <input id="firstName" name="firstName" className="form-control" type="text" defaultValue="Charlie" required="required" />
+                                                            <input id="firstName" name="firstName" className="form-control" type="text" defaultValue={userName} required="required" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -145,7 +146,7 @@ export default function AccountSettings() {
                                                     </div>
                                                     <div className="col-md-9 align-self-center">
                                                         <div className="form-group">
-                                                            <input id="lastName" name="lastName" className="form-control" type="text" defaultValue="Bailey" required="required" />
+                                                            <input id="lastName" name="lastName" className="form-control" type="text" defaultValue="" required="required" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -184,21 +185,23 @@ export default function AccountSettings() {
                                                         <div className="row">
                                                             <div className="col-md-4 align-self-center">
                                                                 <div className="form-group">
-                                                                    <div className="dropdown bootstrap-select"><select className="selectpicker" data-size={7} data-style="btn btn-primary" title="Single Select" tabIndex={-98}>
-                                                                        <option className="bs-title-option" value />
-                                                                        <option>January</option>
-                                                                        <option>February</option>
-                                                                        <option>March</option>
-                                                                        <option selected="selected">April</option>
-                                                                        <option>May</option>
-                                                                        <option>June</option>
-                                                                        <option>July</option>
-                                                                        <option>August</option>
-                                                                        <option>September</option>
-                                                                        <option>October</option>
-                                                                        <option>November</option>
-                                                                        <option>December</option>
-                                                                    </select><button type="button" className="dropdown-toggle btn btn-primary" data-toggle="dropdown" role="button" title="April">
+                                                                    <div className="dropdown bootstrap-select">
+                                                                            <select className="selectpicker" data-size={7} data-style="btn btn-primary" title="Single Select" tabIndex={-98}>
+                                                                            <option className="bs-title-option" value />
+                                                                            <option>None</option>
+                                                                            <option>January</option>
+                                                                            <option>February</option>
+                                                                            <option>March</option>
+                                                                            <option selected="selected">April</option>
+                                                                            <option>May</option>
+                                                                            <option>June</option>
+                                                                            <option>July</option>
+                                                                            <option>August</option>
+                                                                            <option>September</option>
+                                                                            <option>October</option>
+                                                                            <option>November</option>
+                                                                            <option>December</option>
+                                                                        </select><button type="button" className="dropdown-toggle btn btn-primary" data-toggle="dropdown" role="button" title="April">
                                                                             <div className="filter-option">
                                                                                 <div className="filter-option-inner">
                                                                                     <div className="filter-option-inner-inner">April
@@ -218,6 +221,7 @@ export default function AccountSettings() {
                                                                 <div className="form-group">
                                                                     <div className="dropdown bootstrap-select"><select className="selectpicker" data-size={7} data-style="btn btn-primary" title="Single Select" tabIndex={-98}>
                                                                         <option className="bs-title-option" value />
+                                                                        <option>0</option>
                                                                         <option>1</option>
                                                                         <option>2</option>
                                                                         <option>3</option>
@@ -268,20 +272,7 @@ export default function AccountSettings() {
                                                                 <div className="form-group">
                                                                     <div className="dropdown bootstrap-select"><select className="selectpicker" data-size={7} data-style="btn btn-primary" title="Single Select" tabIndex={-98}>
                                                                         <option className="bs-title-option" value />
-                                                                        <option>1986</option>
-                                                                        <option>1987</option>
-                                                                        <option>1988</option>
-                                                                        <option selected="selected">1989</option>
-                                                                        <option>1990</option>
-                                                                        <option>1991</option>
-                                                                        <option>1992</option>
-                                                                        <option>1993</option>
-                                                                        <option>1994</option>
-                                                                        <option>1995</option>
-                                                                        <option>1996</option>
-                                                                        <option>1997</option>
-                                                                        <option>1998</option>
-                                                                        <option>1999</option>
+                                                                        <option>0</option>
                                                                         <option>2000</option>
                                                                         <option>2001</option>
                                                                         <option>2002</option>
@@ -302,10 +293,12 @@ export default function AccountSettings() {
                                                                         <option>2017</option>
                                                                         <option>2018</option>
                                                                         <option>2019</option>
+                                                                        <option>2020</option>
+                                                                        <option selected="selected">2021</option>
                                                                     </select><button type="button" className="dropdown-toggle btn btn-primary" data-toggle="dropdown" role="button" title={1989}>
                                                                             <div className="filter-option">
                                                                                 <div className="filter-option-inner">
-                                                                                    <div className="filter-option-inner-inner">1989
+                                                                                    <div className="filter-option-inner-inner">2021
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -327,17 +320,7 @@ export default function AccountSettings() {
                                                     </div>
                                                     <div className="col-md-9 align-self-center">
                                                         <div className="form-group">
-                                                            <input id="email" name="email" className="form-control" type="email" defaultValue="charlie.bailey@example.com" required="required" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="row">
-                                                    <div className="col-md-3 align-self-center">
-                                                        <label className="labels" htmlFor="#confirmEmail">Confirm Email</label>
-                                                    </div>
-                                                    <div className="col-md-9 align-self-center">
-                                                        <div className="form-group">
-                                                            <input id="confirmEmail" name="confirmEmail" className="form-control" type="email" defaultValue="charlie.bailey@example.com" required="required" />
+                                                            <input disabled id="email" name="email" className="form-control" type="email" defaultValue={email} required="required" />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -361,35 +344,7 @@ export default function AccountSettings() {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="row">
-                                                    <div className="col-md-3 align-self-center">
-                                                        <label className="labels">Language</label>
-                                                    </div>
-                                                    <div className="col-md-4 align-self-center">
-                                                        <div className="form-group">
-                                                            <div className="dropdown bootstrap-select"><select className="selectpicker" data-size={7} data-style="btn btn-primary" title="Single Select" tabIndex={-98}>
-                                                                <option className="bs-title-option" value />
-                                                                <option selected>English</option>
-                                                                <option value={2}>French</option>
-                                                                <option value={3}>Spanish</option>
-                                                                <option value={4}>Deutsche</option>
-                                                                <option value={4}>Russian</option>
-                                                            </select><button type="button" className="dropdown-toggle btn btn-primary" data-toggle="dropdown" role="button" title="English">
-                                                                    <div className="filter-option">
-                                                                        <div className="filter-option-inner">
-                                                                            <div className="filter-option-inner-inner">English</div>
-                                                                        </div>
-                                                                    </div>
-                                                                </button>
-                                                                <div className="dropdown-menu " role="combobox">
-                                                                    <div className="inner show" role="listbox" aria-expanded="false" tabIndex={-1}>
-                                                                        <ul className="dropdown-menu inner show" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+
                                                 <div className="row mt-4">
                                                     <div className="col-md-6">
                                                         <button className="btn btn-primary" type="submit">Save Changes</button>
