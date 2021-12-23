@@ -1,16 +1,17 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
 
+import { useDispatch, useSelector } from "react-redux";
 import { selectUserName, selectProfilePicLink } from "../../features/userSlice";
 
 export default function WalletCard() {
+    const userName = useSelector(selectUserName)
     const profilePicLink = useSelector(selectProfilePicLink)
     return (
         <div className="col-lg-4 col-md-6 ml-auto mr-auto">
             <div className="card card-coin card-plain">
                 <div className="card-header">
                     <img src={profilePicLink} className="img-center img-fluid rounded-circle" />
-                    <h4 className="title">My Wallet</h4>
+                    <h4 className="title">{userName}'s Wallet</h4>
                 </div>
                 <div className="card-body">
                     <ul className="nav nav-tabs nav-tabs-primary justify-content-center">

@@ -3,13 +3,13 @@ import React, { useState, useEffect } from "react";
 import { Container, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Input, Alert } from "reactstrap";
 
 import { useDispatch, useSelector } from "react-redux";
-import { selectProfilePicLink, selectUserName, setProfilePicLink, selectUserEmail, setAdditionalInformation, selectGender, selectBirthDate, selectLocation, selectPhone, selectUserBio } from "../../features/userSlice";
+import { selectProfilePicLink, selectUserName, setProfilePicLink, selectUserEmail, setAdditionalInformation, selectGender, selectBirthDate, selectLocation, selectPhone, selectUserBio, selectRole } from "../../features/userSlice";
 import { auth, storage, firestore } from "../../firebase"
 
 export default function AccountSettings() {
     const dispatch = useDispatch();
     const userName = useSelector(selectUserName)
-    // const  = useSelector(selectLastName)
+    const role = useSelector(selectRole)
     const gender = useSelector(selectGender)
     const birthDate = useSelector(selectBirthDate)
     const location = useSelector(selectLocation)
@@ -20,21 +20,20 @@ export default function AccountSettings() {
 
     const counterFunc = () => {
         let count = 0;
-            if(userName) count++;
-            if(gender) count++;
-            if(userBio) count++;
-            if(birthDate) count++;
-            if(email) count++;
-            if(location) count++;
-            if(phone) count++;
-            return count;
+        if (userName) count++;
+        if (gender) count++;
+        if (userBio) count++;
+        if (birthDate) count++;
+        if (email) count++;
+        if (location) count++;
+        if (phone) count++;
+        return count;
     }
 
     const [imageAsFile, setImageAsFile] = useState('')
-
     const [profileCompletion, setProfileCompletion] = useState(0)
     const [counter, setCounter] = useState(counterFunc())
-    const [submitting,setSubmitting] = useState(false)
+    const [submitting, setSubmitting] = useState(false)
     const [genderDropdown, setGenderDropdown] = useState(false)
     const [showAlert, setShowAlert] = useState(false);
 
@@ -42,12 +41,13 @@ export default function AccountSettings() {
 
 
     useEffect(() => {
-            
-            let count = counterFunc();
-            setCounter(count)
-            setProfileCompletion((counter / 7) * 100)
-            console.log('After state change',counter)
-    },[submitting])
+
+        let count = counterFunc();
+        setCounter(count)
+        role ? (setProfileCompletion((counter / 5) * 100)) : (setProfileCompletion((counter / 7) * 100))
+        
+        console.log('After state change', counter)
+    }, [submitting])
 
     const handleImageAsFile = (e) => {
         console.log(e)
@@ -85,14 +85,14 @@ export default function AccountSettings() {
         setSubmitting(true)
         setShowAlert(false)
         console.log(auth.currentUser.uid)
-        
+
         firestore.collection('users').doc(auth.currentUser.uid).update({
             userName, gender, birthDate, location, phone, profileCompletion, userBio
         }).then(() => {
             console.log('Profile has been updated')
             setShowAlert(true)
             setSubmitting(false)
-            dispatch(setAdditionalInformation({userBio: userBio, profileCompletion: profileCompletion, gender: gender, birthDate: birthDate, location: location, phone: phone}))
+            dispatch(setAdditionalInformation({ userBio: userBio, profileCompletion: profileCompletion, gender: gender, birthDate: birthDate, location: location, phone: phone }))
         })
             .catch(err => console.log(err))
     }
@@ -114,7 +114,7 @@ export default function AccountSettings() {
                                                     <img src={profilePicLink} className="img-center img-fluid rounded-circle" alt="..." />
                                                 </div><input type="file" onChange={handleImageAsFile} /><button onClick={handleFireBaseUpload} className="btn btn-default btn-round btn-lg btn-block">Edit</button></>) :
                                                     (<><div className="fileinput-new thumbnail img-circle img-raised">
-                                                        <img src="/img/placeholder.jpg" alt="..." />
+                                                        <img src="/img/placeholder.jpg" alt="Logo/Profile Picture" />
                                                     </div><br />
 
                                                         <input type="file" onChange={handleImageAsFile} />
@@ -134,13 +134,14 @@ export default function AccountSettings() {
                                                 </a>
                                             </li>
                                             <hr className="line-primary" />
-                                            {/*
+
                                             <li className="nav-item">
                                                 <a className="nav-link" data-toggle="tab" href="#link2" role="tablist">
-                                                    <i className="tim-icons icon-credit-card" /> Billing
+                                                    <i className="tim-icons icon-credit-card" /> Transactions
                                                 </a>
                                             </li>
                                             <hr className="line-primary" />
+                                            {/*
                                             <li className="nav-item">
                                                 <a className="nav-link" data-toggle="tab" href="#link3" role="tablist">
                                                     <i className="tim-icons icon-lock-circle" /> Security
@@ -164,7 +165,7 @@ export default function AccountSettings() {
                                         <div className="progress-container progress-primary">
                                             <span className="progress-badge">Profile Completion</span>
                                             <div className="progress">
-                                                <div className="progress-bar progress-bar-warning" role="progressbar" aria-valuenow={profileCompletion} aria-valuemin={0} aria-valuemax={100} style={{ width:  profileCompletion + '%'  }}>
+                                                <div className="progress-bar progress-bar-warning" role="progressbar" aria-valuenow={profileCompletion} aria-valuemin={0} aria-valuemax={100} style={{ width: profileCompletion + '%' }}>
                                                     <span className="progress-value">{profileCompletion}%</span>
                                                 </div>
                                             </div>
@@ -185,7 +186,7 @@ export default function AccountSettings() {
                                                 <br />
                                                 <div className="row">
                                                     <div className="col-md-3 align-self-center">
-                                                        <label className="labels" htmlFor="#firstName">User Name</label>
+                                                        <label className="labels" htmlFor="#firstName">{role ? ("Instituition's user") : ("User Name")} </label>
                                                     </div>
                                                     <div className="col-md-9 align-self-center">
                                                         <div className="form-group">
@@ -203,51 +204,60 @@ export default function AccountSettings() {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="row">
-                                                    <div className="col-md-3 align-self-center">
-                                                        <label className="labels">I'm</label>
-                                                    </div>
-                                                    <div className="col-md-9 align-self-center">
-                                                        <Dropdown toggle={() => {
-                                                            setGenderDropdown(!genderDropdown)
-                                                        }} isOpen={genderDropdown}   >
-                                                            <DropdownToggle caret >
-                                                                {gender ? gender : "Gender"}
-                                                            </DropdownToggle>
-                                                            <DropdownMenu  >
-                                                                <DropdownItem onClick={() => {
-                                                                    dispatch(setAdditionalInformation({ gender: "Male", birthDate: birthDate, location: location, phone: phone, userBio: userBio, profileCompletion: profileCompletion }))
-                                                                }}   >
-                                                                    Male
-                                                                </DropdownItem>
-                                                                <DropdownItem onClick={() => {
-                                                                    dispatch(setAdditionalInformation({ gender: "Female", birthDate: birthDate, location: location, phone: phone, userBio: userBio, profileCompletion: profileCompletion }))
-                                                                }}>
-                                                                    Female
-                                                                </DropdownItem>
-                                                            </DropdownMenu>
+                                                {
+                                                    role ? (
+                                                        <div></div>
+                                                    ) : (
+                                                        <>
 
-                                                        </Dropdown>
-                                                    </div>
+                                                            <div className="row">
+                                                                <div className="col-md-3 align-self-center">
+                                                                    <label className="labels">I'm</label>
+                                                                </div>
+                                                                <div className="col-md-9 align-self-center">
+                                                                    <Dropdown toggle={() => {
+                                                                        setGenderDropdown(!genderDropdown)
+                                                                    }} isOpen={genderDropdown}   >
+                                                                        <DropdownToggle caret >
+                                                                            {gender ? gender : "Gender"}
+                                                                        </DropdownToggle>
+                                                                        <DropdownMenu  >
+                                                                            <DropdownItem onClick={() => {
+                                                                                dispatch(setAdditionalInformation({ gender: "Male", birthDate: birthDate, location: location, phone: phone, userBio: userBio, profileCompletion: profileCompletion }))
+                                                                            }}   >
+                                                                                Male
+                                                                            </DropdownItem>
+                                                                            <DropdownItem onClick={() => {
+                                                                                dispatch(setAdditionalInformation({ gender: "Female", birthDate: birthDate, location: location, phone: phone, userBio: userBio, profileCompletion: profileCompletion }))
+                                                                            }}>
+                                                                                Female
+                                                                            </DropdownItem>
+                                                                        </DropdownMenu>
+
+                                                                    </Dropdown>
+                                                                </div>
 
 
-                                                </div>
-                                                <div className="row">
-                                                    <div className="col-md-3 align-self-center">
-                                                        <label className="labels">Birth Date</label>
-                                                    </div>
-                                                    <div className="col-md-9 align-self-center">
-                                                        <Input
-                                                            id="exampleDate"
-                                                            name="date"
-                                                            placeholder="date placeholder"
-                                                            type="date"
-                                                            value={birthDate}
-                                                            onChange={e => dispatch(setAdditionalInformation({ birthDate: e.target.value, gender: gender, location: location, phone: phone, userBio: userBio, profileCompletion: profileCompletion }))}
-                                                        />
-                                                    </div>
+                                                            </div>
+                                                            <div className="row">
+                                                                <div className="col-md-3 align-self-center">
+                                                                    <label className="labels">Birth Date</label>
+                                                                </div>
+                                                                <div className="col-md-9 align-self-center">
+                                                                    <Input
+                                                                        id="exampleDate"
+                                                                        name="date"
+                                                                        placeholder="date placeholder"
+                                                                        type="date"
+                                                                        value={birthDate}
+                                                                        onChange={e => dispatch(setAdditionalInformation({ birthDate: e.target.value, gender: gender, location: location, phone: phone, userBio: userBio, profileCompletion: profileCompletion }))}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </>
+                                                    )
+                                                }
 
-                                                </div>
 
                                                 <div className="row">
                                                     <div className="col-md-3 align-self-center">
@@ -261,7 +271,7 @@ export default function AccountSettings() {
                                                 </div>
                                                 <div className="row">
                                                     <div className="col-md-3 align-self-center">
-                                                        <label className="labels" htmlFor="#location">Your Location</label>
+                                                        <label className="labels" htmlFor="#location">{role ? ("Instituition's Address") : ("Your Location")}</label>
                                                     </div>
                                                     <div className="col-md-9 align-self-center">
                                                         <div className="form-group">
@@ -271,7 +281,7 @@ export default function AccountSettings() {
                                                 </div>
                                                 <div className="row">
                                                     <div className="col-md-3 align-self-center">
-                                                        <label className="labels" htmlFor="#phone">Phone Number</label>
+                                                        <label className="labels" htmlFor="#phone">{role ? ("Instituition's Telephone") : ("Phone Number")}</label>
                                                     </div>
                                                     <div className="col-md-4 align-self-center">
                                                         <div className="form-group">
