@@ -31,7 +31,7 @@ export default function RegisterPage() {
                 }).then(() => {
 
                     firestore.collection('users').doc(auth.currentUser.uid).set({
-                        userName: name,role
+                        userName: name,role, email
                     }).then(() => {
                         dispatch(setActiveUser({
                             userName: name,

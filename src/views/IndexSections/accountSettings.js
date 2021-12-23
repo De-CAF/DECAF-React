@@ -87,7 +87,7 @@ export default function AccountSettings() {
         console.log(auth.currentUser.uid)
 
         firestore.collection('users').doc(auth.currentUser.uid).update({
-            userName, gender, birthDate, location, phone, profileCompletion, userBio
+            userName, gender, birthDate, location, phone, profileCompletion, userBio, email
         }).then(() => {
             console.log('Profile has been updated')
             setShowAlert(true)

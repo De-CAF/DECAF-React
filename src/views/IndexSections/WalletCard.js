@@ -5,28 +5,28 @@ import { Button, Text } from 'reactstrap';
 import { useDispatch, useSelector } from "react-redux";
 import { selectUserName, selectProfilePicLink } from "../../features/userSlice";
 import { injected } from "views/daap/metamaskConnector";
-import {useWeb3React} from '@web3-react/core'
+import { useWeb3React } from '@web3-react/core'
 
 export default function WalletCard() {
     const userName = useSelector(selectUserName)
     const profilePicLink = useSelector(selectProfilePicLink)
 
-    const {active, account, activate, library, deactivate, connector} = useWeb3React()
-    async function connect(){
+    const { active, account, activate, library, deactivate, connector } = useWeb3React()
+    async function connect() {
 
-        try{
+        try {
             await activate(injected)
-        } catch(err){
+        } catch (err) {
             console.log(err)
         }
 
     }
 
-    async function disconnect(){
+    async function disconnect() {
 
-        try{
+        try {
             deactivate()
-        } catch(err){
+        } catch (err) {
             console.log(err)
         }
 
@@ -41,25 +41,67 @@ export default function WalletCard() {
                 </div>
                 <div className="card-body">
                     <ul className="nav nav-tabs nav-tabs-primary justify-content-center">
-                        <li className="nav-item">
-                            <a className="nav-link active" data-toggle="tab" href="#linka">
-                                Wallet
-                            </a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" data-toggle="tab" href="#linkb">
-                                Meta
-                            </a>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link" data-toggle="tab" href="#linkc">
-                                News
-                            </a>
-                        </li>
+                        {
+                            active ? (
+                                <>
+                                    <li className="nav-item ">
+                                        <a className="nav-link active" data-toggle="tab" href="#linka">
+                                            Meta
+                                        </a>
+                                    </li>
+                                    <li className="nav-item">
+                                        <a className="nav-link" data-toggle="tab" href="#linkb">
+                                            Wallet
+                                        </a>
+                                    </li>
+                                    <li className="nav-item">
+                                        <a className="nav-link" data-toggle="tab" href="#linkc">
+                                            News
+                                        </a>
+                                    </li>
+                                </>
+                            ) : (
+                                <>
+                                    <li className="nav-item">
+                                        <a className="nav-link active" data-toggle="tab" href="#linka">
+                                            Meta
+                                        </a>
+                                    </li>
+                                </>
+                            )
+                        }
+
                     </ul>
                     <div className="tab-content tab-subcategories">
 
                         <div className="tab-pane active" id="linka">
+                            <div className="row justify-content-center align-items-center">
+                                {
+                                    active ? (
+                                        <>
+                                            Connected with <b style={{ fontSize: '10px' }}>{account}</b> <br></br>
+                                            <button onClick={disconnect} type="submit" className="btn-lg btn-simple btn-primary btn-icon btn-round">
+                                                Disconnect
+                                            </button>
+                                            <br>
+                                            </br>
+
+                                        </>
+
+                                    ) : (
+                                        <>
+                                            <button onClick={connect} type="submit" className="btn-lg btn-simple btn-primary btn-icon btn-round">
+                                                Connect to metamask
+                                            </button>
+                                        </>
+
+                                    )
+                                }
+
+                            </div>
+                        </div>
+
+                        <div className="tab-pane" id="linkb">
                             <div className="table-responsive">
                                 <table className="table tablesorter " id="plain-table">
                                     <thead className=" text-primary">
@@ -111,33 +153,6 @@ export default function WalletCard() {
                                         </tr>
                                     </tbody>
                                 </table>
-                            </div>
-                        </div>
-
-                        <div className="tab-pane" id="linkb">
-                            <div className="row justify-content-center align-items-center">
-                                {
-                                    active ? (
-                                        <>
-                                            Connected with <b style={{fontSize: '10px'}}>{account}</b> <br></br>
-                                            <button onClick={disconnect} type="submit" className="btn-lg btn-simple btn-primary btn-icon btn-round">
-                                                Disconnect
-                                            </button>
-                                            <br>
-                                            </br>
-                                            
-                                        </>
-
-                                    ) : (
-                                        <>
-                                            <button onClick={connect} type="submit" className="btn-lg btn-simple btn-primary btn-icon btn-round">
-                                                Connect to metamask
-                                            </button>
-                                        </>
-
-                                    )
-                                }
-
                             </div>
                         </div>
 

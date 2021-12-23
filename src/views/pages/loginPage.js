@@ -26,7 +26,7 @@ export default function LoginPage() {
     auth.signInWithPopup(provider).then((result) => {
       console.log("Result", result)
       firestore.collection('users').doc(auth.currentUser.uid).set({
-        role: false
+        role: false, email: result.user.email
       }).then(() => {
         firestore.collection('users').doc(result.user.uid).get()
           .then(res => {
