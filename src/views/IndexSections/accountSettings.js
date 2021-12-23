@@ -18,17 +18,8 @@ export default function AccountSettings() {
     const userBio = useSelector(selectUserBio)
     const profilePicLink = useSelector(selectProfilePicLink)
 
-    const [imageAsFile, setImageAsFile] = useState('')
-
-    const [profileCompletion, setProfileCompletion] = useState(0)
-    const [counter, setCounter] = useState(0)
-    const [submitting,setSubmitting] = useState(false)
-    const [genderDropdown, setGenderDropdown] = useState(false)
-    const [showAlert, setShowAlert] = useState(false);
-
-    useEffect(() => {
-            
-            let count = 0;
+    const counterFunc = () => {
+        let count = 0;
             if(userName) count++;
             if(gender) count++;
             if(userBio) count++;
@@ -36,6 +27,23 @@ export default function AccountSettings() {
             if(email) count++;
             if(location) count++;
             if(phone) count++;
+            return count;
+    }
+
+    const [imageAsFile, setImageAsFile] = useState('')
+
+    const [profileCompletion, setProfileCompletion] = useState(0)
+    const [counter, setCounter] = useState(counterFunc())
+    const [submitting,setSubmitting] = useState(false)
+    const [genderDropdown, setGenderDropdown] = useState(false)
+    const [showAlert, setShowAlert] = useState(false);
+
+
+
+
+    useEffect(() => {
+            
+            let count = counterFunc();
             setCounter(count)
             setProfileCompletion((counter / 7) * 100)
             console.log('After state change',counter)
