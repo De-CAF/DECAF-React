@@ -88,7 +88,7 @@ export default function WalletCard() {
                         </div>
 
                         <div className="tab-pane" id="linkb">
-                            <div className="row justify-content-between align-items-center">
+                            <div className="row justify-content-center align-items-center">
                                 <button type="submit" className="btn-lg btn-simple btn-primary btn-icon btn-round">
                                     Connect to metamask</button>
                             </div>

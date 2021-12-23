@@ -9,13 +9,13 @@ import WalletCard from "views/IndexSections/WalletCard";
 import SendDocForm from "views/IndexSections/SendDocForm";
 
 import { useDispatch, useSelector } from "react-redux";
-import { selectUserName, selectProfilePicLink } from "../../features/userSlice";
+import { selectUserName, selectUserBio } from "../../features/userSlice";
 
 
 export default function ProfilePage() {
 
     const userName = useSelector(selectUserName)
-    const profilePicLink = useSelector(selectProfilePicLink)
+    const userBio = useSelector(selectUserBio)
 
     return (
         <>
@@ -32,7 +32,7 @@ export default function ProfilePage() {
                                     {<h1 className="profile-title text-left">{userName}</h1>}
 
                                     <h5 className="text-on-back">01</h5>
-                                    <p className="profile-description">Final year computer engineering undergrad.</p>
+                                    <p className="profile-description">{userBio}</p>
                                     <div className="btn-wrapper profile pt-3">
                                         <a target="_blank" href="https://twitter.com/creativetim" className="btn btn-icon btn-twitter btn-round" data-toggle="tooltip" data-original-title="Follow us">
                                             <i className="fab fa-twitter" />

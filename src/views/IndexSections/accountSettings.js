@@ -3,25 +3,25 @@ import React, { useState } from "react";
 import { Container, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Input, Alert } from "reactstrap";
 
 import { useDispatch, useSelector } from "react-redux";
-import { selectProfilePicLink, selectUserName, setProfilePicLink, selectUserEmail, setAdditionalInformation, selectGender, selectBirthDate, selectLocation, selectPhone } from "../../features/userSlice";
+import { selectProfilePicLink, selectUserName, setProfilePicLink, selectUserEmail, setAdditionalInformation, selectGender, selectBirthDate, selectLocation, selectPhone, selectUserBio } from "../../features/userSlice";
 import { auth, storage, firestore } from "../../firebase"
 
 export default function AccountSettings() {
     const dispatch = useDispatch();
     const userName = useSelector(selectUserName)
-    // const lastName = useSelector(selectLastName)
+    // const  = useSelector(selectLastName)
     const gender = useSelector(selectGender)
     const birthDate = useSelector(selectBirthDate)
     const location = useSelector(selectLocation)
     const phone = useSelector(selectPhone)
     const email = useSelector(selectUserEmail)
-
+    const userBio = useSelector(selectUserBio)
     const profilePicLink = useSelector(selectProfilePicLink)
 
     const [imageAsFile, setImageAsFile] = useState('')
 
-    const [profileCompletion, setProfileCompletion]= useState(0)
-    const [counter, setCounter]=useState(0)
+    const [profileCompletion, setProfileCompletion] = useState(0)
+    const [counter, setCounter] = useState(0)
     const [genderDropdown, setGenderDropdown] = useState(false)
     const [showAlert, setShowAlert] = useState(false);
 
@@ -60,13 +60,23 @@ export default function AccountSettings() {
         e.preventDefault();
         setShowAlert(false)
         console.log(auth.currentUser.uid)
+        setCounter(0)
+        if (userName!=null) setCounter(counter + 1)
+        if (gender!=null) setCounter(counter + 1)
+        if (birthDate!=null) setCounter(counter + 1)
+        if (email!=null) setCounter(counter + 1)
+        if (location!=null) setCounter(counter + 1)
+        if (phone!=null) setCounter(counter + 1)
+        console.log(counter)
+        setProfileCompletion((counter / 6) * 100)
         firestore.collection('users').doc(auth.currentUser.uid).set({
-            userName, gender, birthDate, location, phone
+            userName, gender, birthDate, location, phone, profileCompletion, userBio
         }).then(() => {
             console.log('Profile has been updated')
             setShowAlert(true)
+            dispatch(setAdditionalInformation({userBio: userBio, profileCompletion: profileCompletion, gender: gender, birthDate: birthDate, location: location, phone: phone}))
         })
-        .catch(err => console.log(err))
+            .catch(err => console.log(err))
     }
 
     return (
@@ -106,6 +116,7 @@ export default function AccountSettings() {
                                                 </a>
                                             </li>
                                             <hr className="line-primary" />
+                                            {/*
                                             <li className="nav-item">
                                                 <a className="nav-link" data-toggle="tab" href="#link2" role="tablist">
                                                     <i className="tim-icons icon-credit-card" /> Billing
@@ -123,6 +134,7 @@ export default function AccountSettings() {
                                                     <i className="tim-icons icon-volume-98" /> Notifications
                                                 </a>
                                             </li>
+                                            */}
                                         </ul>
                                     </section>
                                     {/* End Profile Sidebar */}
@@ -134,8 +146,8 @@ export default function AccountSettings() {
                                         <div className="progress-container progress-primary">
                                             <span className="progress-badge">Profile Completion</span>
                                             <div className="progress">
-                                                <div className="progress-bar progress-bar-warning" role="progressbar" aria-valuenow={60} aria-valuemin={0} aria-valuemax={100} style={{ width: '60%' }}>
-                                                    <span className="progress-value">60%</span>
+                                                <div className="progress-bar progress-bar-warning" role="progressbar" aria-valuenow={profileCompletion} aria-valuemin={0} aria-valuemax={100} style={{ width: '{ profileCompletion }' }}>
+                                                    <span className="progress-value">{profileCompletion}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -155,69 +167,70 @@ export default function AccountSettings() {
                                                 <br />
                                                 <div className="row">
                                                     <div className="col-md-3 align-self-center">
-                                                        <label className="labels" htmlFor="#firstName">First Name</label>
+                                                        <label className="labels" htmlFor="#firstName">User Name</label>
                                                     </div>
                                                     <div className="col-md-9 align-self-center">
                                                         <div className="form-group">
-                                                            <input id="firstName" name="firstName" className="form-control" type="text"  value={userName}   />
+                                                            <input disabled id="firstName" name="firstName" className="form-control" type="text" value={userName} />
                                                         </div>
                                                     </div>
                                                 </div>
-                                                {/* <div className="row">
+                                                <div className="row">
                                                     <div className="col-md-3 align-self-center">
-                                                        <label className="labels" htmlFor="#lastName">Last Name</label>
+                                                        <label className="labels" htmlFor="#lastName">Bio</label>
                                                     </div>
                                                     <div className="col-md-9 align-self-center">
                                                         <div className="form-group">
-                                                            <input id="lastName" name="lastName" className="form-control" type="text" defaultValue="" value={lastName} onChange={e => dispatch(setAdditionalInformation({lastName:e.target.value}))} />
+                                                            <input id="userBio" name="userBio" className="form-control" type="text" defaultValue="" value={userBio} onChange={e => dispatch(setAdditionalInformation({ userBio: e.target.value, profileCompletion: profileCompletion, gender: gender, birthDate: birthDate, location: location, phone: phone }))} />
                                                         </div>
                                                     </div>
-                                                </div> */}
+                                                </div>
                                                 <div className="row">
                                                     <div className="col-md-3 align-self-center">
                                                         <label className="labels">I'm</label>
                                                     </div>
                                                     <div className="col-md-9 align-self-center">
-                                                        <Dropdown  toggle={() => {setGenderDropdown(!genderDropdown)
-                                                        } } isOpen={genderDropdown}   >
-                                                        <DropdownToggle  caret >
-                                                        {gender?gender:"Gender"}
-                                                        </DropdownToggle>
-                                                        <DropdownMenu  >
-                                                        <DropdownItem onClick={() => {
-                                                            dispatch(setAdditionalInformation({gender: "Male", birthDate, location, phone}))
-                                                        } }   >
-                                                            Male
-                                                        </DropdownItem>
-                                                        <DropdownItem onClick={() => {
-                                                            dispatch(setAdditionalInformation({gender: "Female", birthDate, location, phone}))
-                                                        } }>
-                                                            Female
-                                                        </DropdownItem>
-                                                        </DropdownMenu>
-                                                        
-                                                    </Dropdown>
+                                                        <Dropdown toggle={() => {
+                                                            setGenderDropdown(!genderDropdown)
+                                                        }} isOpen={genderDropdown}   >
+                                                            <DropdownToggle caret >
+                                                                {gender ? gender : "Gender"}
+                                                            </DropdownToggle>
+                                                            <DropdownMenu  >
+                                                                <DropdownItem onClick={() => {
+                                                                    dispatch(setAdditionalInformation({ gender: "Male", birthDate: birthDate, location: location, phone: phone, userBio: userBio, profileCompletion: profileCompletion }))
+                                                                }}   >
+                                                                    Male
+                                                                </DropdownItem>
+                                                                <DropdownItem onClick={() => {
+                                                                    dispatch(setAdditionalInformation({ gender: "Female", birthDate: birthDate, location: location, phone: phone, userBio: userBio, profileCompletion: profileCompletion }))
+                                                                }}>
+                                                                    Female
+                                                                </DropdownItem>
+                                                            </DropdownMenu>
+
+                                                        </Dropdown>
                                                     </div>
-                                                    
-                                                   
+
+
                                                 </div>
                                                 <div className="row">
                                                     <div className="col-md-3 align-self-center">
                                                         <label className="labels">Birth Date</label>
                                                     </div>
                                                     <div className="col-md-9 align-self-center">
-                                                    <Input
-                                                        id="exampleDate"
-                                                        name="date"
-                                                        placeholder="date placeholder"
-                                                        type="date"
-                                                        value={birthDate}
-                                                        onChange={e => dispatch(setAdditionalInformation({birthDate:e.target.value, gender, location, phone}))}
+                                                        <Input
+                                                            id="exampleDate"
+                                                            name="date"
+                                                            placeholder="date placeholder"
+                                                            type="date"
+                                                            value={birthDate}
+                                                            onChange={e => dispatch(setAdditionalInformation({ birthDate: e.target.value, gender: gender, location: location, phone: phone, userBio: userBio, profileCompletion: profileCompletion }))}
                                                         />
                                                     </div>
-                                                   
+
                                                 </div>
-                                                
+
                                                 <div className="row">
                                                     <div className="col-md-3 align-self-center">
                                                         <label className="labels" htmlFor="#email">Email</label>
@@ -234,7 +247,7 @@ export default function AccountSettings() {
                                                     </div>
                                                     <div className="col-md-9 align-self-center">
                                                         <div className="form-group">
-                                                            <input id="location" name="location" className="form-control" type="text" value={location} onChange={e => dispatch(setAdditionalInformation({ location: e.target.value, gender, birthDate, phone }))}  />
+                                                            <input id="location" name="location" className="form-control" type="text" value={location} onChange={e => dispatch(setAdditionalInformation({ location: e.target.value, gender: gender, birthDate: birthDate, phone: phone, userBio: userBio, profileCompletion: profileCompletion }))} />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -244,9 +257,9 @@ export default function AccountSettings() {
                                                     </div>
                                                     <div className="col-md-4 align-self-center">
                                                         <div className="form-group">
-                                                            <input id="phone" value={phone}  name="phone" onChange={e => {  
-                                                                dispatch(setAdditionalInformation({phone: e.target.value, location, gender, birthDate}))
-                                                                }} className="form-control" type="tel"  />
+                                                            <input id="phone" value={phone} name="phone" onChange={e => {
+                                                                dispatch(setAdditionalInformation({ phone: e.target.value, location: location, gender: gender, birthDate: birthDate, userBio: userBio, profileCompletion: profileCompletion }))
+                                                            }} className="form-control" type="tel" />
                                                         </div>
                                                     </div>
                                                 </div>
