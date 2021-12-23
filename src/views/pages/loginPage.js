@@ -25,21 +25,24 @@ export default function LoginPage() {
     e.preventDefault();
     auth.signInWithPopup(provider).then((result) => {
       console.log("Result", result)
-      firestore.collection('users').doc(result.user.uid).get()
-      .then(res => {
-        const additionalInfo = res.data();
-        dispatch(setActiveUser({
-          userName: result.user.displayName,
-          userEmail: result.user.email,
-          isLoggedIn: true,
-          profilePicLink: result.user.photoURL
-        }))
-        if(res.exists)
-          dispatch(setAdditionalInformation(additionalInfo))
-        history.push('/profile');
+      firestore.collection('users').doc(auth.currentUser.uid).set({
+        role: false
+      }).then(() => {
+        firestore.collection('users').doc(result.user.uid).get()
+          .then(res => {
+            const additionalInfo = res.data();
+            dispatch(setActiveUser({
+              userName: result.user.displayName,
+              userEmail: result.user.email,
+              isLoggedIn: true,
+              profilePicLink: result.user.photoURL,
+              role: additionalInfo.role
+            }))
+            if (res.exists)
+              dispatch(setAdditionalInformation(additionalInfo))
+            history.push('/profile');
+          })
       })
-
-
     })
       .catch(err => console.log(err));
   }
@@ -51,18 +54,19 @@ export default function LoginPage() {
       .then(result => {
         console.log(result);
         firestore.collection('users').doc(result.user.uid).get()
-        .then(res => {
-          const additionalInfo = res.data();
-          dispatch(setActiveUser({
-            userName: result.user.displayName,
-            userEmail: email,
-            isLoggedIn: true,
-            profilePicLink: result.user.photoURL
-          }))
-          if(res.exists)
-            dispatch(setAdditionalInformation(additionalInfo))
-          history.push('/profile');
-        })
+          .then(res => {
+            const additionalInfo = res.data();
+            dispatch(setActiveUser({
+              userName: result.user.displayName,
+              userEmail: email,
+              isLoggedIn: true,
+              profilePicLink: result.user.photoURL,
+              role: additionalInfo.role
+            }))
+            if (res.exists)
+              dispatch(setAdditionalInformation(additionalInfo))
+            history.push('/profile');
+          })
       })
       .catch(err => console.log(err));
   }

@@ -47,6 +47,10 @@ export default function App() {
                     render={(props) => <AboutPage {...props} />}
                 />
                 <Route
+                    path="/download"
+                    render={(props) => <DownloadPage {...props} />}
+                />
+                <Route
                     path="/register"
                     render={(props) => <RegisterPage {...props} />}
                 />
@@ -58,10 +62,7 @@ export default function App() {
                     path="/profile"
                     component={ProfilePage}
                 />
-                <Route
-                    path="/download"
-                    render={(props) => <DownloadPage {...props} />}
-                />
+
                 <PrivateRoute
                     path="/account-settings"
                     component={AccountSettings}

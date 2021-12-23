@@ -86,7 +86,7 @@ export default function AccountSettings() {
         setShowAlert(false)
         console.log(auth.currentUser.uid)
         
-        firestore.collection('users').doc(auth.currentUser.uid).set({
+        firestore.collection('users').doc(auth.currentUser.uid).update({
             userName, gender, birthDate, location, phone, profileCompletion, userBio
         }).then(() => {
             console.log('Profile has been updated')
@@ -566,7 +566,7 @@ export default function AccountSettings() {
                         </div>
                     </Container>
                 </div >
-            </div >& gt;
+            </div >
         </div >
     );
 }

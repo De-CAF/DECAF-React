@@ -10,7 +10,8 @@ const initialState = {
     location: null,
     phone: null,
     profileCompletion: null,
-    userBio: null
+    userBio: null,
+    role: false
 }
 
 const userSlice = createSlice({
@@ -22,6 +23,7 @@ const userSlice = createSlice({
             state.userEmail = action.payload.userEmail
             state.isLoggedIn = action.payload.isLoggedIn
             state.profilePicLink = action.payload.profilePicLink
+            state.role = action.payload.role
         },
          setUserLogOutState : (state,action)=>{
             state.userEmail=null
@@ -34,6 +36,7 @@ const userSlice = createSlice({
             state.phone = null
             state.profileCompletion = null
             state.userBio = null
+            state.role=null
         },
         setProfilePicLink : (state,action)=>{
             state.profilePicLink = action.payload.profilePicLink
@@ -61,5 +64,5 @@ export const selectGender = state => state.user.gender
 export const selectBirthDate = state => state.user.birthDate
 export const selectLocation = state => state.user.location
 export const selectPhone = state => state.user.phone
-
+export const selectRole = state=> state.user.role
 export default userSlice.reducer

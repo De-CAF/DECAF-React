@@ -3,7 +3,7 @@
 
 import React, { useState } from "react";
 import { Alert } from 'reactstrap'
-import { auth } from '../../firebase'
+import { auth, firestore } from '../../firebase'
 
 import { useDispatch } from "react-redux";
 import { setActiveUser } from "../../features/userSlice";
@@ -20,7 +20,7 @@ export default function RegisterPage() {
     const [password, setPasword] = useState("");
     const [showAlert, setShowAlert] = useState(false);
     const [showErr, setShowErr] = useState(false);
-
+    const [role, setRole] = useState(false)
     const onRegister = (e) => {
         e.preventDefault();
         auth.createUserWithEmailAndPassword(email, password)
@@ -28,16 +28,21 @@ export default function RegisterPage() {
                 console.log('User signed up', user);
                 auth.currentUser.updateProfile({
                     displayName: name
-                })
-                    .then(() => {
+                }).then(() => {
+
+                    firestore.collection('users').doc(auth.currentUser.uid).set({
+                        userName: name,role
+                    }).then(() => {
                         dispatch(setActiveUser({
                             userName: name,
                             userEmail: email,
-                            isLoggedIn: true
+                            isLoggedIn: true,
+                            role: role
                         }))
                         setShowAlert(true)
                         setShowErr(false)
                     })
+                })
             })
             .catch(err => {
                 console.log(err)
@@ -97,10 +102,9 @@ export default function RegisterPage() {
                                                                 </div>
                                                                 <div className="form-check text-left">
                                                                     <label className="form-check-label">
-                                                                        <input className="form-check-input" type="checkbox" />
+                                                                        <input className="form-check-input" type="checkbox" onChange={e => setRole(e.target.value)} />
                                                                         <span className="form-check-sign" />
-                                                                        I agree to the
-                                                                        <a href="#">terms and conditions</a>.
+                                                                        Registering as an organisation Admin?
                                                                     </label>
                                                                 </div>
                                                             </form>
