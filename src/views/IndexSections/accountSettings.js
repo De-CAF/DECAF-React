@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 // reactstrap components
 import { Container, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Input, Alert } from "reactstrap";
 
@@ -22,8 +22,24 @@ export default function AccountSettings() {
 
     const [profileCompletion, setProfileCompletion] = useState(0)
     const [counter, setCounter] = useState(0)
+    const [submitting,setSubmitting] = useState(false)
     const [genderDropdown, setGenderDropdown] = useState(false)
     const [showAlert, setShowAlert] = useState(false);
+
+    useEffect(() => {
+            
+            let count = 0;
+            if(userName) count++;
+            if(gender) count++;
+            if(userBio) count++;
+            if(birthDate) count++;
+            if(email) count++;
+            if(location) count++;
+            if(phone) count++;
+            setCounter(count)
+            setProfileCompletion((counter / 7) * 100)
+            console.log('After state change',counter)
+    },[submitting])
 
     const handleImageAsFile = (e) => {
         console.log(e)
@@ -58,22 +74,16 @@ export default function AccountSettings() {
 
     const onSubmit = (e) => {
         e.preventDefault();
+        setSubmitting(true)
         setShowAlert(false)
         console.log(auth.currentUser.uid)
-        setCounter(0)
-        if (userName!=null) setCounter(counter + 1)
-        if (gender!=null) setCounter(counter + 1)
-        if (birthDate!=null) setCounter(counter + 1)
-        if (email!=null) setCounter(counter + 1)
-        if (location!=null) setCounter(counter + 1)
-        if (phone!=null) setCounter(counter + 1)
-        console.log(counter)
-        setProfileCompletion((counter / 6) * 100)
+        
         firestore.collection('users').doc(auth.currentUser.uid).set({
             userName, gender, birthDate, location, phone, profileCompletion, userBio
         }).then(() => {
             console.log('Profile has been updated')
             setShowAlert(true)
+            setSubmitting(false)
             dispatch(setAdditionalInformation({userBio: userBio, profileCompletion: profileCompletion, gender: gender, birthDate: birthDate, location: location, phone: phone}))
         })
             .catch(err => console.log(err))
