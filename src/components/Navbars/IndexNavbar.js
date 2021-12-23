@@ -162,20 +162,6 @@ export default function IndexNavbar() {
               }
             </NavItem>
 
-            {
-              isLoggedIn ? (
-                <NavItem>
-
-                  <Button
-                    className="nav-link d-none d-lg-block"
-                    color="info"
-                    href="/account-settings"
-                  >
-                    <i className="tim-icons icon-settings-gear-63" /> Settings
-                  </Button>
-                </NavItem>) : (<div></div>)
-            }
-
 
             {
               isLoggedIn ? (
@@ -200,6 +186,20 @@ export default function IndexNavbar() {
                 <i className="tim-icons icon-cloud-download-93" /> Download
               </Button>
             </NavItem>
+
+            {
+              isLoggedIn ? (
+                <NavItem>
+
+                  <Button
+                    className="nav-link d-none d-lg-block"
+                    color="info"
+                    href="/account-settings"
+                  >
+                    <i className="tim-icons icon-settings-gear-63" /> Settings
+                  </Button>
+                </NavItem>) : (<div></div>)
+            }
 
             {
               isLoggedIn ? (

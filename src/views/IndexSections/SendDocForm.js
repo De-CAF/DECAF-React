@@ -7,31 +7,18 @@ export default function SendDocForm() {
                 <div className="row">
                     <div className="col-md-6">
                         <div className="form-group">
-                            <label>Your Name</label>
-                            <input type="text" className="form-control" defaultValue="Mike" />
+                            <label>Receiver's Name</label>
+                            <input disabled type="text" className="form-control" defaultValue="Mike" />
                         </div>
                     </div>
                     <div className="col-md-6">
                         <div className="form-group">
-                            <label>Email address</label>
+                            <label>Receiver's Email address</label>
                             <input type="email" className="form-control" placeholder="mike@email.com" />
                         </div>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-md-6">
-                        <div className="form-group">
-                            <label>Phone</label>
-                            <input type="text" className="form-control" defaultValue="001-12321345" />
-                        </div>
-                    </div>
-                    <div className="col-md-6">
-                        <div className="form-group">
-                            <label>Company</label>
-                            <input type="text" className="form-control" defaultValue="CreativeTim" />
-                        </div>
-                    </div>
-                </div>
+
                 <div className="row">
                     <div className="col-md-12">
                         <div className="form-group">
@@ -44,17 +31,15 @@ export default function SendDocForm() {
                     <label className="col-sm-3 col-form-label">Pay to</label>
                     <div className="col-sm-9">
                         <div className="form-group">
-                            <input type="text" className="form-control" placeholder="e.g. 1Nasd92348hU984353hfid" />
-                            <span className="form-text">Please enter a valid address.</span>
+                            <input disabled type="text" className="form-control" placeholder="e.g. 1Nasd92348hU984353hfid" />
+                            <span className="form-text">Metamask account address of 'USEREMAIL'.</span>
                         </div>
                     </div>
                 </div>
                 <div className="row">
-                    <label className="col-sm-3 col-form-label">Amount</label>
+                    <label className="col-sm-3 col-form-label">File</label>
                     <div className="col-sm-9">
-                        <div className="form-group">
-                            <input type="text" className="form-control" placeholder="1.587" />
-                        </div>
+                        <input type="file" />
                     </div>
                 </div>
 
