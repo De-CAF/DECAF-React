@@ -164,8 +164,8 @@ export default function AccountSettings() {
                                         <div className="progress-container progress-primary">
                                             <span className="progress-badge">Profile Completion</span>
                                             <div className="progress">
-                                                <div className="progress-bar progress-bar-warning" role="progressbar" aria-valuenow={profileCompletion} aria-valuemin={0} aria-valuemax={100} style={{ width: '{ profileCompletion }' }}>
-                                                    <span className="progress-value">{profileCompletion}</span>
+                                                <div className="progress-bar progress-bar-warning" role="progressbar" aria-valuenow={profileCompletion} aria-valuemin={0} aria-valuemax={100} style={{ width:  profileCompletion + '%'  }}>
+                                                    <span className="progress-value">{profileCompletion}%</span>
                                                 </div>
                                             </div>
                                         </div>
