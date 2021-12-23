@@ -1,28 +1,29 @@
 import React, { useState } from "react";
 // reactstrap components
-import { Container } from "reactstrap";
+import { Container, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Input, Alert } from "reactstrap";
 
 import { useDispatch, useSelector } from "react-redux";
-import { selectProfilePicLink, selectUserName, setProfilePicLink, selectUserEmail, setAdditionalInformation, selectLastName, selectGender, selectBirthDate, selectLocation, selectPhone } from "../../features/userSlice";
-import { auth, storage } from "../../firebase"
+import { selectProfilePicLink, selectUserName, setProfilePicLink, selectUserEmail, setAdditionalInformation, selectGender, selectBirthDate, selectLocation, selectPhone } from "../../features/userSlice";
+import { auth, storage, firestore } from "../../firebase"
 
 export default function AccountSettings() {
     const dispatch = useDispatch();
     const userName = useSelector(selectUserName)
-    const lastName = useSelector(selectLastName)
+    // const lastName = useSelector(selectLastName)
     const gender = useSelector(selectGender)
     const birthDate = useSelector(selectBirthDate)
     const location = useSelector(selectLocation)
     const phone = useSelector(selectPhone)
     const email = useSelector(selectUserEmail)
+
     const profilePicLink = useSelector(selectProfilePicLink)
 
     const [imageAsFile, setImageAsFile] = useState('')
 
     const [profileCompletion, setProfileCompletion]= useState(0)
     const [counter, setCounter]=useState(0)
-
-
+    const [genderDropdown, setGenderDropdown] = useState(false)
+    const [showAlert, setShowAlert] = useState(false);
 
     const handleImageAsFile = (e) => {
         console.log(e)
@@ -53,6 +54,19 @@ export default function AccountSettings() {
                         })
                     })
             })
+    }
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+        setShowAlert(false)
+        console.log(auth.currentUser.uid)
+        firestore.collection('users').doc(auth.currentUser.uid).set({
+            userName, gender, birthDate, location, phone
+        }).then(() => {
+            console.log('Profile has been updated')
+            setShowAlert(true)
+        })
+        .catch(err => console.log(err))
     }
 
     return (
@@ -145,184 +159,65 @@ export default function AccountSettings() {
                                                     </div>
                                                     <div className="col-md-9 align-self-center">
                                                         <div className="form-group">
-                                                            <input id="firstName" name="firstName" className="form-control" type="text" defaultValue={userName} required="required" />
+                                                            <input id="firstName" name="firstName" className="form-control" type="text"  value={userName}   />
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="row">
+                                                {/* <div className="row">
                                                     <div className="col-md-3 align-self-center">
                                                         <label className="labels" htmlFor="#lastName">Last Name</label>
                                                     </div>
                                                     <div className="col-md-9 align-self-center">
                                                         <div className="form-group">
-                                                            <input id="lastName" name="lastName" className="form-control" type="text" defaultValue="" required="required" />
+                                                            <input id="lastName" name="lastName" className="form-control" type="text" defaultValue="" value={lastName} onChange={e => dispatch(setAdditionalInformation({lastName:e.target.value}))} />
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </div> */}
                                                 <div className="row">
                                                     <div className="col-md-3 align-self-center">
-                                                        <label className="labels">I’m</label>
+                                                        <label className="labels">I'm</label>
                                                     </div>
-                                                    <div className="col-md-4 align-self-center">
-                                                        <div className="form-group">
-                                                            <div className="dropdown bootstrap-select"><select className="selectpicker" data-size={7} data-style="btn btn-primary" title="Single Select" tabIndex={-98}>
-                                                                <option className="bs-title-option" value />
-                                                                <option disabled selected>Gender</option>
-                                                                <option value={2}>Male</option>
-                                                                <option value={3}>Female</option>
-                                                            </select><button type="button" className="dropdown-toggle btn btn-primary" data-toggle="dropdown" role="button" title="Gender">
-                                                                    <div className="filter-option">
-                                                                        <div className="filter-option-inner">
-                                                                            <div className="filter-option-inner-inner">Gender</div>
-                                                                        </div>
-                                                                    </div>
-                                                                </button>
-                                                                <div className="dropdown-menu " role="combobox">
-                                                                    <div className="inner show" role="listbox" aria-expanded="false" tabIndex={-1}>
-                                                                        <ul className="dropdown-menu inner show" />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                    <div className="col-md-9 align-self-center">
+                                                        <Dropdown  toggle={() => {setGenderDropdown(!genderDropdown)
+                                                        } } isOpen={genderDropdown}   >
+                                                        <DropdownToggle  caret >
+                                                        {gender?gender:"Gender"}
+                                                        </DropdownToggle>
+                                                        <DropdownMenu  >
+                                                        <DropdownItem onClick={() => {
+                                                            dispatch(setAdditionalInformation({gender: "Male", birthDate, location, phone}))
+                                                        } }   >
+                                                            Male
+                                                        </DropdownItem>
+                                                        <DropdownItem onClick={() => {
+                                                            dispatch(setAdditionalInformation({gender: "Female", birthDate, location, phone}))
+                                                        } }>
+                                                            Female
+                                                        </DropdownItem>
+                                                        </DropdownMenu>
+                                                        
+                                                    </Dropdown>
                                                     </div>
+                                                    
+                                                   
                                                 </div>
                                                 <div className="row">
                                                     <div className="col-md-3 align-self-center">
                                                         <label className="labels">Birth Date</label>
                                                     </div>
                                                     <div className="col-md-9 align-self-center">
-                                                        <div className="row">
-                                                            <div className="col-md-4 align-self-center">
-                                                                <div className="form-group">
-                                                                    <div className="dropdown bootstrap-select">
-                                                                            <select className="selectpicker" data-size={7} data-style="btn btn-primary" title="Single Select" tabIndex={-98}>
-                                                                            <option className="bs-title-option" value />
-                                                                            <option>None</option>
-                                                                            <option>January</option>
-                                                                            <option>February</option>
-                                                                            <option>March</option>
-                                                                            <option selected="selected">April</option>
-                                                                            <option>May</option>
-                                                                            <option>June</option>
-                                                                            <option>July</option>
-                                                                            <option>August</option>
-                                                                            <option>September</option>
-                                                                            <option>October</option>
-                                                                            <option>November</option>
-                                                                            <option>December</option>
-                                                                        </select><button type="button" className="dropdown-toggle btn btn-primary" data-toggle="dropdown" role="button" title="April">
-                                                                            <div className="filter-option">
-                                                                                <div className="filter-option-inner">
-                                                                                    <div className="filter-option-inner-inner">April
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </button>
-                                                                        <div className="dropdown-menu " role="combobox">
-                                                                            <div className="inner show" role="listbox" aria-expanded="false" tabIndex={-1}>
-                                                                                <ul className="dropdown-menu inner show" />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-md-4">
-                                                                <div className="form-group">
-                                                                    <div className="dropdown bootstrap-select"><select className="selectpicker" data-size={7} data-style="btn btn-primary" title="Single Select" tabIndex={-98}>
-                                                                        <option className="bs-title-option" value />
-                                                                        <option>0</option>
-                                                                        <option>1</option>
-                                                                        <option>2</option>
-                                                                        <option>3</option>
-                                                                        <option>4</option>
-                                                                        <option>5</option>
-                                                                        <option>6</option>
-                                                                        <option>7</option>
-                                                                        <option>8</option>
-                                                                        <option>9</option>
-                                                                        <option>10</option>
-                                                                        <option selected="selected">11</option>
-                                                                        <option>12</option>
-                                                                        <option>13</option>
-                                                                        <option>14</option>
-                                                                        <option>15</option>
-                                                                        <option>16</option>
-                                                                        <option>17</option>
-                                                                        <option>18</option>
-                                                                        <option>19</option>
-                                                                        <option>20</option>
-                                                                        <option>21</option>
-                                                                        <option>22</option>
-                                                                        <option>23</option>
-                                                                        <option>24</option>
-                                                                        <option>25</option>
-                                                                        <option>26</option>
-                                                                        <option>27</option>
-                                                                        <option>28</option>
-                                                                        <option>29</option>
-                                                                        <option>30</option>
-                                                                        <option>31</option>
-                                                                    </select><button type="button" className="dropdown-toggle btn btn-primary" data-toggle="dropdown" role="button" title={11}>
-                                                                            <div className="filter-option">
-                                                                                <div className="filter-option-inner">
-                                                                                    <div className="filter-option-inner-inner">11</div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </button>
-                                                                        <div className="dropdown-menu " role="combobox">
-                                                                            <div className="inner show" role="listbox" aria-expanded="false" tabIndex={-1}>
-                                                                                <ul className="dropdown-menu inner show" />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div className="col-md-4">
-                                                                <div className="form-group">
-                                                                    <div className="dropdown bootstrap-select"><select className="selectpicker" data-size={7} data-style="btn btn-primary" title="Single Select" tabIndex={-98}>
-                                                                        <option className="bs-title-option" value />
-                                                                        <option>0</option>
-                                                                        <option>2000</option>
-                                                                        <option>2001</option>
-                                                                        <option>2002</option>
-                                                                        <option>2003</option>
-                                                                        <option>2004</option>
-                                                                        <option>2005</option>
-                                                                        <option>2006</option>
-                                                                        <option>2007</option>
-                                                                        <option>2008</option>
-                                                                        <option>2009</option>
-                                                                        <option>2010</option>
-                                                                        <option>2011</option>
-                                                                        <option>2012</option>
-                                                                        <option>2013</option>
-                                                                        <option>2014</option>
-                                                                        <option>2015</option>
-                                                                        <option>2016</option>
-                                                                        <option>2017</option>
-                                                                        <option>2018</option>
-                                                                        <option>2019</option>
-                                                                        <option>2020</option>
-                                                                        <option selected="selected">2021</option>
-                                                                    </select><button type="button" className="dropdown-toggle btn btn-primary" data-toggle="dropdown" role="button" title={1989}>
-                                                                            <div className="filter-option">
-                                                                                <div className="filter-option-inner">
-                                                                                    <div className="filter-option-inner-inner">2021
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </button>
-                                                                        <div className="dropdown-menu " role="combobox">
-                                                                            <div className="inner show" role="listbox" aria-expanded="false" tabIndex={-1}>
-                                                                                <ul className="dropdown-menu inner show" />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                                    <Input
+                                                        id="exampleDate"
+                                                        name="date"
+                                                        placeholder="date placeholder"
+                                                        type="date"
+                                                        value={birthDate}
+                                                        onChange={e => dispatch(setAdditionalInformation({birthDate:e.target.value, gender, location, phone}))}
+                                                        />
                                                     </div>
+                                                   
                                                 </div>
+                                                
                                                 <div className="row">
                                                     <div className="col-md-3 align-self-center">
                                                         <label className="labels" htmlFor="#email">Email</label>
@@ -339,7 +234,7 @@ export default function AccountSettings() {
                                                     </div>
                                                     <div className="col-md-9 align-self-center">
                                                         <div className="form-group">
-                                                            <input id="location" name="location" className="form-control" type="text" defaultValue="Sydney, A" required="required" />
+                                                            <input id="location" name="location" className="form-control" type="text" value={location} onChange={e => dispatch(setAdditionalInformation({ location: e.target.value, gender, birthDate, phone }))}  />
                                                         </div>
                                                     </div>
                                                 </div>
@@ -349,17 +244,20 @@ export default function AccountSettings() {
                                                     </div>
                                                     <div className="col-md-4 align-self-center">
                                                         <div className="form-group">
-                                                            <input id="phone" name="phone" className="form-control" type="tel" defaultValue="+40 745 031 200" required="required" />
+                                                            <input id="phone" value={phone}  name="phone" onChange={e => {  
+                                                                dispatch(setAdditionalInformation({phone: e.target.value, location, gender, birthDate}))
+                                                                }} className="form-control" type="tel"  />
                                                         </div>
                                                     </div>
                                                 </div>
 
                                                 <div className="row mt-4">
                                                     <div className="col-md-6">
-                                                        <button className="btn btn-primary" type="submit">Save Changes</button>
+                                                        <button onClick={onSubmit} className="btn btn-primary" type="submit">Save Changes</button>
                                                         <button className="btn btn-primary btn-simple" type="reset">Cancel</button>
                                                     </div>
                                                 </div>
+                                                {showAlert && <Alert color="success">Profile has been updated</Alert>}
                                             </div>
                                         </div>
                                         <div className="tab-pane" id="link2">

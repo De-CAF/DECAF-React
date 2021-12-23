@@ -7,10 +7,10 @@ import { useHistory } from 'react-router-dom';
 
 import Footer from "components/Footer/Footer.js";
 
-import { auth, provider } from '../../firebase'
+import { auth, provider, firestore } from '../../firebase'
 
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveUser, setUserLogOutState, selectIsLoggedIn } from "../../features/userSlice";
+import { setActiveUser, setUserLogOutState, selectIsLoggedIn, setAdditionalInformation } from "../../features/userSlice";
 
 export default function LoginPage() {
   const dispatch = useDispatch();
@@ -25,13 +25,21 @@ export default function LoginPage() {
     e.preventDefault();
     auth.signInWithPopup(provider).then((result) => {
       console.log("Result", result)
-      dispatch(setActiveUser({
-        userName: result.user.displayName,
-        userEmail: result.user.email,
-        isLoggedIn: true,
-        profilePicLink: result.user.photoURL
-      }))
-      history.push('/profile');
+      firestore.collection('users').doc(result.user.uid).get()
+      .then(res => {
+        const additionalInfo = res.data();
+        dispatch(setActiveUser({
+          userName: result.user.displayName,
+          userEmail: result.user.email,
+          isLoggedIn: true,
+          profilePicLink: result.user.photoURL
+        }))
+        if(res.exists)
+          dispatch(setAdditionalInformation(additionalInfo))
+        history.push('/profile');
+      })
+
+
     })
       .catch(err => console.log(err));
   }
@@ -42,13 +50,19 @@ export default function LoginPage() {
     auth.signInWithEmailAndPassword(email, password)
       .then(result => {
         console.log(result);
-        dispatch(setActiveUser({
-          userName: result.user.displayName,
-          userEmail: email,
-          isLoggedIn: true,
-          profilePicLink: result.user.photoURL
-        }))
-        history.push('/profile');
+        firestore.collection('users').doc(result.user.uid).get()
+        .then(res => {
+          const additionalInfo = res.data();
+          dispatch(setActiveUser({
+            userName: result.user.displayName,
+            userEmail: email,
+            isLoggedIn: true,
+            profilePicLink: result.user.photoURL
+          }))
+          if(res.exists)
+            dispatch(setAdditionalInformation(additionalInfo))
+          history.push('/profile');
+        })
       })
       .catch(err => console.log(err));
   }
