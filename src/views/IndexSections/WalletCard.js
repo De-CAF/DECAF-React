@@ -1,11 +1,37 @@
 import React from "react";
 
+import { Button, Text } from 'reactstrap';
+
 import { useDispatch, useSelector } from "react-redux";
 import { selectUserName, selectProfilePicLink } from "../../features/userSlice";
+import { injected } from "views/daap/metamaskConnector";
+import {useWeb3React} from '@web3-react/core'
 
 export default function WalletCard() {
     const userName = useSelector(selectUserName)
     const profilePicLink = useSelector(selectProfilePicLink)
+
+    const {active, account, activate, library, deactivate, connector} = useWeb3React()
+    async function connect(){
+
+        try{
+            await activate(injected)
+        } catch(err){
+            console.log(err)
+        }
+
+    }
+
+    async function disconnect(){
+
+        try{
+            deactivate()
+        } catch(err){
+            console.log(err)
+        }
+
+    }
+
     return (
         <div className="col-lg-4 col-md-6 ml-auto mr-auto">
             <div className="card card-coin card-plain">
@@ -90,8 +116,28 @@ export default function WalletCard() {
 
                         <div className="tab-pane" id="linkb">
                             <div className="row justify-content-center align-items-center">
-                                <button type="submit" className="btn-lg btn-simple btn-primary btn-icon btn-round">
-                                    Connect to metamask</button>
+                                {
+                                    active ? (
+                                        <>
+                                            Connected with <b style={{fontSize: '10px'}}>{account}</b> <br></br>
+                                            <button onClick={disconnect} type="submit" className="btn-lg btn-simple btn-primary btn-icon btn-round">
+                                                Disconnect
+                                            </button>
+                                            <br>
+                                            </br>
+                                            
+                                        </>
+
+                                    ) : (
+                                        <>
+                                            <button onClick={connect} type="submit" className="btn-lg btn-simple btn-primary btn-icon btn-round">
+                                                Connect to metamask
+                                            </button>
+                                        </>
+
+                                    )
+                                }
+
                             </div>
                         </div>
 
@@ -127,8 +173,8 @@ export default function WalletCard() {
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 
 }
