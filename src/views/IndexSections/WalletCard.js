@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Button, Text } from 'reactstrap';
 
@@ -6,23 +6,27 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectUserName, selectProfilePicLink } from "../../features/userSlice";
 import { injected } from "views/daap/metamaskConnector";
 import { useWeb3React } from '@web3-react/core'
+import { firestore, auth } from '../../firebase'
 
 export default function WalletCard() {
     const userName = useSelector(selectUserName)
     const profilePicLink = useSelector(selectProfilePicLink)
 
     const { active, account, activate, library, deactivate, connector } = useWeb3React()
-    async function connect() {
-
-        try {
-            await activate(injected)
-        } catch (err) {
-            console.log(err)
+     function connect() {
+             activate(injected)
+             .catch(err => console.log(err))
         }
 
-    }
+        useEffect(() => {
+            if(active){
+                firestore.collection('users').doc(auth.currentUser.uid).update({
+                    accountAddress: account
+                })
+            }
+        },[account])
 
-    async function disconnect() {
+     function disconnect() {
 
         try {
             deactivate()
@@ -31,7 +35,7 @@ export default function WalletCard() {
         }
 
     }
-
+    // console.log(account)
     return (
         <div className="col-lg-4 col-md-6 ml-auto mr-auto">
             <div className="card card-coin card-plain">

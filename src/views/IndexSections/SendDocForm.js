@@ -16,7 +16,7 @@ export default function SendDocForm() {
         return (false)
     }
 
-    const findAddrName = (e) => {
+    const findUserInfo = (e) => {
         e.preventDefault();
         if(ValidateEmail(e.target.value)){
             firestore.collection('users').where('email', '==', e.target.value).get().then((res)=>{
@@ -43,7 +43,7 @@ export default function SendDocForm() {
                     <div className="col-md-6">
                         <div className="form-group">
                             <label>Receiver's Email address</label>
-                            <input type="email" onChange={findAddrName} className="form-control" placeholder="shreyas@email.com" />
+                            <input type="email" onChange={findUserInfo} className="form-control" placeholder="shreyas@email.com" />
                         </div>
                     </div>
                 </div>
@@ -60,7 +60,7 @@ export default function SendDocForm() {
                     <label className="col-sm-3 col-form-label">Pay to</label>
                     <div className="col-sm-9">
                         <div className="form-group">
-                            <input disabled type="text" className="form-control" placeholder="e.g. 1Nasd92348hU984353hfid" />
+                            <input disabled type="text" className="form-control" placeholder="e.g. 1Nasd92348hU984353hfid" value={receiver?receiver.accountAddress:"e.g. 1Nasd92348hU984353hfid"} />
                             <span className="form-text"> {receiver?("Metamask account address of "+receiver.email):("")}</span>
                         </div>
                     </div>
