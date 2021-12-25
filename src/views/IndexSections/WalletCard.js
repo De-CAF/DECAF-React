@@ -3,33 +3,49 @@ import React, { useEffect } from "react";
 import { Button, Text } from 'reactstrap';
 
 import { useDispatch, useSelector } from "react-redux";
-import { selectUserName, selectProfilePicLink } from "../../features/userSlice";
+import { selectUserName, selectProfilePicLink, setMetaAddress, selectMetaAddress } from "../../features/userSlice";
 import { injected } from "views/daap/metamaskConnector";
 import { useWeb3React } from '@web3-react/core'
 import { firestore, auth } from '../../firebase'
 
+
 export default function WalletCard() {
+    const dispatch = useDispatch()
     const userName = useSelector(selectUserName)
     const profilePicLink = useSelector(selectProfilePicLink)
+    const metaAddress = useSelector(selectMetaAddress)
 
     const { active, account, activate, library, deactivate, connector } = useWeb3React()
-     function connect() {
-             activate(injected)
-             .catch(err => console.log(err))
+    function connect() {
+        activate(injected).catch(err => console.log(err))
+        
+    }
+
+    useEffect(() => {
+        if (active) {
+            firestore.collection('users').doc(auth.currentUser.uid).update({
+                accountAddress: account
+            }).then(() => {
+                dispatch(setMetaAddress({
+                    metaAddress: account
+                }))
+            })
+ 
         }
+    }, [active])
 
-        useEffect(() => {
-            if(active){
-                firestore.collection('users').doc(auth.currentUser.uid).update({
-                    accountAddress: account
-                })
-            }
-        },[account])
-
-     function disconnect() {
+    function disconnect() {
 
         try {
             deactivate()
+            firestore.collection('users').doc(auth.currentUser.uid).update({
+                accountAddress: null
+            }).then(() => {
+                dispatch(setMetaAddress({
+                    metaAddress: null
+                }))
+            })
+
         } catch (err) {
             console.log(err)
         }
@@ -46,7 +62,7 @@ export default function WalletCard() {
                 <div className="card-body">
                     <ul className="nav nav-tabs nav-tabs-primary justify-content-center">
                         {
-                            active ? (
+                            metaAddress ? (
                                 <>
                                     <li className="nav-item ">
                                         <a className="nav-link active" data-toggle="tab" href="#linka">
@@ -81,9 +97,9 @@ export default function WalletCard() {
                         <div className="tab-pane active" id="linka">
                             <div className="row justify-content-center align-items-center">
                                 {
-                                    active ? (
+                                    metaAddress ? (
                                         <>
-                                            Connected with <b style={{ fontSize: '10px' }}>{account}</b> <br></br>
+                                            Connected with <b style={{ fontSize: '10px' }}>{metaAddress}</b> <br></br>
                                             <button onClick={disconnect} type="submit" className="btn-lg btn-simple btn-primary btn-icon btn-round">
                                                 Disconnect
                                             </button>

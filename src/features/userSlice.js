@@ -11,7 +11,8 @@ const initialState = {
     phone: null,
     profileCompletion: null,
     userBio: null,
-    role: false
+    role: false,
+    metaAddress: null
 }
 
 const userSlice = createSlice({
@@ -37,6 +38,7 @@ const userSlice = createSlice({
             state.profileCompletion = null
             state.userBio = null
             state.role=null
+            state.metaAddress = null
         },
         setProfilePicLink : (state,action)=>{
             state.profilePicLink = action.payload.profilePicLink
@@ -48,11 +50,14 @@ const userSlice = createSlice({
                 state.phone = action.payload.phone
                 state.profileCompletion = action.payload.profileCompletion
                 state.userBio = action.payload.userBio
+        },
+        setMetaAddress : (state, action)=>{
+            state.metaAddress = action.payload.metaAddress
         }
     }
 });
 
-export const { setActiveUser, setUserLogOutState, setProfilePicLink, setAdditionalInformation} = userSlice.actions
+export const { setActiveUser, setUserLogOutState, setProfilePicLink, setAdditionalInformation, setMetaAddress} = userSlice.actions
 
 export const selectUserName = state => state.user.userName
 export const selectUserEmail = state => state.user.userEmail
@@ -65,4 +70,5 @@ export const selectBirthDate = state => state.user.birthDate
 export const selectLocation = state => state.user.location
 export const selectPhone = state => state.user.phone
 export const selectRole = state=> state.user.role
+export const selectMetaAddress = state => state.user.metaAddress
 export default userSlice.reducer

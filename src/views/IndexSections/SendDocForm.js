@@ -60,7 +60,7 @@ export default function SendDocForm() {
                     <label className="col-sm-3 col-form-label">Pay to</label>
                     <div className="col-sm-9">
                         <div className="form-group">
-                            <input disabled type="text" className="form-control" placeholder="e.g. 1Nasd92348hU984353hfid" value={receiver?receiver.accountAddress:"e.g. 1Nasd92348hU984353hfid"} />
+                            <input disabled type="text" className="form-control" placeholder="e.g. 1Nasd92348hU984353hfid" value={receiver?(receiver.accountAddress?(receiver.accountAddress):("The user is not connected to metamask")):("e.g. 1Nasd92348hU984353hfid")} />
                             <span className="form-text"> {receiver?("Metamask account address of "+receiver.email):("")}</span>
                         </div>
                     </div>

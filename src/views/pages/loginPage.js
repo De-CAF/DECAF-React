@@ -10,7 +10,7 @@ import Footer from "components/Footer/Footer.js";
 import { auth, provider, firestore } from '../../firebase'
 
 import { useDispatch, useSelector } from "react-redux";
-import { setActiveUser, setUserLogOutState, selectIsLoggedIn, setAdditionalInformation } from "../../features/userSlice";
+import { setActiveUser, setUserLogOutState, selectIsLoggedIn, setAdditionalInformation, setMetaAddress } from "../../features/userSlice";
 
 export default function LoginPage() {
   const dispatch = useDispatch();
@@ -26,7 +26,7 @@ export default function LoginPage() {
     auth.signInWithPopup(provider).then((result) => {
       console.log("Result", result)
       firestore.collection('users').doc(auth.currentUser.uid).set({
-        role: false, email: result.user.email
+        role: false, email: result.user.email, userName: result.user.displayName
       }).then(() => {
         firestore.collection('users').doc(result.user.uid).get()
           .then(res => {
@@ -38,8 +38,11 @@ export default function LoginPage() {
               profilePicLink: result.user.photoURL,
               role: additionalInfo.role
             }))
-            if (res.exists)
+            if (res.exists) {
               dispatch(setAdditionalInformation(additionalInfo))
+              if (additionalInfo.accountAddress)
+                dispatch(setMetaAddress({ metaAddress: additionalInfo.accountAddress }))
+            }
             history.push('/profile');
           })
       })
@@ -63,8 +66,11 @@ export default function LoginPage() {
               profilePicLink: result.user.photoURL,
               role: additionalInfo.role
             }))
-            if (res.exists)
+            if (res.exists) {
               dispatch(setAdditionalInformation(additionalInfo))
+              if (additionalInfo.accountAddress)
+                dispatch(setMetaAddress({ metaAddress: additionalInfo.accountAddress }))
+            }
             history.push('/profile');
           })
       })
