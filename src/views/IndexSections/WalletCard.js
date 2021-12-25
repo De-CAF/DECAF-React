@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Button, Text } from 'reactstrap';
 
 import { useDispatch, useSelector } from "react-redux";
-import { selectUserName, selectProfilePicLink, setMetaAddress, selectMetaAddress } from "../../features/userSlice";
+import { selectUserName, selectProfilePicLink, setMetaAddress, selectMetaAddress, selectAccountBalance, setAccountBalance } from "../../features/userSlice";
 import { injected } from "views/daap/metamaskConnector";
 import { useWeb3React } from '@web3-react/core'
 import { firestore, auth } from '../../firebase'
@@ -14,11 +14,14 @@ export default function WalletCard() {
     const userName = useSelector(selectUserName)
     const profilePicLink = useSelector(selectProfilePicLink)
     const metaAddress = useSelector(selectMetaAddress)
+    const accountbalance = useSelector(selectAccountBalance)
+    const [currentNet, setCurrentNet] = useState('')
 
-    const { active, account, activate, library, deactivate, connector } = useWeb3React()
-    function connect() {
-        activate(injected).catch(err => console.log(err))
-        
+    const { active, account, activate, library, deactivate, connector, network } = useWeb3React()
+    async function connect() {
+        activate(injected)
+            .catch(err => console.log(err))
+
     }
 
     useEffect(() => {
@@ -29,8 +32,18 @@ export default function WalletCard() {
                 dispatch(setMetaAddress({
                     metaAddress: account
                 }))
+                library.eth.getBalance(account).then((balance) => {
+                    //console.log(balance)
+                    dispatch(setAccountBalance({
+                        accountBalance: balance
+                    }))
+                })
+                library.eth.net.getNetworkType()
+                    .then((network) => {
+                        //console.log(network)
+                        setCurrentNet(network)
+                    });
             })
- 
         }
     }, [active])
 
@@ -58,6 +71,8 @@ export default function WalletCard() {
                 <div className="card-header">
                     <img src={profilePicLink} className="img-center img-fluid rounded-circle" />
                     <h4 className="title">{userName}'s Wallet</h4>
+                    
+                    
                 </div>
                 <div className="card-body">
                     <ul className="nav nav-tabs nav-tabs-primary justify-content-center">
@@ -99,7 +114,9 @@ export default function WalletCard() {
                                 {
                                     metaAddress ? (
                                         <>
+    
                                             Connected with <b style={{ fontSize: '10px' }}>{metaAddress}</b> <br></br>
+                                            
                                             <button onClick={disconnect} type="submit" className="btn-lg btn-simple btn-primary btn-icon btn-round">
                                                 Disconnect
                                             </button>
@@ -124,8 +141,10 @@ export default function WalletCard() {
                         <div className="tab-pane" id="linkb">
                             <div className="table-responsive">
                                 <table className="table tablesorter " id="plain-table">
+                                    
                                     <thead className=" text-primary">
-                                        <tr>
+
+                                        <tr style={{textAlign: 'center'}}>
                                             <th className="header">
                                                 COIN
                                             </th>
@@ -139,36 +158,14 @@ export default function WalletCard() {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>
-                                                BTC
-                                            </td>
-                                            <td>
-                                                7.342
-                                            </td>
-                                            <td>
-                                                48,870.75 USD
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
+                                            <td style={{textAlign: 'center'}}>
                                                 ETH
                                             </td>
-                                            <td>
-                                                30.737
+                                            <td style={{textAlign: 'center'}}>
+                                                {accountbalance}
                                             </td>
-                                            <td>
+                                            <td style={{textAlign: 'center'}}>
                                                 64,53.30 USD
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                XRP
-                                            </td>
-                                            <td>
-                                                19.242
-                                            </td>
-                                            <td>
-                                                18,354.96 USD
                                             </td>
                                         </tr>
                                     </tbody>
