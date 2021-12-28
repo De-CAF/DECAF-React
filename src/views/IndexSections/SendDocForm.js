@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable no-useless-escape */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
@@ -11,7 +12,7 @@ import toBuffer from 'it-to-buffer'
 export default function SendDocForm() {
 
     const [receiver, setReceiver] = useState('')
-    const [buffer,setBuffer] = useState(null)
+    const [buffer, setBuffer] = useState(null)
     const metaAddress = useSelector(selectMetaAddress)
     const role = useSelector(selectRole)
     const [ipfs, setIpfs] = useState(null)
@@ -19,7 +20,7 @@ export default function SendDocForm() {
     const [b64, setB64] = useState(null)
 
     create().then(ipfs => {
-        
+
         setIpfs(ipfs)
     })
 
@@ -50,8 +51,8 @@ export default function SendDocForm() {
         const reader = new window.FileReader()
         reader.readAsArrayBuffer(file)
         reader.onloadend = () => {
-        setBuffer(Buffer(reader.result)) 
-        console.log('buffer', reader.result)
+            setBuffer(Buffer(reader.result))
+            console.log('buffer', reader.result)
         }
     }
 
@@ -62,8 +63,6 @@ export default function SendDocForm() {
         const bufferedContents = await toBuffer(ipfs.cat(results.path)) // returns a Buffer
         console.log(bufferedContents)
         setB64(Buffer(bufferedContents).toString('base64'))
-        let image = new Buffer(b64, 'base64');
-        console.log(image)
         setMimeType('image/jpg');
     }
 
@@ -75,7 +74,13 @@ export default function SendDocForm() {
                         {
                             role ? (
                                 <>
-                                 { <img  src={`data:${mimeType};base64,${b64}`}  /> }
+                                    {/*<>
+                                        <img src={`data:${mimeType};base64,${b64}`} />
+                                        <object>
+                                            <embed id="pdfID" type="text/html" width="1200" height="600" src={`data:application/pdf;base64,${b64}`} />
+                                        </object>
+                                    </>*/
+                                    }
                                     <form onSubmit={onSubmit}>
                                         <div className="row">
                                             <div className="col-md-6">
@@ -119,11 +124,11 @@ export default function SendDocForm() {
                                         <button type="submit" className="btn btn-simple btn-primary btn-icon btn-round float-right"><i className="tim-icons icon-send" /></button>
 
                                     </form>
-                                   
+
                                 </>
                             ) : (
                                 <>
-                                Currently only organisations can issue documents!
+                                    Currently only organisations can issue documents!
                                 </>
                             )
                         }
