@@ -43,6 +43,7 @@
     "redux": "^4.1.1",
     "redux-thunk": "^2.4.0",
     "redux-toolkit": "^1.1.2",
+    "truffle": "^5.4.26",
     "web-vitals": "1.0.1",
     "web3": "^1.6.1"
   },

@@ -13,6 +13,7 @@ import Web3 from 'web3'
 
 function getLibrary(provider) {
 
+  console.log(provider)
   return new Web3(provider)
 
 }
