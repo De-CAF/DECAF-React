@@ -16,7 +16,7 @@ export default function TransactionTable() {
                                 <tr>
                                     <th className="text-center">#</th>
                                     <th> Document Name</th>
-                                    <th>IPFS Hash</th>
+                                    <th>Transaction Hash</th>
                                     <th className="text-center">Issued To</th>
                                 </tr>
                             </thead>
@@ -38,7 +38,7 @@ export default function TransactionTable() {
                                 <tr>
                                     <th className="text-center">#</th>
                                     <th> Document Name</th>
-                                    <th>IPFS Hash</th>
+                                    <th>Transaction Hash</th>
                                     <th className="text-center">Issuer</th>
                                 </tr>
                             </thead>

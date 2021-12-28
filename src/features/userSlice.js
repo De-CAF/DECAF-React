@@ -13,7 +13,8 @@ const initialState = {
     userBio: null,
     role: false,
     metaAddress: null,
-    accountBalance: null
+    accountBalance: null,
+    currentNet: null
 }
 
 const userSlice = createSlice({
@@ -41,6 +42,7 @@ const userSlice = createSlice({
             state.role=null
             state.metaAddress = null
             state.accountBalance = null
+            state.currentNet = null
         },
         setProfilePicLink : (state,action)=>{
             state.profilePicLink = action.payload.profilePicLink
@@ -58,11 +60,14 @@ const userSlice = createSlice({
         },
         setAccountBalance :(state,action)=>{
             state.accountBalance = action.payload.accountBalance
+        },
+        setCurrentNet: (state, action) =>{
+            state.currentNet = action.payload.currentNet
         }
     }
 });
 
-export const { setActiveUser, setUserLogOutState, setProfilePicLink, setAdditionalInformation, setMetaAddress, setAccountBalance} = userSlice.actions
+export const { setActiveUser, setUserLogOutState, setProfilePicLink, setAdditionalInformation, setMetaAddress, setAccountBalance,setCurrentNet} = userSlice.actions
 
 export const selectUserName = state => state.user.userName
 export const selectUserEmail = state => state.user.userEmail
@@ -77,4 +82,5 @@ export const selectPhone = state => state.user.phone
 export const selectRole = state=> state.user.role
 export const selectMetaAddress = state => state.user.metaAddress
 export const selectAccountBalance = state => state.user.accountBalance
+export const selectCurrentNet = state => state.user.currentNet
 export default userSlice.reducer

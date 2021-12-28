@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Text } from 'reactstrap';
 
 import { useDispatch, useSelector } from "react-redux";
-import { selectUserName, selectProfilePicLink, setMetaAddress, selectMetaAddress, selectAccountBalance, setAccountBalance } from "../../features/userSlice";
+import { selectUserName, selectProfilePicLink, setMetaAddress, selectMetaAddress, selectAccountBalance, setAccountBalance, selectCurrentNet, setCurrentNet } from "../../features/userSlice";
 import { injected } from "views/daap/metamaskConnector";
 import { useWeb3React } from '@web3-react/core'
 import { firestore, auth } from '../../firebase'
@@ -15,7 +15,7 @@ export default function WalletCard() {
     const profilePicLink = useSelector(selectProfilePicLink)
     const metaAddress = useSelector(selectMetaAddress)
     const accountbalance = useSelector(selectAccountBalance)
-    const [currentNet, setCurrentNet] = useState('')
+    const currentNet = useSelector(selectCurrentNet)
 
     const { active, account, activate, library, deactivate, connector, network } = useWeb3React()
     async function connect() {
@@ -35,13 +35,14 @@ export default function WalletCard() {
                 library.eth.getBalance(account).then((balance) => {
                     //console.log(balance)
                     dispatch(setAccountBalance({
-                        accountBalance: balance
+                        accountBalance: library.utils.fromWei(balance, "ETHER")
                     }))
                 })
                 library.eth.net.getNetworkType()
                     .then((network) => {
                         //console.log(network)
-                        setCurrentNet(network)
+                        //setCurrentNet(network)
+                        dispatch(setCurrentNet({currentNet: network}))
                     });
             })
         }
@@ -56,7 +57,7 @@ export default function WalletCard() {
             }).then(() => {
                 dispatch(setMetaAddress({
                     metaAddress: null
-                }))
+                }),setCurrentNet({currentNet: null}))
             })
 
         } catch (err) {
@@ -70,9 +71,20 @@ export default function WalletCard() {
             <div className="card card-coin card-plain">
                 <div className="card-header">
                     <img src={profilePicLink} className="img-center img-fluid rounded-circle" />
-                    <h4 className="title">{userName}'s Wallet</h4>
-                    
-                    
+                    <h4 className="title">{userName}'s Wallet </h4>
+                    {
+                        metaAddress ? (
+                            <>
+                                <h6>connected to : {currentNet} Net</h6>
+                            </>
+                        ) : (
+                            <>
+                            </>
+                        )
+                    }
+
+
+
                 </div>
                 <div className="card-body">
                     <ul className="nav nav-tabs nav-tabs-primary justify-content-center">
@@ -114,9 +126,9 @@ export default function WalletCard() {
                                 {
                                     metaAddress ? (
                                         <>
-    
+
                                             Connected with <b style={{ fontSize: '10px' }}>{metaAddress}</b> <br></br>
-                                            
+
                                             <button onClick={disconnect} type="submit" className="btn-lg btn-simple btn-primary btn-icon btn-round">
                                                 Disconnect
                                             </button>
@@ -141,10 +153,10 @@ export default function WalletCard() {
                         <div className="tab-pane" id="linkb">
                             <div className="table-responsive">
                                 <table className="table tablesorter " id="plain-table">
-                                    
+
                                     <thead className=" text-primary">
 
-                                        <tr style={{textAlign: 'center'}}>
+                                        <tr style={{ textAlign: 'center' }}>
                                             <th className="header">
                                                 COIN
                                             </th>
@@ -158,14 +170,14 @@ export default function WalletCard() {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td style={{textAlign: 'center'}}>
+                                            <td style={{ textAlign: 'center' }}>
                                                 ETH
                                             </td>
-                                            <td style={{textAlign: 'center'}}>
+                                            <td style={{ textAlign: 'center' }}>
                                                 {accountbalance}
                                             </td>
-                                            <td style={{textAlign: 'center'}}>
-                                                64,53.30 USD
+                                            <td style={{ textAlign: 'center' }}>
+                                                {accountbalance * 4000} USD
                                             </td>
                                         </tr>
                                     </tbody>
