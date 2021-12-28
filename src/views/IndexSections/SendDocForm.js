@@ -4,12 +4,17 @@
 import React, { useState, useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { selectUserName, selectProfilePicLink, selectMetaAddress, selectRole } from "../../features/userSlice";
+import { selectUserName, selectProfilePicLink, selectMetaAddress, selectRole ,selectCurrentNet} from "../../features/userSlice";
 import { firestore } from "../../firebase"
 import { create } from 'ipfs-core'
 import toBuffer from 'it-to-buffer'
+import { useWeb3React } from '@web3-react/core'
+import Decaf from '../../abis/Decaf.json'
+import Migrations from '../../abis/Migrations.json'
 
 export default function SendDocForm() {
+
+    const { active, account, activate, library, deactivate, connector } = useWeb3React()
 
     const [receiver, setReceiver] = useState('')
     const [buffer, setBuffer] = useState(null)
@@ -18,9 +23,10 @@ export default function SendDocForm() {
     const [ipfs, setIpfs] = useState(null)
     const [mimeType, setMimeType] = useState('')
     const [b64, setB64] = useState(null)
+    const [contractToken, setContractToken] = useState(null)
+    const currentNet = useSelector(selectCurrentNet)
 
     create().then(ipfs => {
-
         setIpfs(ipfs)
     })
 
@@ -30,6 +36,7 @@ export default function SendDocForm() {
         }
         return (false)
     }
+    
 
     const findUserInfo = (e) => {
         e.preventDefault();
@@ -64,6 +71,30 @@ export default function SendDocForm() {
         console.log(bufferedContents)
         setB64(Buffer(bufferedContents).toString('base64'))
         setMimeType('image/jpg');
+        //console.log(event)
+        const payTo = event.target[3].value
+        library.utils.toChecksumAddress(payTo)
+        console.log(typeof results.path)
+        const issuer = library.utils.toChecksumAddress(metaAddress)
+        const fileName = event.target[4].value.slice(12)
+        //console.log(fileName)
+        try {
+            const netId = await library.eth.net.getId()
+            const networkData = Migrations.networks[netId]
+            const contractToken = new library.eth.Contract(Decaf.abi, networkData.address );
+            //const dBankAddress = dBank.networks[netId].address;
+            setContractToken(contractToken)
+
+            contractToken.methods.issueDocument(payTo, fileName, results.path).send({from: issuer}).then((res)=>{
+                contractToken.methods.getDocumentsIssued().call({from: metaAddress}).then(docs=>{
+                    console.log(docs)
+                })
+            })
+
+        } catch (err) {
+            console.log('Error', err);
+            window.alert('ERROR', err.message);
+        }
     }
 
     return (
@@ -80,6 +111,7 @@ export default function SendDocForm() {
                                             <embed id="pdfID" type="text/html" width="1200" height="600" src={`data:application/pdf;base64,${b64}`} />
                                         </object>
                                     </>*/
+                                    
                                     }
                                     <form onSubmit={onSubmit}>
                                         <div className="row">
