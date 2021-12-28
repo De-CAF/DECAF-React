@@ -62,7 +62,7 @@ export default function SendDocForm() {
         const bufferedContents = await toBuffer(ipfs.cat(results.path)) // returns a Buffer
         console.log(bufferedContents)
         setB64(Buffer(bufferedContents).toString('base64'))
-        let image = new Buffer(b64, 'base64');
+        let image =  Buffer(b64, 'base64');
         console.log(image)
         setMimeType('image/jpg');
     }
