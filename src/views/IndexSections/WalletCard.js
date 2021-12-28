@@ -17,7 +17,7 @@ export default function WalletCard() {
     const accountbalance = useSelector(selectAccountBalance)
     const currentNet = useSelector(selectCurrentNet)
 
-    const { active, account, activate, library, deactivate, connector, network } = useWeb3React()
+    const { active, account, activate, library, deactivate, connector } = useWeb3React()
     async function connect() {
         activate(injected)
             .catch(err => console.log(err))
@@ -25,7 +25,27 @@ export default function WalletCard() {
     }
 
     useEffect(() => {
+
         if (active) {
+            window.ethereum.on('networkChanged', function (networkId) {
+                //console.log(networkId)
+                library.eth.net.getNetworkType()
+                    .then((network) => {
+                        //console.log(network)
+                        //setCurrentNet(network)
+                        dispatch(setCurrentNet({ currentNet: network }))
+                    });
+                library.eth.getBalance(account).then((balance) => {
+                    //console.log(balance)
+                    dispatch(setAccountBalance({
+                        accountBalance: library.utils.fromWei(balance, "ETHER")
+                    }))
+                })
+            })
+            /*library.eth.getAccounts().then(account=>{
+                console.log("Accounts: "+ account)
+            })*/
+            // window.ethereum.on('accountsChanged', function (networkId) {
             firestore.collection('users').doc(auth.currentUser.uid).update({
                 accountAddress: account
             }).then(() => {
@@ -42,11 +62,12 @@ export default function WalletCard() {
                     .then((network) => {
                         //console.log(network)
                         //setCurrentNet(network)
-                        dispatch(setCurrentNet({currentNet: network}))
+                        dispatch(setCurrentNet({ currentNet: network }))
                     });
             })
+            //})
         }
-    }, [active])
+    },[active])
 
     function disconnect() {
 
@@ -57,7 +78,7 @@ export default function WalletCard() {
             }).then(() => {
                 dispatch(setMetaAddress({
                     metaAddress: null
-                }),setCurrentNet({currentNet: null}))
+                }), setCurrentNet({ currentNet: null }))
             })
 
         } catch (err) {
