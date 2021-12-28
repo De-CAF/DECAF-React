@@ -3,13 +3,23 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUserName, selectProfilePicLink, selectMetaAddress, selectRole } from "../../features/userSlice";
 import { firestore } from "../../firebase"
-
+import { create } from 'ipfs-core'
+import toBuffer from 'it-to-buffer'
 
 export default function SendDocForm() {
 
     const [receiver, setReceiver] = useState('')
+    const [buffer,setBuffer] = useState(null)
     const metaAddress = useSelector(selectMetaAddress)
     const role = useSelector(selectRole)
+    const [ipfs, setIpfs] = useState(null)
+    const [mimeType, setMimeType] = useState('')
+    const [b64, setB64] = useState(null)
+
+    create().then(ipfs => {
+        
+        setIpfs(ipfs)
+    })
 
     function ValidateEmail(mail) {
         if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
@@ -32,6 +42,27 @@ export default function SendDocForm() {
         setReceiver('')
     }
 
+    const captureFile = (event) => {
+        event.preventDefault()
+        const file = event.target.files[0]
+        const reader = new window.FileReader()
+        reader.readAsArrayBuffer(file)
+        reader.onloadend = () => {
+        setBuffer(Buffer(reader.result)) 
+        console.log('buffer', reader.result)
+        }
+    }
+
+    const onSubmit = async (event) => {
+        event.preventDefault()
+        const results = (await ipfs.add(buffer))
+        console.log(results.path)
+        const bufferedContents = await toBuffer(ipfs.cat(results.path)) // returns a Buffer
+        console.log(bufferedContents)
+        setB64(Buffer(bufferedContents).toString('base64'))
+        setMimeType('image/jpg');
+    }
+
     return (
         <div className="card-body">
             {
@@ -40,7 +71,8 @@ export default function SendDocForm() {
                         {
                             role ? (
                                 <>
-                                    <form>
+                                 {/* <image  src={`data:${mimeType};base64,${b64}`}  /> */}
+                                    <form onSubmit={onSubmit}>
                                         <div className="row">
                                             <div className="col-md-6">
                                                 <div className="form-group">
@@ -76,13 +108,14 @@ export default function SendDocForm() {
                                         <div className="row">
                                             <label className="col-sm-3 col-form-label">File</label>
                                             <div className="col-sm-9">
-                                                <input type="file" />
+                                                <input type="file" onChange={captureFile} />
                                             </div>
                                         </div>
 
                                         <button type="submit" className="btn btn-simple btn-primary btn-icon btn-round float-right"><i className="tim-icons icon-send" /></button>
 
                                     </form>
+                                   
                                 </>
                             ) : (
                                 <>
