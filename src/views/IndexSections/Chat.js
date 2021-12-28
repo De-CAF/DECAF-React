@@ -1,3 +1,8 @@
+/* eslint-disable jsx-a11y/alt-text */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable jsx-a11y/img-redundant-alt */
+/* eslint-disable no-script-url */
+/* eslint-disable no-unused-vars */
 import React from "react";
 // reactstrap components
 import { Button, Container, Row, Col, UncontrolledTooltip } from "reactstrap";
@@ -78,7 +83,7 @@ export default function Chat() {
                                                         <small className="text-muted">7 hours ago</small>
                                                     </div>
                                                 </div>
-                                                <span className="text-muted text-small col-11 p-0 text-truncate d-block">It’s an
+                                                <span className="text-muted text-small col-11 p-0 text-truncate d-block">It's an
                                                     effective resource regardless..</span>
                                             </div>
                                         </div>

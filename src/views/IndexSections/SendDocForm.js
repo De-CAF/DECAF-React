@@ -1,3 +1,5 @@
+/* eslint-disable no-useless-escape */
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -60,6 +62,8 @@ export default function SendDocForm() {
         const bufferedContents = await toBuffer(ipfs.cat(results.path)) // returns a Buffer
         console.log(bufferedContents)
         setB64(Buffer(bufferedContents).toString('base64'))
+        let image = new Buffer(b64, 'base64');
+        console.log(image)
         setMimeType('image/jpg');
     }
 
@@ -71,7 +75,7 @@ export default function SendDocForm() {
                         {
                             role ? (
                                 <>
-                                 {/* <image  src={`data:${mimeType};base64,${b64}`}  /> */}
+                                 { <img  src={`data:${mimeType};base64,${b64}`}  /> }
                                     <form onSubmit={onSubmit}>
                                         <div className="row">
                                             <div className="col-md-6">

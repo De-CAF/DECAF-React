@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from "react";
 
 import { Button, Text } from 'reactstrap';
@@ -229,7 +232,7 @@ export default function WalletCard() {
                                         </tr>
                                         <tr>
                                             <td>
-                                                PR: BitCanna – Dutch Blockchain...
+                                                PR: BitCanna - Dutch Blockchain...
                                             </td>
                                         </tr>
                                     </tbody>
