@@ -13,7 +13,7 @@ import Web3 from 'web3'
 
 function getLibrary(provider) {
 
-  console.log(provider)
+  //console.log(provider)
   return new Web3(provider)
 
 }
@@ -25,10 +25,10 @@ store.subscribe(
 );
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Web3ReactProvider getLibrary={getLibrary}>
+  <Web3ReactProvider getLibrary={getLibrary}>
+    <Provider store={store}>
       <App />
-    </Web3ReactProvider>
-  </Provider>,
+    </Provider>
+  </Web3ReactProvider>,
   document.getElementById("root")
 );

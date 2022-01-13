@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.1;
+pragma solidity >=0.8.1;
+pragma abicoder v2;
 
 contract Decaf {
     struct Document {
@@ -9,8 +10,8 @@ contract Decaf {
         string ipfsHash;
     }
 
-    mapping(address => Document[]) documentsIssued;    
-    mapping(address => Document[]) documentsReceived;
+    mapping(address => Document[]) public documentsIssued;    
+    mapping(address => Document[]) public documentsReceived;
 
     function issueDocument(address to, string memory fileName, string memory ipfsHash) public {
         Document memory document;
@@ -23,11 +24,11 @@ contract Decaf {
         documentsReceived[to].push(document);
     }
 
-    function getDocumentsIssued() view public returns (Document[] memory documents){
+    function getDocumentsIssued() public view  returns (Document[] memory){
         return documentsIssued[msg.sender];
     }
 
-    function getDocumentsReceived() view public returns (Document[] memory documents){
+    function getDocumentsReceived() public view  returns (Document[] memory){
         return documentsReceived[msg.sender];
     }
 

@@ -20,7 +20,7 @@ export default function WalletCard() {
     const accountbalance = useSelector(selectAccountBalance)
     const currentNet = useSelector(selectCurrentNet)
 
-    const { active, account, activate, library, deactivate, connector } = useWeb3React()
+    const { active, account, activate, library, deactivate } = useWeb3React()
     async function connect() {
         activate(injected)
             .catch(err => console.log(err))

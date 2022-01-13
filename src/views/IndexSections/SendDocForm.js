@@ -4,17 +4,21 @@
 import React, { useState, useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { selectUserName, selectProfilePicLink, selectMetaAddress, selectRole ,selectCurrentNet} from "../../features/userSlice";
+import { selectMetaAddress, selectRole, selectCurrentNet } from "../../features/userSlice";
 import { firestore } from "../../firebase"
 import { create } from 'ipfs-core'
 import toBuffer from 'it-to-buffer'
 import { useWeb3React } from '@web3-react/core'
 import Decaf from '../../abis/Decaf.json'
-import Migrations from '../../abis/Migrations.json'
 
 export default function SendDocForm() {
 
-    const { active, account, activate, library, deactivate, connector } = useWeb3React()
+    const { active, account, activate, library, deactivate } = useWeb3React()
+
+    create().then(ipfs => {
+        //console.log(ipfs)
+        setIpfs(ipfs)
+    })
 
     const [receiver, setReceiver] = useState('')
     const [buffer, setBuffer] = useState(null)
@@ -24,11 +28,7 @@ export default function SendDocForm() {
     const [mimeType, setMimeType] = useState('')
     const [b64, setB64] = useState(null)
     const [contractToken, setContractToken] = useState(null)
-    const currentNet = useSelector(selectCurrentNet)
 
-    create().then(ipfs => {
-        setIpfs(ipfs)
-    })
 
     function ValidateEmail(mail) {
         if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
@@ -36,7 +36,7 @@ export default function SendDocForm() {
         }
         return (false)
     }
-    
+
 
     const findUserInfo = (e) => {
         e.preventDefault();
@@ -54,6 +54,9 @@ export default function SendDocForm() {
 
     const captureFile = (event) => {
         event.preventDefault()
+        //console.log(create())
+
+        //console.log(ipfs)
         const file = event.target.files[0]
         const reader = new window.FileReader()
         reader.readAsArrayBuffer(file)
@@ -73,28 +76,31 @@ export default function SendDocForm() {
         setMimeType('image/jpg');
         //console.log(event)
         const payTo = event.target[3].value
-        library.utils.toChecksumAddress(payTo)
-        console.log(typeof results.path)
-        const issuer = library.utils.toChecksumAddress(metaAddress)
+        //library.utils.toChecksumAddress(payTo)
+        //console.log(typeof results.path)
+
         const fileName = event.target[4].value.slice(12)
         //console.log(fileName)
         try {
-            const netId = await library.eth.net.getId()
-            const networkData = Migrations.networks[netId]
-            const contractToken = new library.eth.Contract(Decaf.abi, networkData.address );
-            //const dBankAddress = dBank.networks[netId].address;
-            setContractToken(contractToken)
 
-            contractToken.methods.issueDocument(payTo, fileName, results.path).send({from: issuer}).then((res)=>{
-                contractToken.methods.getDocumentsIssued().call({from: metaAddress}).then(docs=>{
-                    console.log(docs)
-                })
+            const netId = await library.eth.net.getId()
+            const networkData = Decaf.networks[netId]
+            console.log("Contract Address: ", networkData.address) 
+            const contractToken = new library.eth.Contract(Decaf.abi, networkData.address);
+           setContractToken(contractToken)
+            contractToken.methods.issueDocument(payTo, fileName, results.path).send({ from: account }).then(async (r)=>{
+                const documentsIssued = await contractToken.methods.getDocumentsIssued().call({ from: account })
+                const documentsRecieved = await contractToken.methods.getDocumentsReceived().call({ from: account })
+                console.log(documentsIssued)
+                console.log(documentsRecieved)
             })
 
         } catch (err) {
             console.log('Error', err);
             window.alert('ERROR', err.message);
         }
+
+
     }
 
     return (
@@ -105,13 +111,16 @@ export default function SendDocForm() {
                         {
                             role ? (
                                 <>
-                                    {/*<>
-                                        <img src={`data:${mimeType};base64,${b64}`} />
-                                        <object>
+                                    {
+                                        <>
+                                            <img src={`data:${mimeType};base64,${b64}`} />
+                                        </>
+
+                                        /*<object>
                                             <embed id="pdfID" type="text/html" width="1200" height="600" src={`data:application/pdf;base64,${b64}`} />
-                                        </object>
-                                    </>*/
-                                    
+                                        </object>*/
+
+
                                     }
                                     <form onSubmit={onSubmit}>
                                         <div className="row">
