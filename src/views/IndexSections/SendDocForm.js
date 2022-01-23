@@ -26,6 +26,7 @@ export default function SendDocForm() {
     const [mimeType, setMimeType] = useState('')
     const [b64, setB64] = useState(null)
     const [ipfsHash, setipfsHash] = useState(null)
+    const [docSig, setdocSig] = useState(null)
 
     const [contractToken1, setContractToken1] = useState(null)
     const [contractToken2, setContractToken2] = useState(null)
@@ -69,21 +70,13 @@ export default function SendDocForm() {
             setBuffer(Buffer(reader.result))
             console.log('buffer', reader.result)
             const results = (await ipfs.add(reader.result))
-            console.log(results.path)
+            console.log("ipfs hash: ", results.path)
             setipfsHash(results.path)
             const bufferedContents = await toBuffer(ipfs.cat(results.path)) // returns a Buffer
             //console.log(bufferedContents)
             setB64(Buffer(bufferedContents).toString('base64'))
             setMimeType('image/jpg');
-        }
 
-    }
-
-    const onSubmit = async (event) => {
-        event.preventDefault()
-        const payTo = event.target[3].value
-        const fileName = event.target[4].value.slice(12)
-        try {
             const netId = await library.eth.net.getId()
             const networkData1 = Decaf.networks[netId]
             const networkData2 = Verification.networks[netId]
@@ -94,15 +87,24 @@ export default function SendDocForm() {
                 setContractToken1(contractToken1)
                 const contractToken2 = new library.eth.Contract(Verification.abi, networkData2.address);
                 setContractToken2(contractToken2)
-                //dispatch(setContracts({ contractDoc: contractToken1, contractVerification: contractToken2 }))
-
-                contractToken1.methods.issueDocument(payTo, fileName, ipfsHash).send({ from: metaAddress }).then(async (r) => {
-                    const documentsIssued = await contractToken1.methods.getDocumentsIssued().call({ from: metaAddress })
-                    const documentsRecieved = await contractToken1.methods.getDocumentsReceived().call({ from: metaAddress })
-                    console.log(documentsIssued)
-                    console.log(documentsRecieved)
-                })
             }
+        }
+
+    }
+
+    const onSubmit = async (event) => {
+        event.preventDefault()
+        const payTo = event.target[3].value
+        const fileName = event.target[4].value.slice(12)
+        try {
+            //dispatch(setContracts({ contractDoc: contractToken1, contractVerification: contractToken2 }))
+            contractToken1.methods.issueDocument(payTo, fileName, ipfsHash).send({ from: metaAddress }).then(async (r) => {
+                const documentsIssued = await contractToken1.methods.getDocumentsIssued().call({ from: metaAddress })
+                const documentsRecieved = await contractToken1.methods.getDocumentsReceived().call({ from: metaAddress })
+                console.log(documentsIssued)
+                console.log(documentsRecieved)
+            })
+
 
         } catch (err) {
             console.log('Error', err);
@@ -111,7 +113,13 @@ export default function SendDocForm() {
     }
 
     const sign = async (event) => {
-
+        const mssgHash = await contractToken2.methods.getMessageHash(ipfsHash).call({ from: metaAddress })
+        library.eth.personal.sign(mssgHash, metaAddress).then(async (signature) => {
+            setdocSig(true)
+            await contractToken1.methods.signDocument(signature, mssgHash).send({ from: metaAddress })
+            const documentsSigned = await contractToken1.methods.getDocumentsSigned().call({ from: metaAddress })
+            console.log(documentsSigned)
+        })
     }
 
     return (
@@ -129,8 +137,15 @@ export default function SendDocForm() {
                                                 <img src={`data:${mimeType};base64,${b64}`} />
                                             </>
                                         ) : (
-                                            <p align="center">Preview Document</p>
+                                            <>
+                                                <p align="center">Preview Document</p>
+                                                <br></br>
+
+                                            </>
+
                                         )
+
+
 
 
                                         /*<object>
@@ -139,6 +154,25 @@ export default function SendDocForm() {
 
 
                                     }
+                                    <p align="center">File Status: {
+                                        ipfsHash ? (
+                                            docSig ? (
+                                                <>
+                                                    <b>File is signed on the blockchain.</b>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <b>IPFS hash generated.</b>
+                                                </>
+                                            )
+                                        ) : (
+                                            <>
+                                                <b>File not uploaded.</b>
+                                            </>
+                                        )
+                                    }
+                                    </p>
+                                    <br></br>
                                     <form onSubmit={onSubmit}>
                                         <div className="row">
                                             <div className="col-md-6">
@@ -154,20 +188,6 @@ export default function SendDocForm() {
                                                 </div>
                                             </div>
                                         </div>
-                                        {
-                                            ipfsHash ? (
-                                                <div className="row">
-                                                    <div className="col-md-12">
-                                                        <div className="form-group">
-                                                            <label>Sign the document on blockchain</label>
-                                                            <button onClick={sign} className="btn btn-simple btn-primary btn-icon btn-round float-right">Sign <i className="tim-icons icon-key-25" /></button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ) : (
-                                                <></>
-                                            )
-                                        }
                                         <div className="row">
                                             <label className="col-sm-3 col-form-label">Pay to</label>
                                             <div className="col-sm-9">
@@ -187,6 +207,24 @@ export default function SendDocForm() {
                                         <button type="submit" className="btn btn-simple btn-primary btn-icon btn-round float-right"><i className="tim-icons icon-send" /></button>
 
                                     </form>
+                                    {
+                                        true ? (
+                                            <div className="row">
+                                                <label>Sign the document on blockchain</label>
+
+                                                <div className="col-md-6">
+                                                    <div className="justify-content-center">
+                                                        <button onClick={sign} className="btn-lg btn-simple btn-primary btn-icon btn-round ">Sign <i className="tim-icons icon-key-25" /></button>
+                                                    </div>
+
+                                                </div>
+
+
+                                            </div>
+                                        ) : (
+                                            <></>
+                                        )
+                                    }
 
                                 </>
                             ) : (
@@ -204,6 +242,6 @@ export default function SendDocForm() {
                 )
             }
 
-        </div>
+        </div >
     );
 }
