@@ -10,10 +10,21 @@ contract Decaf {
         string ipfsHash;
     }
 
-    mapping(address => Document[]) public documentsIssued;    
-    mapping(address => Document[]) public documentsReceived;
+    struct DocumentSigned {
+        bytes signature;
+        address signer;
+        bytes mssgHash;
+    }
 
-    function issueDocument(address to, string memory fileName, string memory ipfsHash) public {
+    mapping(address => Document[]) public documentsIssued;
+    mapping(address => Document[]) public documentsReceived;
+    mapping(address => DocumentSigned[]) public documentsSigned;
+
+    function issueDocument(
+        address to,
+        string memory fileName,
+        string memory ipfsHash
+    ) public {
         Document memory document;
         document.from = msg.sender;
         document.to = to;
@@ -24,12 +35,29 @@ contract Decaf {
         documentsReceived[to].push(document);
     }
 
-    function getDocumentsIssued() public view  returns (Document[] memory){
+    function signDocument(bytes memory signature, bytes memory mssgHash)
+        public
+    {
+        DocumentSigned memory document;
+        document.signer = msg.sender;
+        document.signature = signature;
+        document.mssgHash = mssgHash;
+        documentsSigned[msg.sender].push(document);
+    }
+
+    function getDocumentsIssued() public view returns (Document[] memory) {
         return documentsIssued[msg.sender];
     }
 
-    function getDocumentsReceived() public view  returns (Document[] memory){
+    function getDocumentsReceived() public view returns (Document[] memory) {
         return documentsReceived[msg.sender];
     }
 
+    function getDocumentsSigned()
+        public
+        view
+        returns (DocumentSigned[] memory)
+    {
+        return documentsSigned[msg.sender];
+    }
 }

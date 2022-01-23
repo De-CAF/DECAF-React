@@ -14,7 +14,9 @@ const initialState = {
     role: false,
     metaAddress: null,
     accountBalance: null,
-    currentNet: null
+    currentNet: null,
+    contractDoc: null,
+    contractVerification: null,
 }
 
 const userSlice = createSlice({
@@ -43,6 +45,8 @@ const userSlice = createSlice({
             state.metaAddress = null
             state.accountBalance = null
             state.currentNet = null
+            state.contractDoc = null
+            state.contractVerification = null
         },
         setProfilePicLink : (state,action)=>{
             state.profilePicLink = action.payload.profilePicLink
@@ -63,11 +67,15 @@ const userSlice = createSlice({
         },
         setCurrentNet: (state, action) =>{
             state.currentNet = action.payload.currentNet
-        }
+        },
+        setContracts: (state, action) =>{
+            state.contractDoc = action.payload.contractDoc
+            state.contractVerification = action.payload.contractVerification
+        },
     }
 });
 
-export const { setActiveUser, setUserLogOutState, setProfilePicLink, setAdditionalInformation, setMetaAddress, setAccountBalance,setCurrentNet} = userSlice.actions
+export const { setActiveUser, setUserLogOutState, setProfilePicLink, setAdditionalInformation, setMetaAddress, setAccountBalance,setCurrentNet, setContracts} = userSlice.actions
 
 export const selectUserName = state => state.user.userName
 export const selectUserEmail = state => state.user.userEmail
@@ -83,4 +91,6 @@ export const selectRole = state=> state.user.role
 export const selectMetaAddress = state => state.user.metaAddress
 export const selectAccountBalance = state => state.user.accountBalance
 export const selectCurrentNet = state => state.user.currentNet
+export const selectContractDoc = state => state.user.contractDoc
+export const selectContractVerification = state => state.user.contractVerification
 export default userSlice.reducer

@@ -3,10 +3,8 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from "react";
 
-import { Button, Text } from 'reactstrap';
-
 import { useDispatch, useSelector } from "react-redux";
-import { selectUserName, selectProfilePicLink, setMetaAddress, selectMetaAddress, selectAccountBalance, setAccountBalance, selectCurrentNet, setCurrentNet } from "../../features/userSlice";
+import { selectUserName, selectProfilePicLink, setMetaAddress, selectMetaAddress, selectAccountBalance, setAccountBalance, selectCurrentNet, setCurrentNet, } from "../../features/userSlice";
 import { injected } from "views/daap/metamaskConnector";
 import { useWeb3React } from '@web3-react/core'
 import { firestore, auth } from '../../firebase'
@@ -21,16 +19,56 @@ export default function WalletCard() {
     const currentNet = useSelector(selectCurrentNet)
 
     const { active, account, activate, library, deactivate } = useWeb3React()
+
     async function connect() {
-        activate(injected)
+        await activate(injected)
             .catch(err => console.log(err))
 
     }
 
-    useEffect(() => {
+    function setMetaData(accounts1) {
 
-        if (active) {
-            window.ethereum.on('networkChanged', function (networkId) {
+        firestore.collection('users').doc(auth.currentUser.uid).update({
+            accountAddress: accounts1
+        }).then(() => {
+            dispatch(setMetaAddress({
+                metaAddress: accounts1
+            }))
+            library.eth.getBalance(accounts1).then((balance) => {
+                //console.log(balance)
+                dispatch(setAccountBalance({
+                    accountBalance: library.utils.fromWei(balance, "ETHER")
+                }))
+            })
+            library.eth.net.getNetworkType()
+                .then((network) => {
+                    //console.log(network)
+                    //setCurrentNet(network)
+                    dispatch(setCurrentNet({ currentNet: network }))
+                });
+        })
+
+    }
+
+    async function connectOnLoad() {
+        try {
+            await activate(injected)
+        } catch (ex) {
+            console.log(ex)
+        }
+    }
+
+    useEffect(() => {
+        if (metaAddress != null && active===false) {
+            console.log("Reconnecting..")
+            connectOnLoad()
+        }
+
+        if (active && metaAddress==null) {
+
+            setMetaData(account)
+
+            /*window.ethereum.on('networkChanged', function (networkId) {
                 //console.log(networkId)
                 library.eth.net.getNetworkType()
                     .then((network) => {
@@ -44,46 +82,21 @@ export default function WalletCard() {
                         accountBalance: library.utils.fromWei(balance, "ETHER")
                     }))
                 })
-            })
-            /*library.eth.getAccounts().then(account=>{
-                console.log("Accounts: "+ account)
             })*/
-            // window.ethereum.on('accountsChanged', function (networkId) {
-            firestore.collection('users').doc(auth.currentUser.uid).update({
-                accountAddress: account
-            }).then(() => {
-                dispatch(setMetaAddress({
-                    metaAddress: account
-                }))
-                library.eth.getBalance(account).then((balance) => {
-                    //console.log(balance)
-                    dispatch(setAccountBalance({
-                        accountBalance: library.utils.fromWei(balance, "ETHER")
-                    }))
-                })
-                library.eth.net.getNetworkType()
-                    .then((network) => {
-                        //console.log(network)
-                        //setCurrentNet(network)
-                        dispatch(setCurrentNet({ currentNet: network }))
-                    });
-            })
-            //})
+
         }
-    },[active])
+
+        //})
+    }, [active])
 
     function disconnect() {
 
         try {
             deactivate()
+            dispatch(setMetaAddress({ metaAddress: null }), setCurrentNet({ currentNet: null }), setAccountBalance({accountBalance: null}))
             firestore.collection('users').doc(auth.currentUser.uid).update({
                 accountAddress: null
-            }).then(() => {
-                dispatch(setMetaAddress({
-                    metaAddress: null
-                }), setCurrentNet({ currentNet: null }))
             })
-
         } catch (err) {
             console.log(err)
         }
@@ -99,7 +112,7 @@ export default function WalletCard() {
                     {
                         metaAddress ? (
                             <>
-                                <h6>connected to : {currentNet} Net</h6>
+                                <h6>Connected to : {currentNet} Net</h6>
                             </>
                         ) : (
                             <>
