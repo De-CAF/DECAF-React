@@ -11,6 +11,8 @@ import toBuffer from 'it-to-buffer'
 import { useWeb3React } from '@web3-react/core'
 import Decaf from '../../abis/Decaf.json'
 import Verification from '../../abis/Verification.json'
+
+
 export default function SendDocForm() {
     const dispatch = useDispatch()
     const { active, account, activate, library, deactivate } = useWeb3React()
@@ -64,6 +66,12 @@ export default function SendDocForm() {
     const captureFile = async (event) => {
         event.preventDefault()
         const file = event.target.files[0]
+        //console.log(file.name.split('.').pop())
+        if (file.name.split('.').pop() === "pdf") {
+            setMimeType('application/pdf');
+        } else {
+            setMimeType('image/png')
+        }
         const reader = new window.FileReader()
         reader.readAsArrayBuffer(file)
         reader.onloadend = async () => {
@@ -75,7 +83,8 @@ export default function SendDocForm() {
             const bufferedContents = await toBuffer(ipfs.cat(results.path)) // returns a Buffer
             //console.log(bufferedContents)
             setB64(Buffer(bufferedContents).toString('base64'))
-            setMimeType('image/jpg');
+
+
 
             const netId = await library.eth.net.getId()
             const networkData1 = Decaf.networks[netId]
@@ -133,8 +142,20 @@ export default function SendDocForm() {
                                     {
                                         b64 ? (
                                             <>
+                                                {
+                                                    mimeType === 'application/pdf' ? (
+                                                        <>
+                                                            <object>
+                                                                <embed id="pdfID" type="text/html" width="600" height="600" src={`data:${mimeType};base64,${b64}`} />
+                                                            </object>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <img src={`data:${mimeType};base64,${b64}`} />
+                                                        </>
+                                                    )
+                                                }
 
-                                                <img src={`data:${mimeType};base64,${b64}`} />
                                             </>
                                         ) : (
                                             <>
@@ -148,9 +169,7 @@ export default function SendDocForm() {
 
 
 
-                                        /*<object>
-                                            <embed id="pdfID" type="text/html" width="1200" height="600" src={`data:application/pdf;base64,${b64}`} />
-                                        </object>*/
+
 
 
                                     }
@@ -204,17 +223,38 @@ export default function SendDocForm() {
                                             </div>
                                         </div>
 
-                                        <button type="submit" className="btn btn-simple btn-primary btn-icon btn-round float-right"><i className="tim-icons icon-send" /></button>
+                                        {
+                                            docSig ? (
+                                                <>
+                                                    <button type="submit" className="btn btn-simple btn-primary btn-icon btn-round float-right"><i className="tim-icons icon-send" /></button>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <button disabled className="btn btn-simple btn-primary btn-icon btn-round float-right"><i className="tim-icons icon-send" /></button>
+                                                </>
+                                            )
+                                        }
+
 
                                     </form>
                                     {
-                                        true ? (
+                                        ipfsHash ? (
                                             <div className="row">
                                                 <label>Sign the document on blockchain</label>
 
                                                 <div className="col-md-6">
                                                     <div className="justify-content-center">
-                                                        <button onClick={sign} className="btn-lg btn-simple btn-primary btn-icon btn-round ">Sign <i className="tim-icons icon-key-25" /></button>
+                                                        {
+                                                            docSig ? (
+                                                                <>
+                                                                    <button disabled className="btn-lg btn-simple btn-success btn-icon btn-round ">Signed <i className="tim-icons icon-check-2" /></button>
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <button onClick={sign} className="btn-lg btn-simple btn-primary btn-icon btn-round ">Sign <i className="tim-icons icon-key-25" /></button>
+                                                                </>
+                                                            )
+                                                        }
                                                     </div>
 
                                                 </div>
