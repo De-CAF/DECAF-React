@@ -13,12 +13,16 @@ contract Decaf {
     struct DocumentSigned {
         bytes signature;
         address signer;
+        address receiver;
         bytes mssgHash;
     }
 
     mapping(address => Document[]) public documentsIssued;
     mapping(address => Document[]) public documentsReceived;
+    
     mapping(address => DocumentSigned[]) public documentsSigned;
+    mapping(address => DocumentSigned[]) public documentsSignedReceived;
+
 
     function issueDocument(
         address to,
@@ -35,14 +39,16 @@ contract Decaf {
         documentsReceived[to].push(document);
     }
 
-    function signDocument(bytes memory signature, bytes memory mssgHash)
+    function signDocument(bytes memory signature, bytes memory mssgHash, address receiver)
         public
     {
         DocumentSigned memory document;
         document.signer = msg.sender;
         document.signature = signature;
         document.mssgHash = mssgHash;
+        document.receiver = receiver;
         documentsSigned[msg.sender].push(document);
+        documentsSignedReceived[receiver].push(document);
     }
 
     function getDocumentsIssued() public view returns (Document[] memory) {
@@ -60,4 +66,14 @@ contract Decaf {
     {
         return documentsSigned[msg.sender];
     }
+
+
+    function getDocumentsSignedReceived()
+        public
+        view
+        returns (DocumentSigned[] memory)
+    {
+        return documentsSignedReceived[msg.sender];
+    }
+
 }

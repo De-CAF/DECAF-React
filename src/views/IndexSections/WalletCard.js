@@ -59,6 +59,11 @@ export default function WalletCard() {
     }
 
     useEffect(() => {
+
+        if(library==null && metaAddress!=null){
+            connectOnLoad()
+        }
+
         if (metaAddress != null && active===false) {
             console.log("Reconnecting..")
             connectOnLoad()

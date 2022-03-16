@@ -5,7 +5,7 @@
 import React, { useState, useEffect } from "react";
 // reactstrap components
 import { Container, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Input, Alert } from "reactstrap";
-
+import TransactionTable from "views/IndexSections/TransactionTable";
 import { useDispatch, useSelector } from "react-redux";
 import { selectProfilePicLink, selectUserName, setProfilePicLink, selectUserEmail, setAdditionalInformation, selectGender, selectBirthDate, selectLocation, selectPhone, selectUserBio, selectRole } from "../../features/userSlice";
 import { auth, storage, firestore } from "../../firebase"
@@ -49,7 +49,7 @@ export default function AccountSettings() {
         let count = counterFunc();
         setCounter(count)
         role ? (setProfileCompletion((counter / 5) * 100)) : (setProfileCompletion((counter / 7) * 100))
-        
+
         console.log('After state change', counter)
     }, [submitting])
 
@@ -181,6 +181,7 @@ export default function AccountSettings() {
                             <div className="col-md-8 ml-auto">
                                 <div className="section">
                                     <div className="tab-content">
+
                                         <div className="tab-pane active" id="link1">
                                             <div>
                                                 <header>
@@ -305,71 +306,14 @@ export default function AccountSettings() {
                                                 {showAlert && <Alert color="success">Profile has been updated</Alert>}
                                             </div>
                                         </div>
+
                                         <div className="tab-pane" id="link2">
                                             <header>
-                                                <h2 className="text-uppercase">Billing method</h2>
+                                                <h2 className="text-uppercase">All Transactions</h2>
                                             </header>
                                             <hr className="line-primary" />
                                             <br />
-                                            <table className="table align-items-center">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">Card Type</th>
-                                                        <th scope="col">Card Number</th>
-                                                        <th scope="col">Payment Method</th>
-                                                        <th scope="col">Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <img alt="Image" src="/img/visas.png" className="avatar" />
-                                                        </th>
-                                                        <td>
-                                                            <span className="d-block">•••• •••• •••• 8372</span>
-                                                            <small className="text-muted">Exp: 06/22</small>
-                                                        </td>
-                                                        <td className="text-center">
-                                                            <div className="form-check form-check-radio">
-                                                                <label className="form-check-label">
-                                                                    <input className="form-check-input" type="radio" name="exampleRadios" id="Radios" defaultValue="option2" defaultChecked />
-                                                                    <span className="form-check-sign" />
-                                                                </label>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <button type="submit" className="btn btn-danger btn-sm btn-simple">
-                                                                <i className="tim-icons icon-simple-remove" /> Remove card
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <img alt="Image" src="/img/mastercard.png" className="avatar" />
-                                                        </th>
-                                                        <td>
-                                                            <span className="d-block">•••• •••• •••• 1225</span>
-                                                            <small className="text-muted">Exp: 07/21</small>
-                                                        </td>
-                                                        <td className="text-center">
-                                                            <div className="form-check form-check-radio">
-                                                                <label className="form-check-label">
-                                                                    <input className="form-check-input" type="radio" name="exampleRadios" id="Radios" defaultValue="option1" />
-                                                                    <span className="form-check-sign" />
-                                                                </label>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <button type="submit" className="btn btn-danger btn-sm btn-simple">
-                                                                <i className="tim-icons icon-simple-remove" /> Remove card
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <button className="btn btn-primary btn-sm">
-                                                <i className="tim-icons icon-simple-add" /> Add card
-                                            </button>
+                                            <TransactionTable />
                                         </div>
                                         <div className="tab-pane" id="link3">
                                             <div className="g-pos-rel h-100 g-brd-around g-brd-gray-light-v7 g-rounded-4 g-pa-15 g-pa-30--md">

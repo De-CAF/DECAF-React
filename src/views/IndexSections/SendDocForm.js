@@ -103,8 +103,9 @@ export default function SendDocForm() {
 
     const onSubmit = async (event) => {
         event.preventDefault()
-        const payTo = event.target[3].value
-        const fileName = event.target[4].value.slice(12)
+        const payTo = event.target[2].value
+        const fileName = event.target[3].value.slice(12)
+        console.log(payTo,fileName)
         try {
             //dispatch(setContracts({ contractDoc: contractToken1, contractVerification: contractToken2 }))
             contractToken1.methods.issueDocument(payTo, fileName, ipfsHash).send({ from: metaAddress }).then(async (r) => {
@@ -121,11 +122,15 @@ export default function SendDocForm() {
         }
     }
 
-    const sign = async (event) => {
+    const sign = async  (event, payto) => {
+        event.preventDefault()
+        
+        const payTo = payto
         const mssgHash = await contractToken2.methods.getMessageHash(ipfsHash).call({ from: metaAddress })
+        console.log(mssgHash)
         library.eth.personal.sign(mssgHash, metaAddress).then(async (signature) => {
             setdocSig(true)
-            await contractToken1.methods.signDocument(signature, mssgHash).send({ from: metaAddress })
+            await contractToken1.methods.signDocument(signature, mssgHash, payTo).send({ from: metaAddress })
             const documentsSigned = await contractToken1.methods.getDocumentsSigned().call({ from: metaAddress })
             console.log(documentsSigned)
         })
@@ -251,7 +256,7 @@ export default function SendDocForm() {
                                                                 </>
                                                             ) : (
                                                                 <>
-                                                                    <button onClick={sign} className="btn-lg btn-simple btn-primary btn-icon btn-round ">Sign <i className="tim-icons icon-key-25" /></button>
+                                                                    <button onClick={(e)=> sign(e,receiver.accountAddress)} value ={receiver.accountAddress} className="btn-lg btn-simple btn-primary btn-icon btn-round ">Sign <i className="tim-icons icon-key-25" /></button>
                                                                 </>
                                                             )
                                                         }
