@@ -53,9 +53,9 @@ export default function AboutPage() {
                                             <button href="javascript:void(0)" className="btn btn-icon btn-simple btn-round btn-neutral">
                                                 <i className="fab fa-twitter" />
                                             </button>
-                                            <button href="javascript:void(0)" className="btn btn-icon btn-simple btn-round btn-neutral">
+                                            {/* <button href="javascript:void(0)" className="btn btn-icon btn-simple btn-round btn-neutral">
                                                 <i className="fab fa-dribbble" />
-                                            </button>
+                                            </button> */}
                                             <button href="javascript:void(0)" className="btn btn-icon btn-simple btn-round btn-neutral">
                                                 <i className="fab fa-facebook" />
                                             </button>
@@ -68,7 +68,7 @@ export default function AboutPage() {
                             </div>
                         </div>
                     </div>
-                    <section className="section section-lg">
+                    {/* <section className="section section-lg">
                         <section className="section">
                             <img src="/static/img/path4.png" className="path" style={{ left: '-110px', maxWidth: '60%', top: '-50px' }} />
                             <div className="container">
@@ -178,7 +178,7 @@ export default function AboutPage() {
                                 </div>
                             </div>
                         </section>
-                    </section>
+                    </section> */}
                     <section>
                         <div className="cd-section" id="teams">
                             {/*     *********    TEAM 2     *********      */}
@@ -337,7 +337,7 @@ export default function AboutPage() {
                             {/*     *********    END TEAM 2      *********      */}
                         </div>
                     </section>
-                    <section className="section section-lg">
+                    {/* <section className="section section-lg">
                         <img src="/static/img/path4.png" className="path" style={{ left: 'auto', right: '-250px', maxWidth: '70%', top: 0 }} />
                         <img src="/static/img/path5.png" className="path2" style={{ position: 'absolute', opacity: '.02', right: 'auto', left: '420px', maxWidth: '10%', top: '420px' }} />
                         <img src="/static/img/path2.png" className="path3" style={{ position: 'absolute', opacity: '.02', left: 'auto', right: '500px', maxWidth: '10%', top: '-90px' }} />
@@ -467,7 +467,7 @@ export default function AboutPage() {
                                 </div>
                             </div>
                         </div>
-                    </section>
+                    </section> */}
                     <section className="section section-lg">
                         <img src="/static/img/path4.png" className="path" style={{ maxWidth: '60%', right: '3%', top: '15%' }} />
                         <img src="/static/img/path2.png" className="path2" style={{ position: 'absolute', opacity: '.02', left: '25%', right: 'auto', maxWidth: '10%', top: '200px' }} />
@@ -490,7 +490,7 @@ export default function AboutPage() {
                             </div>
                         </div>
                     </section>
-                    <section className="section section-lg section-coins">
+                    {/* <section className="section section-lg section-coins">
                         <img src="/static/img/path3.png" className="path" style={{ maxWidth: '50%', left: '5%', top: '3%' }} />
                         <div className="container">
                             <div className="row">
@@ -582,7 +582,7 @@ export default function AboutPage() {
                                 </div>
                             </div>
                         </div>
-                    </section>
+                    </section> */}
                 </div>
                 <Footer />
             </div>

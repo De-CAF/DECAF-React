@@ -164,7 +164,7 @@ export default function IndexNavbar() {
             </NavItem>
 
 
-            {
+            {/* {
               isLoggedIn ? (
                 <NavItem>
 
@@ -176,7 +176,7 @@ export default function IndexNavbar() {
                     <i className="tim-icons icon-chat-33" /> Chat
                   </Button>
                 </NavItem>) : (<div></div>)
-            }
+            } */}
 
             <NavItem>
               <Button

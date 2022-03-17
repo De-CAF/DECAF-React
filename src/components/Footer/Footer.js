@@ -45,7 +45,7 @@ export default function Footer() {
             </Nav>
           </Col>
           <Col md="3">
-            <Nav>
+            {/* <Nav>
               <NavItem>
                 <NavLink href="https://creative-tim.com/contact-us?ref=blkdsr-footer">
                   Contact Us
@@ -66,7 +66,7 @@ export default function Footer() {
                   License
                 </NavLink>
               </NavItem>
-            </Nav>
+            </Nav> */}
           </Col>
           <Col md="3">
             <h3 className="title">Follow us:</h3>
@@ -74,7 +74,7 @@ export default function Footer() {
               <Button
                 className="btn-icon btn-neutral btn-round btn-simple"
                 color="default"
-                href="https://twitter.com/creativetim"
+                href="https://twitter.com/"
                 id="tooltip622135962"
                 target="_blank"
               >
@@ -86,7 +86,7 @@ export default function Footer() {
               <Button
                 className="btn-icon btn-neutral btn-round btn-simple"
                 color="default"
-                href="https://www.facebook.com/creativetim"
+                href="https://www.facebook.com/"
                 id="tooltip230450801"
                 target="_blank"
               >
@@ -95,7 +95,7 @@ export default function Footer() {
               <UncontrolledTooltip delay={0} target="tooltip230450801">
                 Like us
               </UncontrolledTooltip>
-              <Button
+              {/* <Button
                 className="btn-icon btn-neutral btn-round btn-simple"
                 color="default"
                 href="https://dribbble.com/creativetim"
@@ -106,7 +106,7 @@ export default function Footer() {
               </Button>
               <UncontrolledTooltip delay={0} target="tooltip318450378">
                 Follow us
-              </UncontrolledTooltip>
+              </UncontrolledTooltip> */}
             </div>
           </Col>
         </Row>
