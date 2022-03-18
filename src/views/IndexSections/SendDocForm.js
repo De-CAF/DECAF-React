@@ -90,8 +90,8 @@ export default function SendDocForm() {
             const networkData1 = Decaf.networks[netId]
             const networkData2 = Verification.networks[netId]
             if (networkData1 && networkData2) {
-                console.log("Contract Address 1: ", networkData1.address)
-                console.log("Contract Address 2: ", networkData2.address)
+                console.log("Contract Address 1: ", networkData1.address) //0x543328Cd57B74110c87c2676c1b9046Ccad256b3 infura
+                console.log("Contract Address 2: ", networkData2.address) // 0x16Fc2Fb481DA460C3d37BdD9A311447e122a18cC
                 const contractToken1 = new library.eth.Contract(Decaf.abi, networkData1.address);
                 setContractToken1(contractToken1)
                 const contractToken2 = new library.eth.Contract(Verification.abi, networkData2.address);
