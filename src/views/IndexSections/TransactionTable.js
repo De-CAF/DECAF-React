@@ -94,7 +94,7 @@ export default function TransactionTable() {
                                             <tr key={i}>
                                                 <td className="text-center">{i + 1}</td>
                                                 <td>{item.fileName}</td>
-                                                <td><a href={"https://ipfs.io/ipfs/" + item.ipfsHash}>Ipfs Link</a></td>
+                                                <td><a href={"https://ipfs.io/ipfs/" + item.ipfsHash}>View File</a></td>
                                                 <td className="text-center">{item.to}</td>
                                             </tr>
                                         ))
