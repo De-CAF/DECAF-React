@@ -5,6 +5,7 @@ import React from "react";
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Footer from "components/Footer/Footer.js";
 import TransactionTable from "views/IndexSections/TransactionTable";
+import DocsSignedRecTable from "views/IndexSections/DocsSignedRecTable";
 import WalletCard from "views/IndexSections/WalletCard";
 import SendDocForm from "views/IndexSections/SendDocForm";
 
@@ -95,8 +96,8 @@ export default function ProfilePage() {
                                                     </div>
                                                     <div className="description">
                                                         <h4 className="info-title">Find us at the office</h4>
-                                                        <p> 
-                                                            {location ? (location): ("Address not added")}
+                                                        <p>
+                                                            {location ? (location) : ("Address not added")}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -107,7 +108,7 @@ export default function ProfilePage() {
                                                     <div className="description">
                                                         <h4 className="info-title">Give us a ring</h4>
                                                         <p> {userName}
-                                                            <br /> {phone ? (phone): ("Telephone not added")}
+                                                            <br /> {phone ? (phone) : ("Telephone not added")}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -153,7 +154,15 @@ export default function ProfilePage() {
                                         <div className="row justify-content-between">
                                             <div className="col-md-6">
                                                 <div className="row justify-content-between align-items-center">
-                                                    <TransactionTable />
+                                                    {
+                                                        role ? (
+                                                            <TransactionTable />
+
+                                                        ) : (
+                                                            <DocsSignedRecTable />
+                                                        )
+                                                    }
+
                                                 </div>
                                             </div>
                                             <div className="col-md-5">

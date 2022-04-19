@@ -6,6 +6,8 @@ import React, { useState, useEffect } from "react";
 // reactstrap components
 import { Container, Dropdown, DropdownToggle, DropdownMenu, DropdownItem, Input, Alert } from "reactstrap";
 import TransactionTable from "views/IndexSections/TransactionTable";
+import DocsSignedRecTable from "views/IndexSections/DocsSignedRecTable"
+import VerificationDoc from "./VerificationDoc";
 import { useDispatch, useSelector } from "react-redux";
 import { selectProfilePicLink, selectUserName, setProfilePicLink, selectUserEmail, setAdditionalInformation, selectGender, selectBirthDate, selectLocation, selectPhone, selectUserBio, selectRole } from "../../features/userSlice";
 import { auth, storage, firestore } from "../../firebase"
@@ -145,22 +147,17 @@ export default function AccountSettings() {
                                                 </a>
                                             </li>
                                             <hr className="line-primary" />
-                                            {/*
+
                                             <li className="nav-item">
                                                 <a className="nav-link" data-toggle="tab" href="#link3" role="tablist">
-                                                    <i className="tim-icons icon-lock-circle" /> Security
+                                                    <i className="tim-icons icon-credit-card" /> Verification
                                                 </a>
                                             </li>
                                             <hr className="line-primary" />
-                                            <li className="nav-item">
-                                                <a className="nav-link" data-toggle="tab" href="#link4" role="tablist">
-                                                    <i className="tim-icons icon-volume-98" /> Notifications
-                                                </a>
-                                            </li>
-                                            */}
                                         </ul>
                                     </section>
                                     {/* End Profile Sidebar */}
+
                                     {/* Profile Completion */}
                                     <br />
                                     <br />
@@ -309,107 +306,34 @@ export default function AccountSettings() {
 
                                         <div className="tab-pane" id="link2">
                                             <header>
-                                                <h2 className="text-uppercase">All Transactions</h2>
+                                                <h2 className="text-uppercase">All Documents Issued</h2>
                                             </header>
                                             <hr className="line-primary" />
                                             <br />
                                             <TransactionTable />
+                                            <br />
+
+                                            <header>
+                                                <h2 className="text-uppercase">All Documents Received</h2>
+                                            </header>
+                                            <hr className="line-primary" />
+                                            <br />
+                                            <DocsSignedRecTable />
                                         </div>
+
+
                                         <div className="tab-pane" id="link3">
                                             <div className="g-pos-rel h-100 g-brd-around g-brd-gray-light-v7 g-rounded-4 g-pa-15 g-pa-30--md">
                                                 <header>
                                                     <h2 className="text-uppercase g-font-size-12 g-font-size-default--md g-color-black mb-0">
-                                                        Security Questions</h2>
+                                                        Verify Document Signature</h2>
                                                 </header>
                                                 <hr className="line-primary" />
-                                                <form>
-                                                    <div className="row">
-                                                        <div className="col-md-6">
-                                                            <label>Security Question</label>
-                                                            <div className="form-group">
-                                                                <div className="dropdown bootstrap-select"><select className="selectpicker" data-size={7} data-style="btn btn-primary" title="Single Select" tabIndex={-98}>
-                                                                    <option className="bs-title-option" value />
-                                                                    <option disabled selected>Your Question</option>
-                                                                    <option value={2}>Question 1</option>
-                                                                    <option value={3}>Question 2</option>
-                                                                    <option value={4}>Question 3</option>
-                                                                </select><button type="button" className="dropdown-toggle btn btn-primary" data-toggle="dropdown" role="button" title="Your Question">
-                                                                        <div className="filter-option">
-                                                                            <div className="filter-option-inner">
-                                                                                <div className="filter-option-inner-inner">Your Question
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </button>
-                                                                    <div className="dropdown-menu " role="combobox">
-                                                                        <div className="inner show" role="listbox" aria-expanded="false" tabIndex={-1}>
-                                                                            <ul className="dropdown-menu inner show" />
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="col-md-6">
-                                                            <label>Your Answer</label>
-                                                            <div className="form-group">
-                                                                <input className="form-control" type="text" placeholder="Enter your answer" />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <br />
-                                                    <br />
-                                                    <header>
-                                                        <h2 className="text-uppercase">Security Settings</h2>
-                                                    </header>
-                                                    <hr className="line-primary" />
-                                                    <div className="form-group d-flex align-items-center justify-content-between">
-                                                        <span>Notify me via email when logging in</span>
-                                                        <div className="bootstrap-switch-on bootstrap-switch bootstrap-switch-wrapper">
-                                                            <div className="bootstrap-switch-container"><span className="bootstrap-switch-handle-on bootstrap-switch-primary">ON</span><span className="bootstrap-switch-label">&nbsp;</span><span className="bootstrap-switch-handle-off bootstrap-switch-default">OFF</span><input type="checkbox" name="checkbox" className="bootstrap-switch" defaultChecked data-on-label="ON" data-off-label="OFF" /></div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="form-group d-flex align-items-center justify-content-between">
-                                                        <span>Send SMS confirmation for all online payments</span>
-                                                        <div className="bootstrap-switch-on bootstrap-switch bootstrap-switch-wrapper">
-                                                            <div className="bootstrap-switch-container"><span className="bootstrap-switch-handle-on bootstrap-switch-primary">ON</span><span className="bootstrap-switch-label">&nbsp;</span><span className="bootstrap-switch-handle-off bootstrap-switch-default">OFF</span><input type="checkbox" name="checkbox" className="bootstrap-switch" defaultChecked data-on-label="ON" data-off-label="OFF" /></div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="form-group d-flex align-items-center justify-content-between">
-                                                        <span>Check which devices accessed your account</span>
-                                                        <div className="bootstrap-switch-off bootstrap-switch bootstrap-switch-wrapper">
-                                                            <div className="bootstrap-switch-container"><span className="bootstrap-switch-handle-on bootstrap-switch-primary">ON</span><span className="bootstrap-switch-label">&nbsp;</span><span className="bootstrap-switch-handle-off bootstrap-switch-default">OFF</span><input type="checkbox" name="checkbox" className="bootstrap-switch" data-on-label="ON" data-off-label="OFF" /></div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="form-group d-flex align-items-center justify-content-between">
-                                                        <span>Find My Device, make sure your device can be found if it gets
-                                                            lost</span>
-                                                        <div className="bootstrap-switch-on bootstrap-switch bootstrap-switch-wrapper">
-                                                            <div className="bootstrap-switch-container"><span className="bootstrap-switch-handle-on bootstrap-switch-primary">ON</span><span className="bootstrap-switch-label">&nbsp;</span><span className="bootstrap-switch-handle-off bootstrap-switch-default">OFF</span><input type="checkbox" name="checkbox" className="bootstrap-switch" defaultChecked data-on-label="ON" data-off-label="OFF" /></div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="form-group d-flex align-items-center justify-content-between">
-                                                        <span>Lock your device with a PIN, pattern, or password</span>
-                                                        <div className="bootstrap-switch-on bootstrap-switch bootstrap-switch-wrapper">
-                                                            <div className="bootstrap-switch-container"><span className="bootstrap-switch-handle-on bootstrap-switch-primary">ON</span><span className="bootstrap-switch-label">&nbsp;</span><span className="bootstrap-switch-handle-off bootstrap-switch-default">OFF</span><input type="checkbox" name="checkbox" className="bootstrap-switch" defaultChecked data-on-label="ON" data-off-label="OFF" /></div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="form-group d-flex align-items-center justify-content-between">
-                                                        <span>Manage what apps have access to app-usage data on your device</span>
-                                                        <div className="bootstrap-switch-off bootstrap-switch bootstrap-switch-wrapper">
-                                                            <div className="bootstrap-switch-container"><span className="bootstrap-switch-handle-on bootstrap-switch-primary">ON</span><span className="bootstrap-switch-label">&nbsp;</span><span className="bootstrap-switch-handle-off bootstrap-switch-default">OFF</span><input type="checkbox" name="checkbox" className="bootstrap-switch" data-on-label="ON" data-off-label="OFF" /></div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="row mt-5 justify-content-end">
-                                                        <div className="col-md-4 ml-auto">
-                                                            <button className="btn btn-primary btn-sm btn-simple" type="reset">Cancel</button>
-                                                            <button className="btn btn-primary btn-sm" type="button">Save
-                                                                Changes</button>
-                                                        </div>
-                                                    </div>
-                                                </form>
+                                                <VerificationDoc />
                                             </div>
                                         </div>
-                                        <div className="tab-pane" id="link4">
+
+                                        <div className="tab-pane" id="link!!">
                                             <div className="container">
                                                 <div className="row">
                                                     <div className="col-12">

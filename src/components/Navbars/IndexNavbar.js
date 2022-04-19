@@ -82,7 +82,7 @@ export default function IndexNavbar() {
             Social
           </NavbarBrand>
           <UncontrolledTooltip placement="bottom" target="navbar-brand">
-            Decentralised file sharing social network
+            Decentralised file sharing network
           </UncontrolledTooltip>
           <button
             aria-expanded={collapseOpen}
@@ -178,7 +178,7 @@ export default function IndexNavbar() {
                 </NavItem>) : (<div></div>)
             } */}
 
-            <NavItem>
+            {/*<NavItem>
               <Button
                 className="nav-link d-none d-lg-block"
                 color="default"
@@ -186,7 +186,7 @@ export default function IndexNavbar() {
               >
                 <i className="tim-icons icon-cloud-download-93" /> Download
               </Button>
-            </NavItem>
+          </NavItem>*/}
 
             {
               isLoggedIn ? (
