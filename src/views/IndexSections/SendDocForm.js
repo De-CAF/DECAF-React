@@ -11,6 +11,7 @@ import toBuffer from 'it-to-buffer'
 import { useWeb3React } from '@web3-react/core'
 import Decaf from '../../abis/Decaf.json'
 import Verification from '../../abis/Verification.json'
+import SendFormUser from "./SendFormUser";
 
 
 export default function SendDocForm() {
@@ -274,7 +275,7 @@ export default function SendDocForm() {
                                 </>
                             ) : (
                                 <>
-                                    Only organisations can issue documents! To share requested documents, visit the chat section.
+                                    <SendFormUser/>
                                 </>
                             )
                         }

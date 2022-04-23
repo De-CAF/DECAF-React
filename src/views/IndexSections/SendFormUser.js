@@ -11,29 +11,33 @@ import toBuffer from 'it-to-buffer'
 import { useWeb3React } from '@web3-react/core'
 import Decaf from '../../abis/Decaf.json'
 import Verification from '../../abis/Verification.json'
-import { createNull } from "typescript";
 
+import { injected } from "views/daap/metamaskConnector";
 
-export default function VerificationDoc() {
+export default function SendFormUser() {
+    const dispatch = useDispatch()
     const { active, account, activate, library, deactivate } = useWeb3React()
 
 
     const metaAddress = useSelector(selectMetaAddress)
-    const role = useSelector(selectRole)
 
+    const [receiver, setReceiver] = useState('')
     const [issuer, setIssuer] = useState('')
     const [issuerAddress, setIssuerAddress] = useState('')
     const [buffer, setBuffer] = useState(null)
-    const [noIssuer, setnoIssuer] = useState(null)
 
     const [ipfs, setIpfs] = useState(null)
     const [mimeType, setMimeType] = useState('')
     const [b64, setB64] = useState(null)
     const [ipfsHash, setipfsHash] = useState(null)
     const [docSig, setdocSig] = useState(null)
+    const [signedDoc, setSignedDoc] = useState(null)
+    const [noIssuer, setnoIssuer] = useState(null)
+
 
     const [contractToken1, setContractToken1] = useState(null)
     const [contractToken2, setContractToken2] = useState(null)
+
 
     useEffect(() => {
         create().then(ipfs => {
@@ -41,15 +45,25 @@ export default function VerificationDoc() {
         })
     }, [ipfs])
 
-    function findUserInfo(address) {
-        firestore.collection('users').where('accountAddress', '==', address).get().then((res) => {
-            res.forEach(doc => {
-                //console.log(doc.id, '=>', doc.data());
-                setIssuer(doc.data())
-            });
-            console.log(issuer)
-        })
-        setIssuer('')
+    function ValidateEmail(mail) {
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+            return (true)
+        }
+        return (false)
+    }
+
+    const findUserInfo = (e) => {
+        e.preventDefault();
+        if (ValidateEmail(e.target.value)) {
+            firestore.collection('users').where('email', '==', e.target.value).get().then((res) => {
+                res.forEach(doc => {
+                    //console.log(doc.id, '=>', doc.data());
+                    setReceiver(doc.data())
+                });
+                console.log(receiver)
+            })
+        }
+        setReceiver('')
     }
 
     const captureFile = async (event) => {
@@ -73,8 +87,6 @@ export default function VerificationDoc() {
             //console.log(bufferedContents)
             setB64(Buffer(bufferedContents).toString('base64'))
 
-
-
             const netId = await library.eth.net.getId()
             const networkData1 = Decaf.networks[netId]
             const networkData2 = Verification.networks[netId]
@@ -90,6 +102,42 @@ export default function VerificationDoc() {
 
     }
 
+    const onSubmit = async (event) => {
+        event.preventDefault()
+        const payTo = event.target[2].value
+        const fileName = event.target[3].value.slice(12)
+        console.log(payTo, fileName)
+        try {
+            //dispatch(setContracts({ contractDoc: contractToken1, contractVerification: contractToken2 }))
+            contractToken1.methods.issueDocument(payTo, fileName, ipfsHash).send({ from: metaAddress }).then(async (r) => {
+                const documentsIssued = await contractToken1.methods.getDocumentsIssued().call({ from: metaAddress })
+                const documentsRecieved = await contractToken1.methods.getDocumentsReceived().call({ from: metaAddress })
+                console.log(documentsIssued)
+                console.log(documentsRecieved)
+            })
+
+            contractToken1.methods.signDocument(signedDoc.signature, signedDoc.mssgHash, payTo).send({ from: metaAddress }).then(async (r) => {
+                const documentsSigned = await contractToken1.methods.getDocumentsSigned().call({ from: metaAddress })
+            })
+
+
+        } catch (err) {
+            console.log('Error', err);
+            window.alert('ERROR', err.message);
+        }
+    }
+
+    function findSignerInfo(address) {
+        firestore.collection('users').where('accountAddress', '==', address).get().then((res) => {
+            res.forEach(doc => {
+                //console.log(doc.id, '=>', doc.data());
+                setIssuer(doc.data())
+            });
+            console.log(issuer)
+        })
+        setIssuer('')
+    }
+
 
     const sign = async (event) => {
         event.preventDefault()
@@ -98,23 +146,18 @@ export default function VerificationDoc() {
         var document = documentsRecieved.filter(function (item) { return item.mssgHash === mssgHash })
         document = document[0]
         const ethSignedMssgHash = await contractToken2.methods.getEthSignedMessageHash(mssgHash).call({ from: metaAddress })
-        console.log(documentsRecieved)
-        console.log(document)
 
-        /*library.eth.personal.sign(mssgHash, metaAddress).then(async (signature) => {
-            setdocSig(true)
-            const signer = await contractToken2.methods.recoverSigner(ethSignedMssgHash, signature).call({ from: metaAddress })
-            setIssuerAddress(signer)
-            findUserInfo(signer)
-        })*/
         if (document) {
             const signer = await contractToken2.methods.recoverSigner(ethSignedMssgHash, document.signature).call({ from: metaAddress })
             setIssuerAddress(signer)
-            findUserInfo(signer)
+            findSignerInfo(signer)
+            setdocSig(true)
+            setSignedDoc(document)
             setnoIssuer(false)
         } else {
             setIssuer('')
             setIssuerAddress('')
+            setdocSig(false)
             setnoIssuer(true)
         }
 
@@ -153,7 +196,6 @@ export default function VerificationDoc() {
                                         </>
 
                                     )
-
                                 }
                                 <p align="center">File Status: {
                                     ipfsHash ? (
@@ -162,16 +204,9 @@ export default function VerificationDoc() {
                                                 <b>File is signed on the blockchain.</b>
                                             </>
                                         ) : (
-                                            noIssuer ? (
-                                                <>
-                                                    <b>Document is not issued by anyone.</b>
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <b>IPFS hash generated.</b>
-                                                </>
-                                            )
-
+                                            <>
+                                                <b>IPFS hash generated.</b>
+                                            </>
                                         )
                                     ) : (
                                         <>
@@ -181,7 +216,31 @@ export default function VerificationDoc() {
                                 }
                                 </p>
                                 <br></br>
-                                <form >
+                                <form onSubmit={onSubmit}>
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <label>Receiver's Name </label>
+                                                <input disabled type="text" className="form-control" value={receiver ? (receiver.userName) : ("Name")} />
+                                            </div>
+                                        </div>
+                                        <div className="col-md-6">
+                                            <div className="form-group">
+                                                <label>Receiver's Email address</label>
+                                                <input type="email" onChange={findUserInfo} className="form-control" placeholder="shreyas@email.com" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="row">
+                                        <label className="col-sm-3 col-form-label">Pay to</label>
+                                        <div className="col-sm-9">
+                                            <div className="form-group">
+                                                <input disabled type="text" className="form-control" placeholder="e.g. 1Nasd92348hU984353hfid" value={receiver ? (receiver.accountAddress ? (receiver.accountAddress) : ("The user is not connected to metamask")) : ("e.g. 1Nasd92348hU984353hfid")} />
+                                                <span className="form-text"> {receiver ? ("Metamask account address of " + receiver.email) : ("")}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div className="row">
                                         <label className="col-sm-3 col-form-label">File</label>
                                         <div className="col-sm-9">
@@ -189,46 +248,47 @@ export default function VerificationDoc() {
                                         </div>
                                     </div>
 
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <div className="form-group">
-                                                <label>Signer's Name </label>
-                                                <input disabled type="text" className="form-control" value={issuer ? (issuer.userName) : ("Name")} />
-                                            </div>
-                                        </div>
-                                        <div className="col-md-6">
-                                            <div className="form-group">
-                                                <label>Signer's Email address</label>
-                                                <input disabled type="email" className="form-control" value={issuer ? (issuer.email) : ("Email")} />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="row">
-                                        <label className="col-sm-3 col-form-label">Signer's account address</label>
-                                        <div className="col-sm-9">
-                                            <div className="form-group">
-                                                <input disabled type="text" className="form-control" placeholder="e.g. 1Nasd92348hU984353hfid" value={issuerAddress ? (issuerAddress) : ("e.g. 1Nasd92348hU984353hfid")} />
-                                            </div>
-                                        </div>
-                                    </div>
+                                    {
+                                        docSig ? (
+                                            <>
+                                                <button type="submit" className="btn btn-simple btn-primary btn-icon btn-round float-right"><i className="tim-icons icon-send" /></button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <button disabled className="btn-lg btn-simple btn-primary btn-icon btn-round float-right">Awaiting valid siganture <i className="tim-icons icon-send" /></button>
+                                            </>
+                                        )
+                                    }
 
 
                                 </form>
                                 {
                                     ipfsHash ? (
                                         <div className="row">
+                                            <label>Check signature of the document on blockchain</label>
+
                                             <div className="col-md-6">
                                                 <div className="justify-content-center">
                                                     {
                                                         docSig ? (
+
+
                                                             <>
-                                                                <button disabled className="btn-lg btn-simple btn-success btn-icon btn-round ">Signed <i className="tim-icons icon-check-2" /></button>
+                                                                <button disabled className="btn-lg btn-simple btn-success btn-icon btn-round ">Signed by {issuer.userName} <i className="tim-icons icon-check-2" /></button>
                                                             </>
+
+
+
                                                         ) : (
-                                                            <>
-                                                                <button onClick={(e) => sign(e)} className="btn-lg btn-simple btn-primary btn-icon btn-round ">Who Signed? <i className="tim-icons icon-key-25" /></button>
-                                                            </>
+                                                            noIssuer ? (
+                                                                <>
+                                                                    <button disabled className="btn-lg btn-simple btn-success btn-icon btn-round ">No signature found<i className="tim-icons icon-check-2" /></button>
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <button onClick={(e) => sign(e)} className="btn-lg btn-simple btn-primary btn-icon btn-round "> Check Signature <i className="tim-icons icon-key-25" /></button>
+                                                                </>
+                                                            )
                                                         )
                                                     }
                                                 </div>
@@ -248,7 +308,7 @@ export default function VerificationDoc() {
                     </>
                 ) : (
                     <>
-                        <p className="profile-description">Connect to Metamask for verification of files.</p>
+                        <p className="profile-description">Connect to Metamask for sharing files.</p>
                     </>
                 )
             }
