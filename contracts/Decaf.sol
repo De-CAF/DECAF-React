@@ -9,6 +9,7 @@ contract Decaf {
         address to;
         string fileName;
         string ipfsHash;
+        bool access;
     }
 
     struct DocumentSigned {
@@ -34,7 +35,7 @@ contract Decaf {
         document.to = to;
         document.fileName = fileName;
         document.ipfsHash = ipfsHash;
-
+        document.access = true;
         documentsIssued[msg.sender].push(document);
         documentsReceived[to].push(document);
     }
@@ -60,13 +61,20 @@ contract Decaf {
     }
 
     function revokeDocument(address user, Document memory doc) public{
+        Document[] memory ownerDocs = documentsIssued[msg.sender];
         Document[] memory receivedDocs = documentsReceived[user];
         Document[] memory issuedDocs = documentsIssued[user];
         address userIssuedTo;
+
+        for (uint i=0; i<ownerDocs.length; i++) {
+            if(equals(ownerDocs[i],doc)){
+                documentsIssued[msg.sender][i].access=false;
+            }
+        }
+
         for (uint i=0; i<receivedDocs.length; i++) {
             if(equals(receivedDocs[i],doc)){
                 delete documentsReceived[user][i];
-                break;
             }
         }
 
@@ -74,7 +82,6 @@ contract Decaf {
             if(equals(issuedDocs[i],doc)){
                 userIssuedTo = documentsIssued[user][i].to;
                 delete documentsIssued[user][i];
-                break;
             }
         }
 
@@ -83,7 +90,6 @@ contract Decaf {
         for (uint i=0; i<userIssuedToDocs.length; i++) {
             if(equals(userIssuedToDocs[i],doc)){
                 delete documentsReceived[userIssuedTo][i];
-                break;
             }
         }
                 
