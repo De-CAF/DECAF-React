@@ -83,6 +83,7 @@ export default function TransactionTable() {
                                     <th>Document Name</th>
                                     <th>View Document</th>
                                     <th className="text-center">Issued To</th>
+                                    <th className="text-center">Access Control</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -96,6 +97,7 @@ export default function TransactionTable() {
                                                 <td>{item.fileName}</td>
                                                 <td><a href={"https://ipfs.io/ipfs/" + item.ipfsHash}>View File</a></td>
                                                 <td className="text-center">{item.to}</td>
+                                                <td> <button className="btn btn-default btn-round btn-block">Edit</button></td>
                                             </tr>
                                         ))
 

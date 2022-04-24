@@ -3,6 +3,7 @@ pragma solidity >=0.8.1;
 pragma abicoder v2;
 
 contract Decaf {
+
     struct Document {
         address from;
         address to;
@@ -22,7 +23,6 @@ contract Decaf {
     
     mapping(address => DocumentSigned[]) public documentsSigned;
     mapping(address => DocumentSigned[]) public documentsSignedReceived;
-
 
     function issueDocument(
         address to,
@@ -59,6 +59,40 @@ contract Decaf {
         return documentsReceived[msg.sender];
     }
 
+    function revokeDocument(address user, Document memory doc) public{
+        Document[] memory receivedDocs = documentsReceived[user];
+        Document[] memory issuedDocs = documentsIssued[user];
+        address userIssuedTo;
+        for (uint i=0; i<receivedDocs.length; i++) {
+            if(equals(receivedDocs[i],doc)){
+                delete documentsReceived[user][i];
+                break;
+            }
+        }
+
+        for (uint i=0; i<issuedDocs.length; i++) {
+            if(equals(issuedDocs[i],doc)){
+                userIssuedTo = documentsIssued[user][i].to;
+                delete documentsIssued[user][i];
+                break;
+            }
+        }
+
+
+        Document[] memory userIssuedToDocs = documentsReceived[userIssuedTo];
+        for (uint i=0; i<userIssuedToDocs.length; i++) {
+            if(equals(userIssuedToDocs[i],doc)){
+                delete documentsReceived[userIssuedTo][i];
+                break;
+            }
+        }
+                
+    }
+    function equals(Document memory _first, Document memory _second) internal view returns (bool) {
+        // Just compare the output of hashing all fields packed
+        return(keccak256(abi.encodePacked( _first.fileName, _first.ipfsHash)) == keccak256(abi.encodePacked( _second.fileName, _second.ipfsHash)));
+    }
+
     function getDocumentsSigned()
         public
         view
@@ -77,3 +111,10 @@ contract Decaf {
     }
 
 }
+
+//0x5B38Da6a701c568545dCfcB03FcB875f56beddC4
+
+//0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2
+
+//0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db
+
