@@ -70,6 +70,10 @@ export default function TransactionTable() {
 
     }, [active, metaAddress])
 
+    const onSubmit = async (event) => {
+        event.preventDefault()
+    }
+
     return (
         <>
             {
@@ -97,7 +101,7 @@ export default function TransactionTable() {
                                                 <td>{item.fileName}</td>
                                                 <td><a href={"https://ipfs.io/ipfs/" + item.ipfsHash}>View File</a></td>
                                                 <td className="text-center">{item.to}</td>
-                                                <td> <button className="btn btn-default btn-round btn-block">Edit</button></td>
+                                                <td> <button onSubmit={onSubmit} className="btn btn-default btn-round btn-block">Revoke Access</button></td>
                                             </tr>
                                         ))
 
