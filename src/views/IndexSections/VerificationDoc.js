@@ -66,25 +66,48 @@ export default function VerificationDoc() {
         reader.onloadend = async () => {
             setBuffer(Buffer(reader.result))
             console.log('buffer', reader.result)
-            const results = (await ipfs.add(reader.result))
-            console.log("ipfs hash: ", results.path)
-            setipfsHash(results.path)
-            const bufferedContents = await toBuffer(ipfs.cat(results.path)) // returns a Buffer
-            //console.log(bufferedContents)
-            setB64(Buffer(bufferedContents).toString('base64'))
+            var results;
+            if (ipfs) {
+                results = (await ipfs.add(reader.result))
+                console.log("ipfs hash: ", results.path)
+                setipfsHash(results.path)
+                const bufferedContents = await toBuffer(ipfs.cat(results.path)) // returns a Buffer
+                //console.log(bufferedContents)
+                setB64(Buffer(bufferedContents).toString('base64'))
 
+                const netId = await library.eth.net.getId()
+                const networkData1 = Decaf.networks[netId]
+                const networkData2 = Verification.networks[netId]
+                if (networkData1 && networkData2) {
+                    console.log("Contract Address 1: ", networkData1.address) //0x543328Cd57B74110c87c2676c1b9046Ccad256b3 infura
+                    console.log("Contract Address 2: ", networkData2.address) // 0x16Fc2Fb481DA460C3d37BdD9A311447e122a18cC
+                    const contractToken1 = new library.eth.Contract(Decaf.abi, networkData1.address);
+                    setContractToken1(contractToken1)
+                    const contractToken2 = new library.eth.Contract(Verification.abi, networkData2.address);
+                    setContractToken2(contractToken2)
+                }
+            } else {
+                create().then(async (ipfs) => {
+                    setIpfs(ipfs)
+                    results = (await ipfs.add(reader.result))
+                    console.log("ipfs hash: ", results.path)
+                    setipfsHash(results.path)
+                    const bufferedContents = await toBuffer(ipfs.cat(results.path)) // returns a Buffer
+                    //console.log(bufferedContents)
+                    setB64(Buffer(bufferedContents).toString('base64'))
 
-
-            const netId = await library.eth.net.getId()
-            const networkData1 = Decaf.networks[netId]
-            const networkData2 = Verification.networks[netId]
-            if (networkData1 && networkData2) {
-                console.log("Contract Address 1: ", networkData1.address) //0x543328Cd57B74110c87c2676c1b9046Ccad256b3 infura
-                console.log("Contract Address 2: ", networkData2.address) // 0x16Fc2Fb481DA460C3d37BdD9A311447e122a18cC
-                const contractToken1 = new library.eth.Contract(Decaf.abi, networkData1.address);
-                setContractToken1(contractToken1)
-                const contractToken2 = new library.eth.Contract(Verification.abi, networkData2.address);
-                setContractToken2(contractToken2)
+                    const netId = await library.eth.net.getId()
+                    const networkData1 = Decaf.networks[netId]
+                    const networkData2 = Verification.networks[netId]
+                    if (networkData1 && networkData2) {
+                        console.log("Contract Address 1: ", networkData1.address) //0x543328Cd57B74110c87c2676c1b9046Ccad256b3 infura
+                        console.log("Contract Address 2: ", networkData2.address) // 0x16Fc2Fb481DA460C3d37BdD9A311447e122a18cC
+                        const contractToken1 = new library.eth.Contract(Decaf.abi, networkData1.address);
+                        setContractToken1(contractToken1)
+                        const contractToken2 = new library.eth.Contract(Verification.abi, networkData2.address);
+                        setContractToken2(contractToken2)
+                    }
+                })
             }
         }
 
