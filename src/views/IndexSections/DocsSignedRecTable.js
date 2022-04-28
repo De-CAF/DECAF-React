@@ -42,7 +42,9 @@ export default function DocsSignedRecTable() {
                     const receivedDocs = contractToken1.methods.getDocumentsReceived().call({ from: metaAddress })
                     receivedDocs.then(rec => {
                         setReceivedDocs(rec)
+                        console.log(rec)
                     })
+                    
 
                 }
 
@@ -78,12 +80,16 @@ export default function DocsSignedRecTable() {
                                     {
                                         receivedDocs ? (
                                             receivedDocs.map((item, i) => (
+                                                item.fileName ?(
                                                 <tr key={i}>
                                                     <td className="text-center">{i + 1}</td>
                                                     <td>{item.fileName}</td>
                                                     <td><a href={"https://ipfs.io/ipfs/" + item.ipfsHash}>View File</a></td>
                                                     <td className="text-center">{item.from}</td>
                                                 </tr>
+                                                ):(
+                                                    <></>
+                                                )
                                             ))
                                         ) : (
                                             <>

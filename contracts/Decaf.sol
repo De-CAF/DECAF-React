@@ -3,7 +3,6 @@ pragma solidity >=0.8.1;
 pragma abicoder v2;
 
 contract Decaf {
-
     struct Document {
         address from;
         address to;
@@ -21,7 +20,7 @@ contract Decaf {
 
     mapping(address => Document[]) public documentsIssued;
     mapping(address => Document[]) public documentsReceived;
-    
+
     mapping(address => DocumentSigned[]) public documentsSigned;
     mapping(address => DocumentSigned[]) public documentsSignedReceived;
 
@@ -32,7 +31,6 @@ contract Decaf {
         string memory fileName,
         string memory ipfsHash
     ) public {
-
         Document memory document;
         document.from = msg.sender;
         document.to = to;
@@ -43,9 +41,11 @@ contract Decaf {
         documentsReceived[to].push(document);
     }
 
-    function signDocument(bytes memory signature, bytes memory mssgHash, address receiver)
-        public
-    {
+    function signDocument(
+        bytes memory signature,
+        bytes memory mssgHash,
+        address receiver
+    ) public {
         DocumentSigned memory document;
         document.signer = msg.sender;
         document.signature = signature;
@@ -63,48 +63,76 @@ contract Decaf {
         return documentsReceived[msg.sender];
     }
 
-    function revokeDocument(address user, Document memory doc) public{
+    function revokeDocument(address user, Document memory doc) public {
         Document[] memory ownerDocs = documentsIssued[msg.sender];
         Document[] memory receivedDocs = documentsReceived[user];
         Document[] memory issuedDocs = documentsIssued[user];
-        
-        for (uint i=0; i<ownerDocs.length; i++) {
-            if(equalsOwner(ownerDocs[i],doc)){
-                documentsIssued[msg.sender][i].access=false;
+
+        for (uint256 i = 0; i < ownerDocs.length; i++) {
+            if (equalsOwner(ownerDocs[i], doc)) {
+                documentsIssued[msg.sender][i].access = false;
             }
         }
 
-        for (uint i=0; i<receivedDocs.length; i++) {
-            if(equals(receivedDocs[i],doc)){
+        for (uint256 i = 0; i < receivedDocs.length; i++) {
+            if (equals(receivedDocs[i], doc)) {
                 delete documentsReceived[user][i];
             }
         }
 
-        for (uint i=0; i<issuedDocs.length; i++) {
-            if(equals(issuedDocs[i],doc)){
-                userIssuedTo.push(documentsIssued[user][i].to);
+        for (uint256 i = 0; i < issuedDocs.length; i++) {
+            if (equals(issuedDocs[i], doc)) {
+                if (documentsIssued[user][i].to != msg.sender) {
+                    userIssuedTo.push(documentsIssued[user][i].to);
+                }
                 delete documentsIssued[user][i];
             }
         }
 
-        for(uint j=0;j<userIssuedTo.length;j++){
-            Document[] memory userIssuedToDocs = documentsReceived[userIssuedTo[j]];
-            for (uint i=0; i<userIssuedToDocs.length; i++) {
-                if(equals(userIssuedToDocs[i],doc)){
+        for (uint256 j = 0; j < userIssuedTo.length; j++) {
+            Document[] memory userIssuedToDocs = documentsReceived[
+                userIssuedTo[j]
+            ];
+            for (uint256 i = 0; i < userIssuedToDocs.length; i++) {
+                if (equals(userIssuedToDocs[i], doc)) {
                     delete documentsReceived[userIssuedTo[j]][i];
                 }
             }
         }
-                
-    }
-    function equals(Document memory _first, Document memory _second) internal view returns (bool) {
-        // Just compare the output of hashing all fields packed
-        return(keccak256(abi.encodePacked( _first.fileName, _first.ipfsHash)) == keccak256(abi.encodePacked( _second.fileName, _second.ipfsHash)));
     }
 
-    function equalsOwner(Document memory _first, Document memory _second) internal view returns (bool) {
+    function equals(Document memory _first, Document memory _second)
+        internal
+        view
+        returns (bool)
+    {
         // Just compare the output of hashing all fields packed
-        return(keccak256(abi.encodePacked( _first.fileName, _first.ipfsHash,_first.from,_first.to)) == keccak256(abi.encodePacked( _second.fileName, _second.ipfsHash,_second.from, _second.to)));
+        return (keccak256(abi.encodePacked(_first.fileName, _first.ipfsHash)) ==
+            keccak256(abi.encodePacked(_second.fileName, _second.ipfsHash)));
+    }
+
+    function equalsOwner(Document memory _first, Document memory _second)
+        internal
+        view
+        returns (bool)
+    {
+        // Just compare the output of hashing all fields packed
+        return (keccak256(
+            abi.encodePacked(
+                _first.fileName,
+                _first.ipfsHash,
+                _first.from,
+                _first.to
+            )
+        ) ==
+            keccak256(
+                abi.encodePacked(
+                    _second.fileName,
+                    _second.ipfsHash,
+                    _second.from,
+                    _second.to
+                )
+            ));
     }
 
     function getDocumentsSigned()
@@ -115,7 +143,6 @@ contract Decaf {
         return documentsSigned[msg.sender];
     }
 
-
     function getDocumentsSignedReceived()
         public
         view
@@ -123,7 +150,6 @@ contract Decaf {
     {
         return documentsSignedReceived[msg.sender];
     }
-
 }
 
 //0x5B38Da6a701c568545dCfcB03FcB875f56beddC4

@@ -70,8 +70,10 @@ export default function TransactionTable() {
 
     }, [active, metaAddress])
 
-    const onSubmit = async (event) => {
+    const onSubmit = async (event, userTo, doc) => {
         event.preventDefault()
+        await contractToken1.methods.revokeDocument(userTo, doc).send({ from: metaAddress })
+        window.location.reload()
     }
 
     return (
@@ -96,13 +98,23 @@ export default function TransactionTable() {
 
 
                                         issuedDocs.map((item, i) => (
-                                            <tr key={i}>
-                                                <td className="text-center">{i + 1}</td>
-                                                <td>{item.fileName}</td>
-                                                <td><a href={"https://ipfs.io/ipfs/" + item.ipfsHash}>View File</a></td>
-                                                <td className="text-center">{item.to}</td>
-                                                <td> <button onSubmit={onSubmit} className="btn btn-default btn-round btn-block">Revoke Access</button></td>
-                                            </tr>
+                                            item.fileName ? (
+                                                <tr key={i}>
+                                                    <td className="text-center">{i + 1}</td>
+                                                    <td>{item.fileName}</td>
+                                                    <td><a href={"https://ipfs.io/ipfs/" + item.ipfsHash}>View File</a></td>
+                                                    <td className="text-center">{item.to}</td>
+                                                    {
+                                                        item.access ? (
+                                                            <td> <button onClick={(e) => onSubmit(e, item.to, item)} className="btn btn-default btn-round btn-block">Revoke</button></td>
+                                                        ) : (
+                                                            <td> <button disabled className="btn btn-default btn-round btn-block">Revoked</button></td>
+                                                        )
+                                                    }
+                                                </tr>
+                                            ) : (
+                                                <></>
+                                            )
                                         ))
 
 

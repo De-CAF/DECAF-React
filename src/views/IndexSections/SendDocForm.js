@@ -30,6 +30,7 @@ export default function SendDocForm() {
     const [b64, setB64] = useState(null)
     const [ipfsHash, setipfsHash] = useState(null)
     const [docSig, setdocSig] = useState(null)
+    const [cantIssue, setCantIssue] = useState(null)
 
     const [contractToken1, setContractToken1] = useState(null)
     const [contractToken2, setContractToken2] = useState(null)
@@ -78,26 +79,79 @@ export default function SendDocForm() {
         reader.onloadend = async () => {
             setBuffer(Buffer(reader.result))
             console.log('buffer', reader.result)
-            const results = (await ipfs.add(reader.result))
-            console.log("ipfs hash: ", results.path)
-            setipfsHash(results.path)
-            const bufferedContents = await toBuffer(ipfs.cat(results.path)) // returns a Buffer
-            //console.log(bufferedContents)
-            setB64(Buffer(bufferedContents).toString('base64'))
+            var results;
+            if (ipfs) {
+                results = (await ipfs.add(reader.result))
+                console.log("ipfs hash: ", results.path)
+                setipfsHash(results.path)
+                const bufferedContents = await toBuffer(ipfs.cat(results.path)) // returns a Buffer
+                console.log(bufferedContents)
+                setB64(Buffer(bufferedContents).toString('base64'))
 
+                const netId = await library.eth.net.getId()
+                const networkData1 = Decaf.networks[netId]
+                const networkData2 = Verification.networks[netId]
+                if (networkData1 && networkData2) {
+                    console.log("Contract Address 1: ", networkData1.address) //0x543328Cd57B74110c87c2676c1b9046Ccad256b3 infura
+                    console.log("Contract Address 2: ", networkData2.address) // 0x16Fc2Fb481DA460C3d37BdD9A311447e122a18cC
+                    const contractToken1 = new library.eth.Contract(Decaf.abi, networkData1.address);
+                    setContractToken1(contractToken1)
+                    const contractToken2 = new library.eth.Contract(Verification.abi, networkData2.address);
+                    setContractToken2(contractToken2)
 
+                    const docRecieved = await contractToken1.methods.getDocumentsSignedReceived().call({ from: metaAddress })
+                    const mssgHash = await contractToken2.methods.getMessageHash(results.path).call({ from: metaAddress })
+                    var doc = docRecieved.filter(function (item) { return item.mssgHash === mssgHash })
+                    doc = doc[0]
+                    console.log(docRecieved)
+                    console.log(ipfsHash)
+                    if (doc) {
+                        setCantIssue(true)
+                    } else {
+                        setCantIssue(false)
+                    }
+                }
+            } else {
+                create().then(async (ipfs) => {
+                    setIpfs(ipfs)
+                    results = (await ipfs.add(reader.result))
+                    console.log("ipfs hash: ", results.path)
+                    setipfsHash(results.path)
+                    const bufferedContents = await toBuffer(ipfs.cat(results.path)) // returns a Buffer
+                    //console.log(ipfsHash)
+                    setB64(Buffer(bufferedContents).toString('base64'))
 
-            const netId = await library.eth.net.getId()
-            const networkData1 = Decaf.networks[netId]
-            const networkData2 = Verification.networks[netId]
-            if (networkData1 && networkData2) {
-                console.log("Contract Address 1: ", networkData1.address) //0x543328Cd57B74110c87c2676c1b9046Ccad256b3 infura
-                console.log("Contract Address 2: ", networkData2.address) // 0x16Fc2Fb481DA460C3d37BdD9A311447e122a18cC
-                const contractToken1 = new library.eth.Contract(Decaf.abi, networkData1.address);
-                setContractToken1(contractToken1)
-                const contractToken2 = new library.eth.Contract(Verification.abi, networkData2.address);
-                setContractToken2(contractToken2)
+                    const netId = await library.eth.net.getId()
+                    const networkData1 = Decaf.networks[netId]
+                    const networkData2 = Verification.networks[netId]
+                    if (networkData1 && networkData2) {
+                        console.log("Contract Address 1: ", networkData1.address) //0x543328Cd57B74110c87c2676c1b9046Ccad256b3 infura
+                        console.log("Contract Address 2: ", networkData2.address) // 0x16Fc2Fb481DA460C3d37BdD9A311447e122a18cC
+                        const contractToken1 = new library.eth.Contract(Decaf.abi, networkData1.address);
+                        setContractToken1(contractToken1)
+                        const contractToken2 = new library.eth.Contract(Verification.abi, networkData2.address);
+                        setContractToken2(contractToken2)
+
+                        const docRecieved = await contractToken1.methods.getDocumentsSignedReceived().call({ from: metaAddress })
+                        const mssgHash = await contractToken2.methods.getMessageHash(results.path).call({ from: metaAddress })
+                        var doc = docRecieved.filter(function (item) { return item.mssgHash === mssgHash })
+                        doc = doc[0]
+                        console.log(docRecieved)
+                        console.log(ipfsHash)
+                        if (doc) {
+                            setCantIssue(true)
+                        } else {
+                            setCantIssue(false)
+                        }
+                    }
+                })
+
             }
+
+
+
+
+
         }
 
     }
@@ -106,7 +160,7 @@ export default function SendDocForm() {
         event.preventDefault()
         const payTo = event.target[2].value
         const fileName = event.target[3].value.slice(12)
-        console.log(payTo,fileName)
+        console.log(payTo, fileName)
         try {
             //dispatch(setContracts({ contractDoc: contractToken1, contractVerification: contractToken2 }))
             contractToken1.methods.issueDocument(payTo, fileName, ipfsHash).send({ from: metaAddress }).then(async (r) => {
@@ -114,6 +168,7 @@ export default function SendDocForm() {
                 const documentsRecieved = await contractToken1.methods.getDocumentsReceived().call({ from: metaAddress })
                 console.log(documentsIssued)
                 console.log(documentsRecieved)
+                window.location.reload()
             })
 
 
@@ -123,9 +178,9 @@ export default function SendDocForm() {
         }
     }
 
-    const sign = async  (event, payto) => {
+    const sign = async (event, payto) => {
         event.preventDefault()
-        
+
         const payTo = payto
         const mssgHash = await contractToken2.methods.getMessageHash(ipfsHash).call({ from: metaAddress })
         console.log(mssgHash)
@@ -181,14 +236,20 @@ export default function SendDocForm() {
                                     }
                                     <p align="center">File Status: {
                                         ipfsHash ? (
-                                            docSig ? (
+                                            cantIssue ? (
                                                 <>
-                                                    <b>File is signed on the blockchain.</b>
+                                                    <b>This file is issued by some other organisation, you cannot issue it to anyone.</b>
                                                 </>
                                             ) : (
-                                                <>
-                                                    <b>IPFS hash generated.</b>
-                                                </>
+                                                docSig ? (
+                                                    <>
+                                                        <b>File is signed on the blockchain.</b>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <b>IPFS hash generated.</b>
+                                                    </>
+                                                )
                                             )
                                         ) : (
                                             <>
@@ -230,14 +291,20 @@ export default function SendDocForm() {
                                         </div>
 
                                         {
-                                            docSig ? (
-                                                <>
-                                                    <button type="submit" className="btn btn-simple btn-primary btn-icon btn-round float-right"><i className="tim-icons icon-send" /></button>
-                                                </>
-                                            ) : (
+                                            cantIssue ? (
                                                 <>
                                                     <button disabled className="btn btn-simple btn-primary btn-icon btn-round float-right"><i className="tim-icons icon-send" /></button>
                                                 </>
+                                            ) : (
+                                                docSig ? (
+                                                    <>
+                                                        <button type="submit" className="btn btn-simple btn-primary btn-icon btn-round float-right"><i className="tim-icons icon-send" /></button>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <button disabled className="btn btn-simple btn-primary btn-icon btn-round float-right"><i className="tim-icons icon-send" /></button>
+                                                    </>
+                                                )
                                             )
                                         }
 
@@ -251,14 +318,20 @@ export default function SendDocForm() {
                                                 <div className="col-md-6">
                                                     <div className="justify-content-center">
                                                         {
-                                                            docSig ? (
+                                                            cantIssue ? (
                                                                 <>
-                                                                    <button disabled className="btn-lg btn-simple btn-success btn-icon btn-round ">Signed <i className="tim-icons icon-check-2" /></button>
+                                                                    <button disabled className="btn-lg btn-simple btn-danger btn-icon btn-round ">Cannot sign</button>
                                                                 </>
                                                             ) : (
-                                                                <>
-                                                                    <button onClick={(e)=> sign(e,receiver.accountAddress)} value ={receiver.accountAddress} className="btn-lg btn-simple btn-primary btn-icon btn-round ">Sign <i className="tim-icons icon-key-25" /></button>
-                                                                </>
+                                                                docSig ? (
+                                                                    <>
+                                                                        <button disabled className="btn-lg btn-simple btn-success btn-icon btn-round ">Signed <i className="tim-icons icon-check-2" /></button>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <button onClick={(e) => sign(e, receiver.accountAddress)} value={receiver.accountAddress} className="btn-lg btn-simple btn-primary btn-icon btn-round ">Sign <i className="tim-icons icon-key-25" /></button>
+                                                                    </>
+                                                                )
                                                             )
                                                         }
                                                     </div>
@@ -275,7 +348,7 @@ export default function SendDocForm() {
                                 </>
                             ) : (
                                 <>
-                                    <SendFormUser/>
+                                    <SendFormUser />
                                 </>
                             )
                         }

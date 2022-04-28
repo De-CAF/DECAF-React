@@ -80,12 +80,26 @@ export default function SendFormUser() {
         reader.onloadend = async () => {
             setBuffer(Buffer(reader.result))
             console.log('buffer', reader.result)
-            const results = (await ipfs.add(reader.result))
-            console.log("ipfs hash: ", results.path)
-            setipfsHash(results.path)
-            const bufferedContents = await toBuffer(ipfs.cat(results.path)) // returns a Buffer
-            //console.log(bufferedContents)
-            setB64(Buffer(bufferedContents).toString('base64'))
+            var results;
+            if (ipfs) {
+                results = (await ipfs.add(reader.result))
+                console.log("ipfs hash: ", results.path)
+                setipfsHash(results.path)
+                const bufferedContents = await toBuffer(ipfs.cat(results.path)) // returns a Buffer
+                //console.log(bufferedContents)
+                setB64(Buffer(bufferedContents).toString('base64'))
+            } else {
+                create().then(async (ipfs) => {
+                    setIpfs(ipfs)
+                    results = (await ipfs.add(reader.result))
+                    console.log("ipfs hash: ", results.path)
+                    setipfsHash(results.path)
+                    const bufferedContents = await toBuffer(ipfs.cat(results.path)) // returns a Buffer
+                    //console.log(bufferedContents)
+                    setB64(Buffer(bufferedContents).toString('base64'))
+                })
+
+            }
 
             const netId = await library.eth.net.getId()
             const networkData1 = Decaf.networks[netId]
@@ -147,13 +161,24 @@ export default function SendFormUser() {
         document = document[0]
         const ethSignedMssgHash = await contractToken2.methods.getEthSignedMessageHash(mssgHash).call({ from: metaAddress })
 
-        if (document) {
-            const signer = await contractToken2.methods.recoverSigner(ethSignedMssgHash, document.signature).call({ from: metaAddress })
-            setIssuerAddress(signer)
-            findSignerInfo(signer)
-            setdocSig(true)
-            setSignedDoc(document)
-            setnoIssuer(false)
+        const docRecieved = await contractToken1.methods.getDocumentsReceived().call({ from: metaAddress })
+        var doc = docRecieved.filter(function (item) { return item.ipfsHash === ipfsHash })
+        doc = doc[0]
+        console.log(doc)
+        if (document && doc) {
+            if (doc.access) {
+                const signer = await contractToken2.methods.recoverSigner(ethSignedMssgHash, document.signature).call({ from: metaAddress })
+                setIssuerAddress(signer)
+                findSignerInfo(signer)
+                setdocSig(true)
+                setSignedDoc(document)
+                setnoIssuer(false)
+            } else {
+                setIssuer('')
+                setIssuerAddress('')
+                setdocSig(false)
+                setnoIssuer(true)
+            }
         } else {
             setIssuer('')
             setIssuerAddress('')
@@ -255,7 +280,7 @@ export default function SendFormUser() {
                                             </>
                                         ) : (
                                             <>
-                                                <button disabled className="btn-lg btn-simple btn-primary btn-icon btn-round float-right">Awaiting valid siganture <i className="tim-icons icon-send" /></button>
+                                                <button disabled className="btn btn-simple btn-primary btn-icon btn-round float-right"><i className="tim-icons icon-send" /></button>
                                             </>
                                         )
                                     }
@@ -282,7 +307,7 @@ export default function SendFormUser() {
                                                         ) : (
                                                             noIssuer ? (
                                                                 <>
-                                                                    <button disabled className="btn-lg btn-simple btn-success btn-icon btn-round ">No signature found<i className="tim-icons icon-check-2" /></button>
+                                                                    <button disabled className="btn-lg btn-simple btn-danger btn-icon btn-round ">Not authorised</button>
                                                                 </>
                                                             ) : (
                                                                 <>
