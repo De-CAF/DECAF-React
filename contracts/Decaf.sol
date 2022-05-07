@@ -18,8 +18,16 @@ contract Decaf {
         bytes mssgHash;
     }
 
+
+    function DocHash(string memory ipfsHash) public pure returns(bytes32) {
+        return keccak256(abi.encode(ipfsHash));
+    }
+
+
     mapping(address => Document[]) public documentsIssued;
     mapping(address => Document[]) public documentsReceived;
+
+    mapping(string=>Document[]) public documentDirectory;
 
     mapping(address => DocumentSigned[]) public documentsSigned;
     mapping(address => DocumentSigned[]) public documentsSignedReceived;
@@ -39,6 +47,21 @@ contract Decaf {
         document.access = true;
         documentsIssued[msg.sender].push(document);
         documentsReceived[to].push(document);
+        if(documentDirectory[document.ipfsHash].length == 0)
+            documentDirectory[document.ipfsHash].push(document);
+    }
+
+    function issueDocumentVersion(
+        string memory fileName,
+        string memory ipfsHash,
+        address to
+    ) public {
+        Document memory document;
+        document.fileName = fileName;
+        document.ipfsHash = ipfsHash;
+        document.to = to;
+        document.from = msg.sender;
+        documentDirectory[ipfsHash].push(document);
     }
 
     function signDocument(
@@ -59,9 +82,14 @@ contract Decaf {
         return documentsIssued[msg.sender];
     }
 
+    function getDocumentVersionsIssued(string memory ipfsHash) public view returns (Document[] memory) {
+        return documentDirectory[ipfsHash];
+    }
+
     function getDocumentsReceived() public view returns (Document[] memory) {
         return documentsReceived[msg.sender];
     }
+
 
     function revokeDocument(address user, Document memory doc) public {
         Document[] memory ownerDocs = documentsIssued[msg.sender];
@@ -71,8 +99,8 @@ contract Decaf {
         for (uint256 i = 0; i < ownerDocs.length; i++) {
             if (equalsOwner(ownerDocs[i], doc)) {
                 documentsIssued[msg.sender][i].access = false;
-            }
         }
+    }
 
         for (uint256 i = 0; i < receivedDocs.length; i++) {
             if (equals(receivedDocs[i], doc)) {
@@ -159,3 +187,5 @@ contract Decaf {
 //0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db
 
 //0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB
+
+//["0x5B38Da6a701c568545dCfcB03FcB875f56beddC4","0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2","doc1_master","doc1_master",true]

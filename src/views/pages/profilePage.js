@@ -11,6 +11,7 @@ import SendDocForm from "views/IndexSections/SendDocForm";
 
 import { useDispatch, useSelector } from "react-redux";
 import { selectUserName, selectUserBio, selectRole, selectPhone, selectUserEmail, selectLocation } from "../../features/userSlice";
+import SendFormUser from "views/IndexSections/SendFormUser";
 
 
 export default function ProfilePage() {
@@ -190,7 +191,7 @@ export default function ProfilePage() {
                                                         <h5 className="text-on-back">03</h5>
                                                     </div>
                                                 </div>
-                                                <SendDocForm />
+                                                <SendFormUser />
                                             </div>
 
 
