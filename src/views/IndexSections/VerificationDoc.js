@@ -31,15 +31,12 @@ export default function VerificationDoc() {
     const [b64, setB64] = useState(null)
     const [ipfsHash, setipfsHash] = useState(null)
     const [docSig, setdocSig] = useState(null)
+    const [masterDoc, setMasterDoc] = useState(null)
 
     const [contractToken1, setContractToken1] = useState(null)
     const [contractToken2, setContractToken2] = useState(null)
 
-    useEffect(() => {
-        create().then(ipfs => {
-            setIpfs(ipfs)
-        })
-    }, [ipfs])
+    const [ipfsIsActive, setIpfsIsActive] = useState(false)
 
     function findUserInfo(address) {
         firestore.collection('users').where('accountAddress', '==', address).get().then((res) => {
@@ -67,32 +64,14 @@ export default function VerificationDoc() {
             setBuffer(Buffer(reader.result))
             console.log('buffer', reader.result)
             var results;
-            if (ipfs) {
-                results = (await ipfs.add(reader.result))
-                console.log("ipfs hash: ", results.path)
-                setipfsHash(results.path)
-                const bufferedContents = await toBuffer(ipfs.cat(results.path)) // returns a Buffer
-                //console.log(bufferedContents)
-                setB64(Buffer(bufferedContents).toString('base64'))
-
-                const netId = await library.eth.net.getId()
-                const networkData1 = Decaf.networks[netId]
-                const networkData2 = Verification.networks[netId]
-                if (networkData1 && networkData2) {
-                    console.log("Contract Address 1: ", networkData1.address) //0x543328Cd57B74110c87c2676c1b9046Ccad256b3 infura
-                    console.log("Contract Address 2: ", networkData2.address) // 0x16Fc2Fb481DA460C3d37BdD9A311447e122a18cC
-                    const contractToken1 = new library.eth.Contract(Decaf.abi, networkData1.address);
-                    setContractToken1(contractToken1)
-                    const contractToken2 = new library.eth.Contract(Verification.abi, networkData2.address);
-                    setContractToken2(contractToken2)
-                }
-            } else {
-                create().then(async (ipfs) => {
-                    setIpfs(ipfs)
-                    results = (await ipfs.add(reader.result))
+            if (!ipfsIsActive) {
+                create().then(async (ipfss) => {
+                    setIpfs(ipfss)
+                    setIpfsIsActive(true)
+                    results = (await ipfss.add(reader.result))
                     console.log("ipfs hash: ", results.path)
                     setipfsHash(results.path)
-                    const bufferedContents = await toBuffer(ipfs.cat(results.path)) // returns a Buffer
+                    const bufferedContents = await toBuffer(ipfss.cat(results.path)) // returns a Buffer
                     //console.log(bufferedContents)
                     setB64(Buffer(bufferedContents).toString('base64'))
 
@@ -117,28 +96,49 @@ export default function VerificationDoc() {
     const sign = async (event) => {
         event.preventDefault()
         const documentsRecieved = await contractToken1.methods.getDocumentsSignedReceived().call({ from: metaAddress })
-        const mssgHash = await contractToken2.methods.getMessageHash(ipfsHash).call({ from: metaAddress })
-        var document = documentsRecieved.filter(function (item) { return item.mssgHash === mssgHash })
-        document = document[0]
-        const ethSignedMssgHash = await contractToken2.methods.getEthSignedMessageHash(mssgHash).call({ from: metaAddress })
-        console.log(documentsRecieved)
-        console.log(document)
+        const masterIpfs = await contractToken1.methods.getDocumentVersionLink(ipfsHash).call({ from: metaAddress })
+        console.log("v", ipfsHash)
+        console.log("m", masterIpfs)
+        if (masterIpfs) {
+            const mssgHash = await contractToken2.methods.getMessageHash(masterIpfs).call({ from: metaAddress })
+            var document = documentsRecieved.filter(function (item) { return item.mssgHash === mssgHash })
+            document = document[0]
+            const ethSignedMssgHash = await contractToken2.methods.getEthSignedMessageHash(mssgHash).call({ from: metaAddress })
+            console.log(documentsRecieved)
+            console.log(document)
+            if (document) {
+                const signer = await contractToken2.methods.recoverSigner(ethSignedMssgHash, document.signature).call({ from: metaAddress })
+                setIssuerAddress(signer)
+                findUserInfo(signer)
+                setnoIssuer(false)
+                setMasterDoc(masterIpfs)
+                console.log(masterIpfs)
+                setdocSig(document.signature)
+            } else {
+                setIssuer('')
+                setIssuerAddress('')
+                setnoIssuer(true)
+            }
 
-        /*library.eth.personal.sign(mssgHash, metaAddress).then(async (signature) => {
-            setdocSig(true)
-            const signer = await contractToken2.methods.recoverSigner(ethSignedMssgHash, signature).call({ from: metaAddress })
-            setIssuerAddress(signer)
-            findUserInfo(signer)
-        })*/
-        if (document) {
-            const signer = await contractToken2.methods.recoverSigner(ethSignedMssgHash, document.signature).call({ from: metaAddress })
-            setIssuerAddress(signer)
-            findUserInfo(signer)
-            setnoIssuer(false)
+
         } else {
-            setIssuer('')
-            setIssuerAddress('')
-            setnoIssuer(true)
+            const mssgHash = await contractToken2.methods.getMessageHash(ipfsHash).call({ from: metaAddress })
+            var document = documentsRecieved.filter(function (item) { return item.mssgHash === mssgHash })
+            document = document[0]
+            const ethSignedMssgHash = await contractToken2.methods.getEthSignedMessageHash(mssgHash).call({ from: metaAddress })
+            console.log(documentsRecieved)
+            console.log(document)
+            if (document) {
+                const signer = await contractToken2.methods.recoverSigner(ethSignedMssgHash, document.signature).call({ from: metaAddress })
+                setIssuerAddress(signer)
+                findUserInfo(signer)
+                setnoIssuer(false)
+                setdocSig(document.signature)
+            } else {
+                setIssuer('')
+                setIssuerAddress('')
+                setnoIssuer(true)
+            }
         }
 
     }
@@ -178,12 +178,20 @@ export default function VerificationDoc() {
                                     )
 
                                 }
-                                <p align="center">File Status: {
+                                <p align="center" style={{"paddingTop": 20}}>File Status: {
                                     ipfsHash ? (
                                         docSig ? (
-                                            <>
-                                                <b>File is signed on the blockchain.</b>
-                                            </>
+
+                                            masterDoc ? (
+                                                <>
+                                                    <b>Version file is signed on the blockchain. <a href={"https://ipfs.io/ipfs/" + masterDoc}>View Master File</a></b>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <b>File is signed on the blockchain.</b>
+                                                </>
+                                            )
+
                                         ) : (
                                             noIssuer ? (
                                                 <>
@@ -206,7 +214,7 @@ export default function VerificationDoc() {
                                 <br></br>
                                 <form >
                                     <div className="row">
-                                        <label className="col-sm-3 col-form-label">File</label>
+                                        <label className="col-sm-3 col-form-label" style={{ "color": "white" }}>File</label>
                                         <div className="col-sm-9">
                                             <input type="file" onChange={captureFile} />
                                         </div>
@@ -215,23 +223,23 @@ export default function VerificationDoc() {
                                     <div className="row">
                                         <div className="col-md-6">
                                             <div className="form-group">
-                                                <label>Signer's Name </label>
-                                                <input disabled type="text" className="form-control" value={issuer ? (issuer.userName) : ("Name")} />
+                                                <label style={{ "color": "white" }}>Signer's Name </label>
+                                                <input disabled style={{ "color": "white" }} type="text" className="form-control" value={issuer ? (issuer.userName) : ("Name")} />
                                             </div>
                                         </div>
                                         <div className="col-md-6">
                                             <div className="form-group">
-                                                <label>Signer's Email address</label>
-                                                <input disabled type="email" className="form-control" value={issuer ? (issuer.email) : ("Email")} />
+                                                <label style={{ "color": "white" }}>Signer's Email address</label>
+                                                <input disabled style={{ "color": "white" }} type="email" className="form-control" value={issuer ? (issuer.email) : ("Email")} />
                                             </div>
                                         </div>
                                     </div>
 
                                     <div className="row">
-                                        <label className="col-sm-3 col-form-label">Signer's account address</label>
+                                        <label className="col-sm-3 col-form-label" style={{ "color": "white" }}>Signer's account address</label>
                                         <div className="col-sm-9">
                                             <div className="form-group">
-                                                <input disabled type="text" className="form-control" placeholder="e.g. 1Nasd92348hU984353hfid" value={issuerAddress ? (issuerAddress) : ("e.g. 1Nasd92348hU984353hfid")} />
+                                                <input disabled type="text" style={{ "color": "white" }} className="form-control" placeholder="e.g. 1Nasd92348hU984353hfid" value={issuerAddress ? (issuerAddress) : ("e.g. 1Nasd92348hU984353hfid")} />
                                             </div>
                                         </div>
                                     </div>

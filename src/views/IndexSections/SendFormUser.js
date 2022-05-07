@@ -38,12 +38,9 @@ export default function SendFormUser() {
     const [contractToken1, setContractToken1] = useState(null)
     const [contractToken2, setContractToken2] = useState(null)
 
+    const [ipfsIsActive, setIpfsIsActive] = useState(false)
+    const [isVersion, setIsVersion] = useState(false)
 
-    useEffect(() => {
-        create().then(ipfs => {
-            setIpfs(ipfs)
-        })
-    }, [ipfs])
 
     function ValidateEmail(mail) {
         if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
@@ -81,37 +78,39 @@ export default function SendFormUser() {
             setBuffer(Buffer(reader.result))
             console.log('buffer', reader.result)
             var results;
-            if (ipfs) {
-                results = (await ipfs.add(reader.result))
-                console.log("ipfs hash: ", results.path)
-                setipfsHash(results.path)
-                const bufferedContents = await toBuffer(ipfs.cat(results.path)) // returns a Buffer
-                //console.log(bufferedContents)
-                setB64(Buffer(bufferedContents).toString('base64'))
-            } else {
-                create().then(async (ipfs) => {
-                    setIpfs(ipfs)
-                    results = (await ipfs.add(reader.result))
+            if (!ipfsIsActive) {
+                create().then(async (ipfss) => {
+                    setIpfs(ipfss)
+                    setIpfsIsActive(true)
+                    results = (await ipfss.add(reader.result))
                     console.log("ipfs hash: ", results.path)
                     setipfsHash(results.path)
-                    const bufferedContents = await toBuffer(ipfs.cat(results.path)) // returns a Buffer
+         
+                    const bufferedContents = await toBuffer(ipfss.cat(results.path)) // returns a Buffer
                     //console.log(bufferedContents)
                     setB64(Buffer(bufferedContents).toString('base64'))
+                    const netId = await library.eth.net.getId()
+                    const networkData1 = Decaf.networks[netId]
+                    const networkData2 = Verification.networks[netId]
+                    if (networkData1 && networkData2) {
+                        console.log("Contract Address 1: ", networkData1.address) //0x543328Cd57B74110c87c2676c1b9046Ccad256b3 infura
+                        console.log("Contract Address 2: ", networkData2.address) // 0x16Fc2Fb481DA460C3d37BdD9A311447e122a18cC
+                        const contractToken1 = new library.eth.Contract(Decaf.abi, networkData1.address);
+                        setContractToken1(contractToken1)
+                        const contractToken2 = new library.eth.Contract(Verification.abi, networkData2.address);
+                        setContractToken2(contractToken2)
+
+                        const masterIpfs = await contractToken1.methods.getDocumentVersionLink(results.path).call({ from: metaAddress })
+                        console.log(masterIpfs)
+                        if (masterIpfs) {
+                            setIsVersion(true)
+                        }
+                    }
                 })
 
             }
 
-            const netId = await library.eth.net.getId()
-            const networkData1 = Decaf.networks[netId]
-            const networkData2 = Verification.networks[netId]
-            if (networkData1 && networkData2) {
-                console.log("Contract Address 1: ", networkData1.address) //0x543328Cd57B74110c87c2676c1b9046Ccad256b3 infura
-                console.log("Contract Address 2: ", networkData2.address) // 0x16Fc2Fb481DA460C3d37BdD9A311447e122a18cC
-                const contractToken1 = new library.eth.Contract(Decaf.abi, networkData1.address);
-                setContractToken1(contractToken1)
-                const contractToken2 = new library.eth.Contract(Verification.abi, networkData2.address);
-                setContractToken2(contractToken2)
-            }
+
         }
 
     }
@@ -222,7 +221,7 @@ export default function SendFormUser() {
 
                                     )
                                 }
-                                <p align="center">File Status: {
+                                <p align="center" style={{"paddingTop": 20}}>File Status: {
                                     ipfsHash ? (
                                         docSig ? (
                                             <>
@@ -245,35 +244,36 @@ export default function SendFormUser() {
                                     <div className="row">
                                         <div className="col-md-6">
                                             <div className="form-group">
-                                                <label>Receiver's Name </label>
-                                                <input disabled type="text" className="form-control" value={receiver ? (receiver.userName) : ("Name")} />
+                                                <label style={{ "color": "white" }}>Receiver's Name </label>
+                                                <input disabled style={{ "color": "white" }} type="text" className="form-control" value={receiver ? (receiver.userName) : ("Name")} />
                                             </div>
                                         </div>
                                         <div className="col-md-6">
                                             <div className="form-group">
-                                                <label>Receiver's Email address</label>
-                                                <input type="email" onChange={findUserInfo} className="form-control" placeholder="shreyas@email.com" />
+                                                <label style={{ "color": "white" }}>Receiver's Email address</label>
+                                                <input type="email" style={{ "color": "white" }} onChange={findUserInfo} className="form-control" placeholder="shreyas@email.com" />
                                             </div>
                                         </div>
                                     </div>
                                     <div className="row">
-                                        <label className="col-sm-3 col-form-label">Pay to</label>
+                                        <label className="col-sm-3 col-form-label" style={{ "color": "white" }}>Pay to</label>
                                         <div className="col-sm-9">
                                             <div className="form-group">
-                                                <input disabled type="text" className="form-control" placeholder="e.g. 1Nasd92348hU984353hfid" value={receiver ? (receiver.accountAddress ? (receiver.accountAddress) : ("The user is not connected to metamask")) : ("e.g. 1Nasd92348hU984353hfid")} />
-                                                <span className="form-text"> {receiver ? ("Metamask account address of " + receiver.email) : ("")}</span>
+                                                <input disabled type="text" style={{ "color": "white" }} className="form-control" placeholder="e.g. 1Nasd92348hU984353hfid" value={receiver ? (receiver.accountAddress ? (receiver.accountAddress) : ("The user is not connected to metamask")) : ("e.g. 1Nasd92348hU984353hfid")} />
+                                                <span className="form-text" style={{ "color": "white" }}> {receiver ? ("Metamask account address of " + receiver.email) : ("")}</span>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div className="row">
-                                        <label className="col-sm-3 col-form-label">File</label>
+                                        <label className="col-sm-3 col-form-label" style={{ "color": "white" }}>File</label>
                                         <div className="col-sm-9">
                                             <input type="file" onChange={captureFile} />
                                         </div>
                                     </div>
 
                                     {
+
                                         docSig ? (
                                             <>
                                                 <button type="submit" className="btn btn-simple btn-primary btn-icon btn-round float-right"><i className="tim-icons icon-send" /></button>
@@ -283,6 +283,7 @@ export default function SendFormUser() {
                                                 <button disabled className="btn btn-simple btn-primary btn-icon btn-round float-right"><i className="tim-icons icon-send" /></button>
                                             </>
                                         )
+
                                     }
 
 
@@ -310,9 +311,16 @@ export default function SendFormUser() {
                                                                     <button disabled className="btn-lg btn-simple btn-danger btn-icon btn-round ">Not authorised</button>
                                                                 </>
                                                             ) : (
-                                                                <>
-                                                                    <button onClick={(e) => sign(e)} className="btn-lg btn-simple btn-primary btn-icon btn-round "> Check Signature <i className="tim-icons icon-key-25" /></button>
-                                                                </>
+                                                                isVersion ? (
+                                                                    <>
+                                                                        <button disabled className="btn-lg btn-simple btn-warning btn-icon btn-round "> Upload Master Doc</button>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <button onClick={(e) => sign(e)} className="btn-lg btn-simple btn-primary btn-icon btn-round "> Check Signature <i className="tim-icons icon-key-25" /></button>
+
+                                                                    </>
+                                                                )
                                                             )
                                                         )
                                                     }

@@ -62,12 +62,12 @@ export default function WalletCard() {
 
 
 
-        if (metaAddress != null && active===false) {
+        if (metaAddress != null && active === false) {
             console.log("Reconnecting..")
             connectOnLoad()
         }
 
-        if (active && metaAddress==null) {
+        if (active && metaAddress == null) {
 
             setMetaData(account)
 
@@ -96,7 +96,7 @@ export default function WalletCard() {
 
         try {
             deactivate()
-            dispatch(setMetaAddress({ metaAddress: null }), setCurrentNet({ currentNet: null }), setAccountBalance({accountBalance: null}))
+            dispatch(setMetaAddress({ metaAddress: null }), setCurrentNet({ currentNet: null }), setAccountBalance({ accountBalance: null }))
             firestore.collection('users').doc(auth.currentUser.uid).update({
                 accountAddress: null
             })
@@ -141,11 +141,13 @@ export default function WalletCard() {
                                             Wallet
                                         </a>
                                     </li>
-                                    <li className="nav-item">
-                                        <a className="nav-link" data-toggle="tab" href="#linkc">
-                                            News
-                                        </a>
-                                    </li>
+                                    {/*
+                                        <li className="nav-item">
+                                            <a className="nav-link" data-toggle="tab" href="#linkc">
+                                                News
+                                            </a>
+                                        </li>
+                                    */}
                                 </>
                             ) : (
                                 <>

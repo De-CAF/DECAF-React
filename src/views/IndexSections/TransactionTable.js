@@ -181,10 +181,11 @@ export default function TransactionTable() {
         const fileName = event.target[3].value.slice(12)
         const ipfshashMaster = event.target[4].value
         const payTo = event.target[2].value
-        console.log(ipfs)
+        console.log("v",ipfsHash)
+        console.log("master", ipfshashMaster)
         try {
             //dispatch(setContracts({ contractDoc: contractToken1, contractVerification: contractToken2 }))
-            contractToken1.methods.issueDocumentVersion(fileName, ipfshashMaster, payTo).send({ from: metaAddress }).then(async (r) => {
+            contractToken1.methods.issueDocumentVersion(fileName, ipfshashMaster,ipfsHash, payTo).send({ from: metaAddress }).then(async (r) => {
                 window.location.reload()
             })
         } catch (err) {
@@ -341,13 +342,13 @@ export default function TransactionTable() {
                                                                                                                     <div className="col-md-6">
                                                                                                                         <div className="form-group">
                                                                                                                             <label>Receiver's Name </label>
-                                                                                                                            <input disabled type="text" className="form-control" value={receiver ? (receiver.userName) : ("Name")} />
+                                                                                                                            <input disabled style={{ "color": "white" }} type="text" className="form-control" value={receiver ? (receiver.userName) : ("Name")} />
                                                                                                                         </div>
                                                                                                                     </div>
                                                                                                                     <div className="col-md-6">
                                                                                                                         <div className="form-group">
                                                                                                                             <label>Receiver's Email address</label>
-                                                                                                                            <input type="email" onChange={findUserInfo} className="form-control" placeholder="shreyas@email.com" />
+                                                                                                                            <input type="email" style={{ "color": "white" }} onChange={findUserInfo} className="form-control" placeholder="shreyas@email.com" />
                                                                                                                         </div>
                                                                                                                     </div>
                                                                                                                 </div>
@@ -355,8 +356,8 @@ export default function TransactionTable() {
                                                                                                                     <label className="col-sm-3 col-form-label">Pay to</label>
                                                                                                                     <div className="col-sm-9">
                                                                                                                         <div className="form-group">
-                                                                                                                            <input disabled type="text" className="form-control" placeholder="e.g. 1Nasd92348hU984353hfid" value={receiver ? (receiver.accountAddress ? (receiver.accountAddress) : ("The user is not connected to metamask")) : ("e.g. 1Nasd92348hU984353hfid")} />
-                                                                                                                            <span className="form-text"> {receiver ? ("Metamask account address of " + receiver.email) : ("")}</span>
+                                                                                                                            <input disabled type="text" style={{ "color": "white" }} className="form-control" placeholder="e.g. 1Nasd92348hU984353hfid" value={receiver ? (receiver.accountAddress ? (receiver.accountAddress) : ("The user is not connected to metamask")) : ("e.g. 1Nasd92348hU984353hfid")} />
+                                                                                                                            <span className="form-text" style={{ "color": "white" }}> {receiver ? ("Metamask account address of " + receiver.email) : ("")}</span>
                                                                                                                         </div>
                                                                                                                     </div>
                                                                                                                 </div>

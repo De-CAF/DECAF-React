@@ -28,6 +28,7 @@ contract Decaf {
     mapping(address => Document[]) public documentsReceived;
 
     mapping(string=>Document[]) public documentDirectory;
+    mapping(string=>string) public documentVersionMasterLink;
 
     mapping(address => DocumentSigned[]) public documentsSigned;
     mapping(address => DocumentSigned[]) public documentsSignedReceived;
@@ -53,6 +54,7 @@ contract Decaf {
 
     function issueDocumentVersion(
         string memory fileName,
+        string memory ipfsHashMaster,
         string memory ipfsHash,
         address to
     ) public {
@@ -61,7 +63,8 @@ contract Decaf {
         document.ipfsHash = ipfsHash;
         document.to = to;
         document.from = msg.sender;
-        documentDirectory[ipfsHash].push(document);
+        documentDirectory[ipfsHashMaster].push(document);
+        documentVersionMasterLink[ipfsHash]=ipfsHashMaster;
     }
 
     function signDocument(
@@ -85,6 +88,11 @@ contract Decaf {
     function getDocumentVersionsIssued(string memory ipfsHash) public view returns (Document[] memory) {
         return documentDirectory[ipfsHash];
     }
+
+    function getDocumentVersionLink(string memory ipfsHash) public view returns (string memory) {
+        return documentVersionMasterLink[ipfsHash];
+    }
+
 
     function getDocumentsReceived() public view returns (Document[] memory) {
         return documentsReceived[msg.sender];

@@ -41,6 +41,8 @@ export default function SendDocForm() {
     const contractVerificationToken = useSelector(selectContractVerification)
     const [ipfsIsActive, setIpfsIsActive] = useState(false)
 
+    const [isVersion, setIsVersion] = useState(false)
+
     function ValidateEmail(mail) {
         if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
             return (true)
@@ -101,22 +103,37 @@ export default function SendDocForm() {
                             setContractToken1(contractToken1)
                             const contractToken2 = new library.eth.Contract(Verification.abi, networkData2.address);
                             setContractToken2(contractToken2)
-
-                            const docRecieved = await contractToken1.methods.getDocumentsSignedReceived().call({ from: metaAddress })
-                            const mssgHash = await contractToken2.methods.getMessageHash(results.path).call({ from: metaAddress })
-                            var doc = docRecieved.filter(function (item) { return item.mssgHash === mssgHash })
-                            doc = doc[0]
-                            if (doc) {
-                                setCantIssue(true)
-                            } else {
-                                setCantIssue(false)
+                            const masterIpfs = await contractToken1.methods.getDocumentVersionLink(results.path).call({ from: metaAddress })
+                            
+                            if (masterIpfs) {
+                                setIsVersion(true)
+                                const docRecieved = await contractToken1.methods.getDocumentsSignedReceived().call({ from: metaAddress })
+                                const mssgHash = await contractToken2.methods.getMessageHash(masterIpfs).call({ from: metaAddress })
+                                var doc = docRecieved.filter(function (item) { return item.mssgHash === mssgHash })
+                                doc = doc[0]
+                                if (doc) {
+                                    setCantIssue(true)
+                                } else {
+                                    setCantIssue(false)
+                                }
                             }
+                            else {
+                                const docRecieved = await contractToken1.methods.getDocumentsSignedReceived().call({ from: metaAddress })
+                                const mssgHash = await contractToken2.methods.getMessageHash(results.path).call({ from: metaAddress })
+                                var doc = docRecieved.filter(function (item) { return item.mssgHash === mssgHash })
+                                doc = doc[0]
+                                if (doc) {
+                                    setCantIssue(true)
+                                } else {
+                                    setCantIssue(false)
+                                }
+                            }
+
                         }
                     })
-                } catch (err) { 
+                } catch (err) {
                     console.log(err)
                 }
-
             }
 
 
@@ -203,7 +220,7 @@ export default function SendDocForm() {
 
 
                                     }
-                                    <p align="center">File Status: {
+                                    <p align="center" style={{"paddingTop": 20}}>File Status: {
                                         ipfsHash ? (
                                             cantIssue ? (
                                                 <>
@@ -232,28 +249,28 @@ export default function SendDocForm() {
                                         <div className="row">
                                             <div className="col-md-6">
                                                 <div className="form-group">
-                                                    <label>Receiver's Name </label>
-                                                    <input disabled type="text" className="form-control" value={receiver ? (receiver.userName) : ("Name")} />
+                                                    <label style={{ "color": "white" }}>Receiver's Name </label>
+                                                    <input disabled style={{ "color": "white" }} type="text" className="form-control" value={receiver ? (receiver.userName) : ("Name")} />
                                                 </div>
                                             </div>
                                             <div className="col-md-6">
                                                 <div className="form-group">
-                                                    <label>Receiver's Email address</label>
-                                                    <input type="email" onChange={findUserInfo} className="form-control" placeholder="shreyas@email.com" />
+                                                    <label style={{ "color": "white" }}>Receiver's Email address</label>
+                                                    <input type="email" style={{ "color": "white" }} onChange={findUserInfo} className="form-control" placeholder="shreyas@email.com" />
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="row">
-                                            <label className="col-sm-3 col-form-label">Pay to</label>
+                                            <label style={{ "color": "white" }} className="col-sm-3 col-form-label">Pay to</label>
                                             <div className="col-sm-9">
                                                 <div className="form-group">
-                                                    <input disabled type="text" className="form-control" placeholder="e.g. 1Nasd92348hU984353hfid" value={receiver ? (receiver.accountAddress ? (receiver.accountAddress) : ("The user is not connected to metamask")) : ("e.g. 1Nasd92348hU984353hfid")} />
-                                                    <span className="form-text"> {receiver ? ("Metamask account address of " + receiver.email) : ("")}</span>
+                                                    <input disabled type="text" style={{ "color": "white" }} className="form-control" placeholder="e.g. 1Nasd92348hU984353hfid" value={receiver ? (receiver.accountAddress ? (receiver.accountAddress) : ("The user is not connected to metamask")) : ("e.g. 1Nasd92348hU984353hfid")} />
+                                                    <span className="form-text" style={{ "color": "white" }}> {receiver ? ("Metamask account address of " + receiver.email) : ("")}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="row">
-                                            <label className="col-sm-3 col-form-label">File</label>
+                                            <label className="col-sm-3 col-form-label" style={{ "color": "white" }}>File</label>
                                             <div className="col-sm-9">
                                                 <input type="file" onChange={captureFile} />
                                             </div>

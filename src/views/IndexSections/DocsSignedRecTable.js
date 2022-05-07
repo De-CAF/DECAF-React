@@ -26,7 +26,7 @@ export default function DocsSignedRecTable() {
     const [issuedDocs, setissuedDocs] = useState(null)
     const [receivedDocs, setReceivedDocs] = useState(null)
     const [docVersions, setDocVersions] = useState(null)
-    const [modalData, setModalaData] = useState(null)
+    const [modalData2, setModalaData] = useState(null)
 
     const [contractToken1, setContractToken1] = useState(null)
     const [contractToken2, setContractToken2] = useState(null)
@@ -110,12 +110,12 @@ export default function DocsSignedRecTable() {
                                                         <td>{item.fileName}</td>
                                                         <td><a href={"https://ipfs.io/ipfs/" + item.ipfsHash}>View File</a></td>
                                                         <td className="text-center">{item.from}</td>
-                                                        < td > <button onClick={e => getVersion(e, item)} type="button" class="btn btn-primary btn-round" data-toggle="modal" data-target="#exampleModal2">View</button></td>
-                                                        <div class="modal fade primary" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+                                                        < td > <button onClick={e => getVersion(e, item)} type="button" class="btn btn-primary btn-round" data-toggle="modal" data-target="#exampleModal3">View</button></td>
+                                                        <div class="modal fade primary" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel3" aria-hidden="true">
                                                             <div class="modal-dialog" role="document">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
-                                                                        <h3 class="modal-title" id="exampleModalLabel">Versions of: {modalData ? (modalData.fileName) : (<></>)}</h3>
+                                                                        <h3 class="modal-title" id="exampleModalLabel">Versions of: {modalData2 ? (modalData2.fileName) : (<></>)}</h3>
                                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                             <span aria-hidden="true">&times;</span>
                                                                         </button>
@@ -129,7 +129,7 @@ export default function DocsSignedRecTable() {
                                                                                         <th className="text-center">#</th>
                                                                                         <th>Document Name</th>
                                                                                         <th>View Document</th>
-                                                                                        <th className="text-center">Issuer</th>
+                                                                                        <th className="text-center">Organisation Issuer</th>
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
