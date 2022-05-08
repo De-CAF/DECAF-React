@@ -18,7 +18,7 @@ export default function Footer() {
       <Container>
         <Row>
           <Col md="3">
-            <h1 class="title">DECAF• Social</h1>
+            <h1 class="title">DECAF• Professional</h1>
           </Col>
           <Col md="3">
             <Nav>
