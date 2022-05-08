@@ -1,51 +1,74 @@
-<h1 align="center">DECAF• Social :coffee:</h1>
 
+| <h1 align="center">DECAF• Professional :coffee:</h1> |<h1 align="center">DECAF• Social :coffee:</h1> |
+| --- | --- |
+| ![Product Presentation Image](https://github.com/De-CAF/DECAF-React/blob/main/public/static/img/App-Mockup.jpg) | ![Product Presentation Image](https://github.com/De-CAF/DECAF-React/blob/main/public/static/img/mockupHD.png) |
+| <h3 align="center">Developed!  ✔️</h3> | <h3 align="center">Coming Soon! :man_mechanic: :woman_mechanic:</h3> |
 
-![Product Presentation Image](https://github.com/De-CAF/DECAF-React/blob/main/public/static/img/mockupHD.png)
+<div align="center">
+  
+[![](https://img.shields.io/badge/Made_with-Nodejs-red?style=for-the-badge&logo=node.js)](https://nodejs.org/en/)
+  [![](https://img.shields.io/badge/Made_with-React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://nodejs.org/en/)
+[![](https://img.shields.io/badge/Smart_Contracts_using-Solidity-e6e6e6?style=for-the-badge&logo=solidity&logoColor=black)](mongodb.com "MongoDB")
+[![](https://img.shields.io/badge/Powered_by-Ethereum-3C3C3D?style=for-the-badge&logo=Ethereum&logoColor=white)](#)
+  [![](https://img.shields.io/badge/IDE-Visual_Studio_Code-purple?style=for-the-badge&logo=visual-studio-code)](https://code.visualstudio.com/  "Visual Studio Code")
+[![](https://img.shields.io/badge/Authentication_Service-firebase-yellow.svg?style=for-the-badge&logo=firebase)](#)
 
-<h3 align="center">Development in progress! :man_mechanic: :woman_mechanic:</h3>
+**DECAF• Professional** is designed to provide am ecosystem for organisations and users to have complete discretion over a particular document, maintaining integrity, transparency, availibility and authenticity. The application's architecture was built using blockchain technology. 
+
+</div>
+  
+<!-- TABLE OF CONTENTS -->
+<details open="open">
+  <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
+  <ol>
+    <li>
+      <a href="#browser-support">Browser Support</a>
+    </li>
+    <li><a href="#features">Features</a></li>
+    <li>
+      <a href="#demo">Application demo</a>
+      <ul>
+        <li><a href="#static-pages">Static Pages</a></li>
+        <li><a href="#authentication-pages">Authentication Pages</a></li>
+      </ul>
+    </li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
+
+<!-- Browser Support -->
+## Browser Support
+
+**DECAF• Professional** requires a Metamask enabled browser to avail the services. At present, we officially aim to support the following browser:
+
+| Metamask Enabled | Chrome |
+| :---: | :---: | 
+| <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" width="64" height="64"> | <img src="https://github.com/creativetimofficial/public-assets/blob/main/logos/chrome-logo.png?raw=true" width="64" height="64"> |
+
+<!-- Features -->
+## Features
+1. Feature discussion
+
+<!-- Demo -->
+## Application Demo
+
+<!-- Static Pages -->
+- ### Static Pages 
+  We have created a home page and landing page to have an entry point for the application.
+
+| Home Page |
+| --- | 
+| ![Home](https://github.com/De-CAF/DECAF-React/blob/main/public/static/img/1_home.png) |
+
+ 
+- ### Authentication Pages 
+  We have created two authentication pages, login page and registration page to
+  
+| Login Page | Registration Page |
+| --- | --- |
+| ![Login Page](https://github.com/De-CAF/DECAF-React/blob/main/public/static/img/Login.png)  | ![Register Page](https://github.com/De-CAF/DECAF-React/blob/main/public/static/img/Register.png) |
 
 <!---
-**[Blk• Design  System React](http://demos.creative-tim.com/blk-design-system-react/)** is a responsive Bootstrap 4 kit, developed using [React](https://reactjs.org/), [Reactstrap](https://reactstrap.github.io/) and [create-react-app](https://facebook.github.io/create-react-app/), and it is provided for free by Creative Tim. It is a beautiful cross-platform UI kit featuring over 70 elements and 3 templates.
-
-Blk• Design  System React will help you create a clean and simple website that is a perfect fit for today's black design. It is built using the 12 column grid system, with components designed to fit together perfectly. It makes use of bold colours, beautiful typography, clear photography and spacious arrangements.
-
-## Complex Documentation
-
-Each element is well presented in a very complex documentation. You can read more about the idea behind this design system here. You can check the components here and the foundation here.
-
-## Bootstrap 4 Support
-
-Blk• Design System React is built on top of the much awaited Bootstrap 4 (Reactstrap). This makes starting a new project very simple. It also provides benefits if you are already working on a Bootstrap 4 or Reactstrap project; you can just import the Blk• Design System React style over it. Most of the elements have been redesigned; but if you are using an element we have not touched, it will fall back to the Bootstrap default.
-
-
-## Table of Contents
-
-* [Versions](#versions)
-* [PRO Versions](#pro-versions)
-* [Demo](#demo)
-* [Quick Start](#quick-start)
-* [Documentation](#documentation)
-* [File Structure](#file-structure)
-* [Browser Support](#browser-support)
-* [Resources](#resources)
-* [Reporting Issues](#reporting-issues)
-* [Licensing](#licensing)
-* [Useful Links](#useful-links)
-
-## Demo
-
-| Buttons | Inputs | Navbars  |
-| --- | --- | ---  |
-| [![Buttons](https://github.com/creativetimofficial/public-assets/blob/main/blk-design-system-react/buttons.png?raw=true)](https://demos.creative-tim.com/blk-design-system-react/#/)  | [![Inputs](https://github.com/creativetimofficial/public-assets/blob/main/blk-design-system-react/inputs.png?raw=true)](https://demos.creative-tim.com/blk-design-system-react/#/)  | [![Navbar](https://github.com/creativetimofficial/public-assets/blob/main/blk-design-system-react/navbars.png?raw=true)](https://demos.creative-tim.com/blk-design-system-react/#/)  
-
-| Login Page | Landing Page | Profile Page  |
-| --- | --- | ---  |
-| [![Register Page](https://raw.githubusercontent.com/creativetimofficial/public-assets/main/blk-design-system-react/register-page.png)](https://demos.creative-tim.com/blk-design-system-react/#/register-page)  | [![Landing Page](https://github.com/creativetimofficial/public-assets/blob/main/blk-design-system-react/landing-page.png?raw=true)](https://demos.creative-tim.com/blk-design-system-react/#/landing-page)  | [![Profile Page](https://github.com/creativetimofficial/public-assets/blob/main/blk-design-system-react/profile-page.png?raw=true)](https://demos.creative-tim.com/blk-design-system-react/#/profile-page)  
-
-[View More](https://demos.creative-tim.com/blk-design-system-react)
-
-
 ## Quick start
 
 - `npm i blk-design-system-react`
@@ -57,15 +80,6 @@ Blk• Design System React is built on top of the much awaited Bootstrap 4 (Reac
 
 ## Documentation
 The documentation for the BLK Design System React is hosted at our [website](https://demos.creative-tim.com/blk-design-system-react/#/documentation/overview).
-
-
-## Browser Support
-
-At present, we officially aim to support the last two versions of the following browsers:
-
-| Chrome | Firefox | Edge | Safari | Opera |
-| :---: | :---: | :---: | :---: | :---: |
-|<img src="https://github.com/creativetimofficial/public-assets/blob/main/logos/chrome-logo.png?raw=true" width="64" height="64">|<img src="https://raw.githubusercontent.com/creativetimofficial/public-assets/main/logos/firefox-logo.png" width="64" height="64">|<img src="https://raw.githubusercontent.com/creativetimofficial/public-assets/main/logos/edge-logo.png" width="64" height="64">|<img src="https://raw.githubusercontent.com/creativetimofficial/public-assets/main/logos/safari-logo.png" width="64" height="64"> |<img src="https://raw.githubusercontent.com/creativetimofficial/public-assets/main/logos/opera-logo.png" width="64" height="64">|
 
 
 
@@ -132,4 +146,5 @@ Facebook: <https://www.facebook.com/CreativeTim>
 Dribbble: <https://dribbble.com/creativetim>
 
 Instagram: <https://www.instagram.com/CreativeTimOfficial>
--->
+--->
+
