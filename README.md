@@ -26,7 +26,7 @@
     </li>
     <li><a href="#features">Features</a></li>
     <li>
-      <a href="#demo">Application demo</a>
+      <a href="#application-pages">Application Pages</a>
       <ul>
         <li><a href="#static-pages">Static Pages</a></li>
         <li><a href="#authentication-pages">Authentication Pages</a></li>
@@ -47,10 +47,72 @@
 
 <!-- Features -->
 ## Features
-1. Feature discussion
+
+**1. Authentication:**
+
+  - Users and organizations can register using their personal email or using gmail.
+
+  - Users can login and change their profile photo, gender, biodata, location, phone and birth date.
+
+  - Organizations can login and change their profile photo, biodata, location and phone.
+
+**2. Crypto Wallet Support:**
+
+  - The application is designed to support Ethereum based wallets, namely Metamask.
+
+  - The wallet is integrated in the architecture of the application so as to support transactions using cryptocurrencies developed on the Ethereum            blockchain.
+
+  - Organizations and users can connect to their wallet and can view their network, wallet balance and their metamask account address.
+
+  - Organizations and users need to connect to the wallet to access all features of the application.
+
+**3. Organization to User Document Issuing:**
+
+  - A dynamic form is created, which checks whether the receiver is connected to a wallet or not so as to retrieve the metamask account address for the transaction.
+
+  - Organization uploads a master file (PDF/Image). The file status is dynamically updated along with the preview of the file after interactions with a smart contract.
+
+  - The file is checked for any previous signature using a smart contract. If a signature is found, the transaction is blocked and the organization cannot sign/issue the file.
+
+  - Organization signs the file using the metamask wallet and confirms the transaction for issuing the file to a user using a smart contract.
+
+**4.User to 3rd Party Document Sharing:**
+
+  - A similar form as mentioned above is created to check for the receiver.
+
+  - User uploads a master file and a valid signature is checked using a smart contract. 
+
+  - A valid master file then can be shared to another 3rd party organization.
+
+  - Users cannot send a version file to an organization. 
+
+**5. Document Verification:**
+
+  - A separate microservice is created for verifying a document.
+
+  - A 3rd party can verify by interacting with a smart contract, who was the original signer of the document. Signer’s email address, metamask address and name is viewed. 
+
+  - This same framework is used in the above forms for conducting valid transactions.
+
+**6. Version Control:**
+
+  - A version control mechanism is implemented using smart contract interaction. 
+
+  - Organizations can issue new versions of a particular master document, to create a version directory for that document.
+
+  - All the versions of that master document are visible across the user base and subsequent 3rd party organizations with whom the master document is shared.
+
+**7. Access Control:**
+
+  - An access control framework is implemented using smart contract interaction.
+
+  - Organizations can revoke the access of a particular master document and its version directory from the user. Subsequently the 3rd parties will also be denied access.
+
+  - Users can also revoke the access of the master document and its version directory from 3rd party organizations.
+
 
 <!-- Demo -->
-## Application Demo
+## Application Pages
 
 <!-- Static Pages -->
 - ### Static Pages 
