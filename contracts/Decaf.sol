@@ -9,6 +9,7 @@ contract Decaf {
         string fileName;
         string ipfsHash;
         bool access;
+        uint256 time;
     }
 
     struct DocumentSigned {
@@ -18,17 +19,19 @@ contract Decaf {
         bytes mssgHash;
     }
 
-
-    function DocHash(string memory ipfsHash) public pure returns(bytes32) {
+    function DocHash(string memory ipfsHash) public pure returns (bytes32) {
         return keccak256(abi.encode(ipfsHash));
     }
 
+    function Time_call() public view returns (uint256) {
+        return block.timestamp;
+    }
 
     mapping(address => Document[]) public documentsIssued;
     mapping(address => Document[]) public documentsReceived;
 
-    mapping(string=>Document[]) public documentDirectory;
-    mapping(string=>string) public documentVersionMasterLink;
+    mapping(string => Document[]) public documentDirectory;
+    mapping(string => string) public documentVersionMasterLink;
 
     mapping(address => DocumentSigned[]) public documentsSigned;
     mapping(address => DocumentSigned[]) public documentsSignedReceived;
@@ -48,7 +51,8 @@ contract Decaf {
         document.access = true;
         documentsIssued[msg.sender].push(document);
         documentsReceived[to].push(document);
-        if(documentDirectory[document.ipfsHash].length == 0)
+        document.time = Time_call();
+        if (documentDirectory[document.ipfsHash].length == 0)
             documentDirectory[document.ipfsHash].push(document);
     }
 
@@ -63,8 +67,9 @@ contract Decaf {
         document.ipfsHash = ipfsHash;
         document.to = to;
         document.from = msg.sender;
+        document.time = Time_call();
         documentDirectory[ipfsHashMaster].push(document);
-        documentVersionMasterLink[ipfsHash]=ipfsHashMaster;
+        documentVersionMasterLink[ipfsHash] = ipfsHashMaster;
     }
 
     function signDocument(
@@ -85,19 +90,25 @@ contract Decaf {
         return documentsIssued[msg.sender];
     }
 
-    function getDocumentVersionsIssued(string memory ipfsHash) public view returns (Document[] memory) {
+    function getDocumentVersionsIssued(string memory ipfsHash)
+        public
+        view
+        returns (Document[] memory)
+    {
         return documentDirectory[ipfsHash];
     }
 
-    function getDocumentVersionLink(string memory ipfsHash) public view returns (string memory) {
+    function getDocumentVersionLink(string memory ipfsHash)
+        public
+        view
+        returns (string memory)
+    {
         return documentVersionMasterLink[ipfsHash];
     }
-
 
     function getDocumentsReceived() public view returns (Document[] memory) {
         return documentsReceived[msg.sender];
     }
-
 
     function revokeDocument(address user, Document memory doc) public {
         Document[] memory ownerDocs = documentsIssued[msg.sender];
@@ -107,8 +118,8 @@ contract Decaf {
         for (uint256 i = 0; i < ownerDocs.length; i++) {
             if (equalsOwner(ownerDocs[i], doc)) {
                 documentsIssued[msg.sender][i].access = false;
+            }
         }
-    }
 
         for (uint256 i = 0; i < receivedDocs.length; i++) {
             if (equals(receivedDocs[i], doc)) {
