@@ -11,7 +11,7 @@
 [![](https://img.shields.io/badge/Smart_Contracts_using-Solidity-e6e6e6?style=for-the-badge&logo=solidity&logoColor=black)](mongodb.com "MongoDB")
 [![](https://img.shields.io/badge/Powered_by-Ethereum-3C3C3D?style=for-the-badge&logo=Ethereum&logoColor=white)](#)
   [![](https://img.shields.io/badge/IDE-Visual_Studio_Code-purple?style=for-the-badge&logo=visual-studio-code)](https://code.visualstudio.com/  "Visual Studio Code")
-[![](https://img.shields.io/badge/Authentication_Service-firebase-%23039BE5.svg?style=for-the-badge&logo=firebase)](#)
+[![](https://img.shields.io/badge/Authentication_Service-firebase-yellow.svg?style=for-the-badge&logo=firebase)](#)
 
 **DECAF• Professional** is designed to provide am ecosystem for organisations and users to have complete discretion over a particular document, maintaining integrity, transparency, availibility and authenticity. The application's architecture was built using blockchain technology. 
 
@@ -26,7 +26,7 @@
     </li>
     <li><a href="#features">Features</a></li>
     <li>
-      <a href="#demo">Demo Pages & Features</a>
+      <a href="#demo">Application demo</a>
       <ul>
         <li><a href="#static-pages">Static Pages</a></li>
         <li><a href="#authentication-pages">Authentication Pages</a></li>
@@ -50,7 +50,7 @@
 1. Feature discussion
 
 <!-- Demo -->
-## Demo
+## Application Demo
 
 <!-- Static Pages -->
 - ### Static Pages 
