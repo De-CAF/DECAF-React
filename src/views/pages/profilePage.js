@@ -66,12 +66,14 @@ export default function ProfilePage() {
                                             <div className="col-md-5">
                                                 <h1 className="profile-title text-left">Transactions</h1>
                                                 <h5 className="text-on-back">02</h5>
-                                                <p className="profile-description text-left">View all your transaction history.</p>
+                                                <p className="profile-description text-left">View all your issued history.</p>
+                                                {/*
                                                 <div className="btn-wrapper pt-3">
                                                     <button href="javascript:void(0)" className="btn btn-simple btn-info">
                                                         <i className="tim-icons icon-bulb-63" /> Check it!
                                                     </button>
-                                                </div>
+                                                </div>*/
+                                                }
                                             </div>
                                         </div>
                                     </div>
@@ -169,7 +171,7 @@ export default function ProfilePage() {
                                             <div className="col-md-5">
                                                 <h1 className="profile-title text-left">Transactions</h1>
                                                 <h5 className="text-on-back">02</h5>
-                                                <p className="profile-description text-left">View transaction history.</p>
+                                                <p className="profile-description text-left">View all your received history.</p>
                                                 {/*
                                                     <div className="btn-wrapper pt-3">
                                                         <button href="javascript:void(0)" className="btn btn-simple btn-info">

@@ -47,17 +47,11 @@ export default function AboutPage() {
                                         <br />
                                         <span className="text-white">secured</span>
                                     </h1>
-                                    <p className="text-white mb-3">A seamless service enabling you to share every file with the highest security and integrity. One stop platform for all documents, using our state of the art request-response mechanism, powered by blockchain technology.</p>
+                                    <p className="text-white mb-3">A seamless service enabling you to share every file with the highest security and integrity. One stop platform for all propriety documents, using our state of the art mechanism, powered by Blockchain Technology.</p>
                                     <div className="btn-wrapper">
                                         <div className="button-container">
-                                            <button href="javascript:void(0)" className="btn btn-icon btn-simple btn-round btn-neutral">
-                                                <i className="fab fa-twitter" />
-                                            </button>
-                                            {/* <button href="javascript:void(0)" className="btn btn-icon btn-simple btn-round btn-neutral">
-                                                <i className="fab fa-dribbble" />
-                                            </button> */}
-                                            <button href="javascript:void(0)" className="btn btn-icon btn-simple btn-round btn-neutral">
-                                                <i className="fab fa-facebook" />
+                                            <button href="https://github.com/De-CAF/DECAF-React" className="btn btn-icon btn-simple btn-round btn-neutral">
+                                            <i class="fab fa-github"></i>
                                             </button>
                                         </div>
                                     </div>
@@ -244,7 +238,7 @@ export default function AboutPage() {
                                                                         <i className="tim-icons icon-atom" /> Skills
                                                                     </td>
                                                                     <td className="text-right">
-                                                                        React.js, Node.js, AWS
+                                                                        React.js, Node.js, Blockchain
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
@@ -252,7 +246,7 @@ export default function AboutPage() {
                                                                         <i className="tim-icons icon-user-run" /> Hobbies
                                                                     </td>
                                                                     <td className="text-right">
-                                                                        Skiing
+                                                                        Football
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
@@ -278,7 +272,7 @@ export default function AboutPage() {
                                                                         <i className="tim-icons icon-atom" /> Skills
                                                                     </td>
                                                                     <td className="text-right">
-                                                                        React.js, Blockchain Technology
+                                                                        React.js, Blockchain
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
@@ -322,7 +316,7 @@ export default function AboutPage() {
                                                                         <i className="tim-icons icon-user-run" /> Hobbies
                                                                     </td>
                                                                     <td className="text-right">
-                                                                        Cookery
+                                                                        Football
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
@@ -467,7 +461,7 @@ export default function AboutPage() {
                                 </div>
                             </div>
                         </div>
-                    </section> */}
+                    </section> 
                     <section className="section section-lg">
                         <img src="/static/img/path4.png" className="path" style={{ maxWidth: '60%', right: '3%', top: '15%' }} />
                         <img src="/static/img/path2.png" className="path2" style={{ position: 'absolute', opacity: '.02', left: '25%', right: 'auto', maxWidth: '10%', top: '200px' }} />
@@ -490,6 +484,7 @@ export default function AboutPage() {
                             </div>
                         </div>
                     </section>
+                    */}
                     {/* <section className="section section-lg section-coins">
                         <img src="/static/img/path3.png" className="path" style={{ maxWidth: '50%', left: '5%', top: '3%' }} />
                         <div className="container">

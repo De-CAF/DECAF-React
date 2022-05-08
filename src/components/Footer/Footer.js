@@ -69,31 +69,19 @@ export default function Footer() {
             </Nav> */}
           </Col>
           <Col md="3">
-            <h3 className="title">Follow us:</h3>
+            <h3 className="title">Find us on:</h3>
             <div className="btn-wrapper profile">
               <Button
                 className="btn-icon btn-neutral btn-round btn-simple"
                 color="default"
-                href="https://twitter.com/"
+                href="https://github.com/De-CAF/DECAF-React"
                 id="tooltip622135962"
                 target="_blank"
               >
-                <i className="fab fa-twitter" />
+                <i className="fab fa-github" />
               </Button>
               <UncontrolledTooltip delay={0} target="tooltip622135962">
-                Follow us
-              </UncontrolledTooltip>
-              <Button
-                className="btn-icon btn-neutral btn-round btn-simple"
-                color="default"
-                href="https://www.facebook.com/"
-                id="tooltip230450801"
-                target="_blank"
-              >
-                <i className="fab fa-facebook-square" />
-              </Button>
-              <UncontrolledTooltip delay={0} target="tooltip230450801">
-                Like us
+                Star us
               </UncontrolledTooltip>
               {/* <Button
                 className="btn-icon btn-neutral btn-round btn-simple"

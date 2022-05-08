@@ -76,10 +76,10 @@ export default function IndexNavbar() {
   return (
     <Navbar className={"fixed-top " + color} color-on-scroll="100" expand="lg">
       <Container>
-        <div className="navbar-translate">
-          <NavbarBrand to="/" tag={Link} id="navbar-brand">
-            <span>DECAF• </span>
-            Social
+        <div  className="navbar-translate">
+          <NavbarBrand style={{"fontSize": 20}} to="/" tag={Link} id="navbar-brand">
+            <span >DECAF• </span>
+            Professional
           </NavbarBrand>
           <UncontrolledTooltip placement="bottom" target="navbar-brand">
             Decentralised file sharing network
