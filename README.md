@@ -54,15 +54,12 @@
 
 <!-- Static Pages -->
 - ### Static Pages 
-  We have created two static pages, home page and landing page to have an entry point for the application and to give a brief introduction of the team respectively.
+  We have created a home page and landing page to have an entry point for the application.
 
 | Home Page |
 | --- | 
 | ![Home](https://github.com/De-CAF/DECAF-React/blob/main/public/static/img/1_home.png) |
 
-|  Landing Page  |
-| --- | 
-| ![Landing](https://github.com/De-CAF/DECAF-React/blob/main/public/static/img/2_about.png) |
  
 - ### Authentication Pages 
   We have created two authentication pages, login page and registration page to
