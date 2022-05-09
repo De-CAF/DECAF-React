@@ -124,12 +124,31 @@
   3. Choose your file to upload. Wait for the file's ipfs hash to generate. (Note: File status will be updated dynamically.)
   4. Sign the document and confirm the transaction to execute the smart contract for signature using the Metamask wallet.
   5. Send the file by confirming one more transaction using the Metamask wallet.
+  6. In the transaction table select the 'Add' button to add a version document. Follow steps 2 to 5 for issuing the version document.
 
 <div align="center">
 
 | Organisation is issuing a document and its version to a user. |
 | --- | 
 | ![Part1](https://github.com/De-CAF/DECAF-React/blob/main/public/static/img/Part1.gif) |
+  
+</div>
+
+- ### 3rd Party Organisation Sharing:
+  Steps:
+  1. Login into your account and connect your Metamask wallet to the application.
+  2. Enter the email address of receiving organisation. The account address and receiver's name will be updated dynamically. (Note: The receiver must be connected to a wallet.)
+  3. Choose your file to upload. Wait for the file's ipfs hash to generate. (Note: File status will be updated dynamically.)
+  4. Check whether the file has a valid signature and is indeed sent by the issuing organisation.
+  5. Send the file by confirming 2 transactions using the Metamask wallet.
+  
+  (Note: User cannot send the version document. The master document must be selected.)
+
+<div align="center">
+
+| User is sharing the master document received to a third party organisation. |
+| --- | 
+| ![Part1](https://github.com/De-CAF/DECAF-React/blob/main/public/static/img/Part2.gif) |
   
 </div>
 
