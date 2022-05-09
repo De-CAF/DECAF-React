@@ -207,7 +207,7 @@
 
 ## Quick start
 
-Running the application:
+**Running the application:**
 
 - Install `Metamask extension` on chrome. Setup your wallet.
 - Clone the repo: `git clone https://github.com/De-CAF/DECAF-React.git`.
@@ -216,13 +216,13 @@ Running the application:
 - `npm i --save`
 - `npm start`.
 
-Running Blockhain Network:
+**Running Local Blockhain Network:**
 
 - Install `Ganache`.
 - Setup Ganache with network id `1337` and RPC server `HTTP://127.0.0.1:8545`.
 - Add the network to your Metamask Wallet in `Settings` or `Add Network` button under the `Networks` tab.
 
-Deploying Smart Contract on a network:
+**Deploying Smart Contract on a network:**
 
 - Make sure `Truffle CLI` is installed in your pc.
 - To deploy the smart contract on local network Ganache, run the command `truffle migrate`.
