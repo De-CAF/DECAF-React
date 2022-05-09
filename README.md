@@ -27,7 +27,7 @@
     <li><a href="#features">Features</a></li>
     <li><a href="#demo">Demo</a></li>
     <li>
-      <a href="#static-pages">Application Pages</a>
+      <a href="#static-pages">Static Pages</a>
       <ul>
         <li><a href="#home">Home Page</a></li>
         <li><a href="#landing">Landing Page</a></li>
