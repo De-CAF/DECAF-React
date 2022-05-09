@@ -118,6 +118,12 @@
 ## Demo
 
 - ### Document and Version Issuing:
+  Steps:
+  1. Login into your account and connect your Metamask wallet to the application.
+  2. Enter the email address of receiver. The account address and receiver's name will be updated dynamically. (Note: The receiver must be connected to a wallet.)
+  3. Choose your file to upload. Wait for the file's ipfs hash to generate. (Note: File status will be updated dynamically.)
+  4. Sign the document and confirm the transaction to execute the smart contract for signature using the Metamask wallet.
+  5. Send the file by confirming one more transaction using the Metamask wallet.
 
 <div align="center">
 
