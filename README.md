@@ -25,6 +25,7 @@
       <a href="#browser-support">Browser Support</a>
     </li>
     <li><a href="#features">Features</a></li>
+    <li><a href="#demo">Demo</a></li>
     <li>
       <a href="#application-pages">Application Pages</a>
       <ul>
@@ -41,9 +42,13 @@
 
 **DECAF• Professional** requires a Metamask enabled browser to avail the services. At present, we officially aim to support the following browser:
 
+<div align="center">
+
 | Metamask Enabled | Chrome |
 | :---: | :---: | 
 | <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" width="64" height="64"> | <img src="https://github.com/creativetimofficial/public-assets/blob/main/logos/chrome-logo.png?raw=true" width="64" height="64"> |
+
+</div>
 
 <!-- Features -->
 ## Features
@@ -110,8 +115,18 @@
 
   - Users can also revoke the access of the master document and its version directory from 3rd party organizations.
 
+## Demo
 
-<!-- Demo -->
+- ### Document and Version Issuing:
+
+<div align="center">
+
+| Organisation is issuing a document and its version to a user. |
+| --- | 
+| ![Part1](https://github.com/De-CAF/DECAF-React/blob/main/public/static/img/Part1.gif) |
+  
+</div>
+
 ## Application Pages
 
 <!-- Static Pages -->
