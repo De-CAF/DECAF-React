@@ -27,12 +27,13 @@
     <li><a href="#features">Features</a></li>
     <li><a href="#demo">Demo</a></li>
     <li>
-      <a href="#application-pages">Application Pages</a>
+      <a href="#static-pages">Application Pages</a>
       <ul>
-        <li><a href="#static-pages">Static Pages</a></li>
-        <li><a href="#authentication-pages">Authentication Pages</a></li>
+        <li><a href="#home">Home Page</a></li>
+        <li><a href="#landing">Landing Page</a></li>
       </ul>
     </li>
+    <li><a href="#quick-start">Quick Start</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
@@ -134,7 +135,7 @@
   
 </div>
 
-- ### 3rd Party Organisation Sharing:
+- ### 3rd Party Organisation Document Sharing:
   Steps:
   1. Login into your account and connect your Metamask wallet to the application.
   2. Enter the email address of receiving organisation. The account address and receiver's name will be updated dynamically. (Note: The receiver must be connected to a wallet.)
@@ -152,10 +153,44 @@
   
 </div>
 
-## Application Pages
+- ### 3rd Party Organisation Document Verification:
+  Steps:
+  1. Login into your account and connect your Metamask wallet to the application.
+  2. Go to the 'Verification' tab in the 'Settings' page.
+  3. Choose your file to upload. Wait for the file's ipfs hash to generate. (Note: File status will be updated dynamically.)
+  4. Issuer's details will be displayed if the file has a valid signature.
+  
+  (Note: Organisation cannot issue a document that is already signed by another organisations.)
+
+<div align="center">
+
+| Third party organisation is veryfying the authenticity of a version document received. |
+| --- | 
+| ![Part1](https://github.com/De-CAF/DECAF-React/blob/main/public/static/img/Part3.gif) |
+  
+</div>
+
+- ### Revoking Access:
+  Steps:
+  1. Login into your account and connect your Metamask wallet to the application.
+  2. In the transactions table, click the 'Revoke' button.
+  3. Confirm the transaction using the Metamask wallet to execute the smart contract.
+  
+  (Note: The document and its version map will be revoked from the users as well the 3rd party organisations with whom they have shared the document.)
+  (Note: User will not be authorised to share this document again until the document is issued again.)
+
+<div align="center">
+
+| Organisation is revoking access of a document and its subsequent versions. |
+| --- | 
+| ![Part1](https://github.com/De-CAF/DECAF-React/blob/main/public/static/img/Part4.gif) |
+  
+</div>
+
+## Static Pages
 
 <!-- Static Pages -->
-- ### Static Pages 
+- ### Home
   We have created a home page and landing page to have an entry point for the application.
 
 | Home Page |
@@ -163,21 +198,35 @@
 | ![Home](https://github.com/De-CAF/DECAF-React/blob/main/public/static/img/1_home.png) |
 
  
-- ### Authentication Pages 
-  We have created two authentication pages, login page and registration page to
+- ### Landing
+  We have created a landing page to give a breif description about the product development team and the product.
   
-| Login Page | Registration Page |
+| Product Description | Team Description |
 | --- | --- |
-| ![Login Page](https://github.com/De-CAF/DECAF-React/blob/main/public/static/img/Login.png)  | ![Register Page](https://github.com/De-CAF/DECAF-React/blob/main/public/static/img/Register.png) |
+| ![Login Page](https://github.com/De-CAF/DECAF-React/blob/main/public/static/img/2.1_about.png)  | ![Register Page](https://github.com/De-CAF/DECAF-React/blob/main/public/static/img/2.2_about.png) |
 
-<!---
 ## Quick start
 
-- `npm i blk-design-system-react`
-- [Download from Github](https://github.com/creativetimofficial/blk-design-system-react/archive/main.zip).
-- [Download from Creative Tim](https://www.creative-tim.com/product/blk-design-system-react).
-- Install with [Bower](https://bower.io/): ```bower install blk-design-system-react```.
-- Clone the repo: `git clone https://github.com/creativetimofficial/blk-design-system-react.git`.
+- Install Metamask extension on chrome. Setup your wallet.
+- Clone the repo: `git clone https://github.com/De-CAF/DECAF-React.git`.
+- Create project on `https://goerli.infura.io`.
+- Create `.secret.json` file with content as {"projectId": `Goerli Project Id`, "mnemonics":  `Wallet Secret`}.
+- `npm i --save`
+- `npm start`.
+
+
+## Contact
+
+Shreyas More: shreyas.mm@somaiya.edu
+
+Pranav Ahuja: pranav.ahuja@somaiya.edu
+
+Nandita Kadam: nandita.kadam@somaiya.edu
+
+Ramesh Krishnan: ramesh.krishnan@somaiya.edu
+
+<!---
+
 
 
 ## Documentation
@@ -194,24 +243,6 @@ The documentation for the BLK Design System React is hosted at our [website](htt
 - Issues: [Github Issues Page](https://github.com/creativetimofficial/blk-design-system-react/issues)
 - **FREE Dashboards:**
 
-| HTML | React | Vue  |
-| --- | --- | ---  |
-| [![Black Dashboard  HTML](https://github.com/creativetimofficial/public-assets/blob/main/black-dashboard/black-dashboard.jpg?raw=true)](https://www.creative-tim.com/product/black-dashboard) | [![Black Dashboard  React](https://github.com/creativetimofficial/public-assets/blob/main/black-dashboard-react/black-dashboard-react.jpg?raw=true)](https://www.creative-tim.com/product/black-dashboard-react) | [![Vue Black Dashboard](https://github.com/creativetimofficial/public-assets/blob/main/vue-black-dashboard/vue-black-dashboard.jpg?raw=true)](https://www.creative-tim.com/product/vue-black-dashboard)  |
-
-| Angular | Laravel | Django | Nuxt |
-| --- | --- | --- | --- |
-| [![Black Dashboard Angular](https://raw.githubusercontent.com/creativetimofficial/public-assets/main/black-dashboard-angular/opt_bd_angular_thumbnail.jpg)](https://www.creative-tim.com/product/black-dashboard-angular)  | [![Black Dashboard Laravel](https://raw.githubusercontent.com/creativetimofficial/public-assets/main/black-dashboard-laravel/opt_blk_laravel_thumbnail.jpg)](https://www.creative-tim.com/product/black-dashboard-laravel)  | [![Black Dashboard Django](https://raw.githubusercontent.com/creativetimofficial/public-assets/main/black-dashboard-django/opt_bdfree_django_thumbnail.jpg)](https://www.creative-tim.com/product/black-dashboard-django)  | [![Nuxt Dashboard Django](https://raw.githubusercontent.com/creativetimofficial/public-assets/main/nuxt-black-dashboard/opt_bd_nuxjs_thumbnail.jpg)](https://www.creative-tim.com/product/black-dashboard-django)  |
-
-- **PRO Dashboards:**
-
-| React | Vue | Nuxt |
-| --- | --- | ---  |
-| [![Black Dashboard PRO React](https://raw.githubusercontent.com/creativetimofficial/public-assets/main/black-dashboard-pro-react/black-dashboard-pro-react.jpg)](https://www.creative-tim.com/product/black-dashboard-pro-react) | [![Vue Black Dashboard PRO](https://raw.githubusercontent.com/creativetimofficial/public-assets/main/vue-black-dashboard-pro/vue-black-dashboard-pro.jpg)](https://www.creative-tim.com/product/vue-black-dashboard-pro) | [![Nuxt Black Dashboard PRO](https://raw.githubusercontent.com/creativetimofficial/public-assets/main/nuxt-black-dashboard-pro/opt_bdp_nuxt_thumbnail.jpg)](https://www.creative-tim.com/product/nuxt-black-dashboard-pro)  |
-
-| Angular | Django | Django |
-| --- | --- | ---  |
-| [![Black Dashboard PRO Angular](https://raw.githubusercontent.com/creativetimofficial/public-assets/main/black-dashboard-pro-angular/opt_bdp_angular_thumbnail.jpg)](https://www.creative-tim.com/product/black-dashboard-pro-angular) | [![Black Dashboard PRO Laravel](https://raw.githubusercontent.com/creativetimofficial/public-assets/main/black-dashboard-pro-laravel/opt_blkp_laravel_thumbnail.jpg)](https://www.creative-tim.com/product/black-dashboard-pro-laravel)  | [![Black Dashboard PRO Django](https://raw.githubusercontent.com/creativetimofficial/public-assets/main/black-dashboard-pro-django/opt_bdp_django_thumbnail.jpg)](https://www.creative-tim.com/product/black-dashboard-pro-django)  |
-
 ## Reporting Issues
 
 We use GitHub Issues as the official bug tracker for the BLK Design System. Here are some advices for our users that want to report an issue:
@@ -220,33 +251,6 @@ We use GitHub Issues as the official bug tracker for the BLK Design System. Here
 2. Providing us reproducible steps for the issue will shorten the time it takes for it to be fixed.
 3. Some issues may be browser specific, so specifying in what browser you encountered the issue might help.
 
-## Licensing
 
-- Copyright 2020 Creative Tim (https://www.creative-tim.com/?ref=blkdsr-readme)
-
-- Licensed under MIT (https://github.com/creativetimofficial/blk-design-system-react/blob/main/LICENSE.md)
-
-## Useful Links
-
-- [Tutorials](https://www.youtube.com/channel/UCVyTG4sCw-rOvB9oHkzZD1w)
-- [Affiliate Program](https://www.creative-tim.com/affiliates/new) (earn money)
-- [Blog Creative Tim](http://blog.creative-tim.com/)
-- [Free Products](https://www.creative-tim.com/bootstrap-themes/free) from Creative Tim
-- [Premium Products](https://www.creative-tim.com/bootstrap-themes/premium) from Creative Tim
-- [React Products](https://www.creative-tim.com/bootstrap-themes/react-themes) from Creative Tim
-- [Angular Products](https://www.creative-tim.com/bootstrap-themes/angular-themes) from Creative Tim
-- [VueJS Products](https://www.creative-tim.com/bootstrap-themes/vuejs-themes) from Creative Tim
-- [More products](https://www.creative-tim.com/bootstrap-themes) from Creative Tim
-- Check our Bundles [here](https://www.creative-tim.com/bundles?ref="mk-github-readme")
-
-### Social Media
-
-Twitter: <https://twitter.com/CreativeTim>
-
-Facebook: <https://www.facebook.com/CreativeTim>
-
-Dribbble: <https://dribbble.com/creativetim>
-
-Instagram: <https://www.instagram.com/CreativeTimOfficial>
 --->
 
